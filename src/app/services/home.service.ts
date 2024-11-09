@@ -7,7 +7,7 @@ import { Product } from '../common/product';
   providedIn: 'root'
 })
 export class HomeService {
-  private apiUrl:string ="http://localhost:8085/api/v1/home";
+  private apiUrl:string ="https://ecommerce-back-0cc9b90e39e5.herokuapp.com/api/v1/home";
   
   constructor(private httpClient:HttpClient) { }
 
