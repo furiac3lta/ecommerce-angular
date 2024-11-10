@@ -11,13 +11,18 @@ export class HeaderService {
 
 
   constructor(private sessionStorage:SessionStorageService) { 
-    this.token = this.sessionStorage.getItem('token').token;
-    this.headers = new HttpHeaders(
-  
-      {
-        //'Content-Type':'application/json',
-        'Authorization':`${this.token}`
-      }
-    )
+
+if(this.sessionStorage.getItem('token') !=null){
+  this.token = this.sessionStorage.getItem('token').token;
+  this.headers = new HttpHeaders(
+
+    {
+      //'Content-Type':'application/json',
+      'Authorization':`${this.token}`
+    }
+  )
+}
+
+
   }
 }
