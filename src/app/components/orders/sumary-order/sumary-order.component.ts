@@ -114,7 +114,13 @@ export class SumaryOrderComponent implements OnInit {
     this.getUserById(this.userId);
     const mercadopago = new MercadoPago(environment.mercadoPagoPublicKey, {
       locale: 'es-AR' // Configura el idioma que necesitas
+      
     });
+    setTimeout(
+      () =>{
+        this.sessionStorage.removeItem('token')
+      },600000
+    )
   }
 
   generateOrder() {

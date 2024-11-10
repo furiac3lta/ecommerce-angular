@@ -21,6 +21,7 @@ import { NavbarComponent } from './layout/navbar/navbar.component';
 import { RegistrationComponent } from './components/authentication/registration/registration.component';
 import { LoginComponent } from './components/authentication/login/login.component';
 import { LogoutComponent } from './components/logout/logout.component';
+import { authGuard } from './guards/auth.guard';
 
 const routes: Routes = [
   {path: '', component:HomeComponent},
@@ -31,7 +32,7 @@ const routes: Routes = [
   {path: 'admin/category/add', component:CategoryAddComponent},
   {path: 'admin/category/update/:id', component:CategoryAddComponent},
   {path:'cart/detailproduct/:id', component:DetailProductComponent},
-  {path: 'cart/summary', component: SumaryOrderComponent},
+  {path: 'cart/summary', component: SumaryOrderComponent, canActivate:[authGuard]},
   {path: 'user/register', component: RegistrationComponent},
   {path: 'user/login', component: LoginComponent},
   {path: 'logout', component: LogoutComponent}
