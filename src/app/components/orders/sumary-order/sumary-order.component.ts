@@ -79,6 +79,7 @@ import { OrderService } from 'src/app/services/order.service';
 import { UserService } from 'src/app/services/user.service';
 import { PaymentService } from 'src/app/services/payment.service'; // Importar PaymentService
 import { environment } from 'src/enviroments/enviroment';
+import { SessionStorageService } from 'src/app/services/session-storage.service';
 
 declare var MercadoPago: any;
 @Component({
@@ -94,19 +95,22 @@ export class SumaryOrderComponent implements OnInit {
   email: string = '';
   address: string = '';
   orderProducts: OrderProduct[] = [];
-  userId: number = 2;
+  userId: number = 0;
   description: string = 'Compra de productos en la tienda';
+  
 
   constructor(
     private cartService: CartService,
     private userService: UserService,
     private orderService: OrderService,
-    private paymentService: PaymentService // Inyectar el servicio de pago
+    private paymentService: PaymentService, // Inyectar el servicio de pago
+    private sessionStorage: SessionStorageService
   ) {}
 
   ngOnInit(): void {
     this.items = this.cartService.convertToListFromMap();
     this.totalCart = this.cartService.totalCart();
+    this.userId = this.sessionStorage.getItem('token').id;
     this.getUserById(this.userId);
     const mercadopago = new MercadoPago(environment.mercadoPagoPublicKey, {
       locale: 'es-AR' // Configura el idioma que necesitas
