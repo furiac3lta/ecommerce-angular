@@ -20,6 +20,7 @@ import { SumaryOrderComponent } from './components/orders/sumary-order/sumary-or
 import { NavbarComponent } from './layout/navbar/navbar.component';
 import { RegistrationComponent } from './components/authentication/registration/registration.component';
 import { LoginComponent } from './components/authentication/login/login.component';
+import { LogoutComponent } from './components/logout/logout.component';
 
 const routes: Routes = [
   {path: '', component:HomeComponent},
@@ -33,6 +34,7 @@ const routes: Routes = [
   {path: 'cart/summary', component: SumaryOrderComponent},
   {path: 'user/register', component: RegistrationComponent},
   {path: 'user/login', component: LoginComponent},
+  {path: 'logout', component: LogoutComponent}
 ];
 
 @NgModule({
@@ -49,6 +51,7 @@ const routes: Routes = [
     SumaryOrderComponent,
     RegistrationComponent,
     LoginComponent,
+    LogoutComponent,
     
   ],
   imports: [
