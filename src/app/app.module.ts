@@ -18,6 +18,8 @@ import { DetailProductComponent } from './components/cart/detail-product/detail-
 import { HeaderUserComponent } from './components/header-user/header-user.component';
 import { SumaryOrderComponent } from './components/orders/sumary-order/sumary-order.component';
 import { NavbarComponent } from './layout/navbar/navbar.component';
+import { RegistrationComponent } from './components/authentication/registration/registration.component';
+import { LoginComponent } from './components/authentication/login/login.component';
 
 const routes: Routes = [
   {path: '', component:HomeComponent},
@@ -28,7 +30,9 @@ const routes: Routes = [
   {path: 'admin/category/add', component:CategoryAddComponent},
   {path: 'admin/category/update/:id', component:CategoryAddComponent},
   {path:'cart/detailproduct/:id', component:DetailProductComponent},
-  {path: 'cart/summary', component: SumaryOrderComponent}
+  {path: 'cart/summary', component: SumaryOrderComponent},
+  {path: 'user/register', component: RegistrationComponent},
+  {path: 'user/login', component: LoginComponent},
 ];
 
 @NgModule({
@@ -43,6 +47,8 @@ const routes: Routes = [
     DetailProductComponent,
     HeaderUserComponent,
     SumaryOrderComponent,
+    RegistrationComponent,
+    LoginComponent,
     
   ],
   imports: [
