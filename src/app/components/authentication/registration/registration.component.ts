@@ -45,5 +45,6 @@ export class RegistrationComponent implements OnInit {
       console.log(res);
     });
     console.log(user);
+    this.router.navigate(['user/login'])
   }
 }

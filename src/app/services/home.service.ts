@@ -14,5 +14,7 @@ export class HomeService {
   getProducts():Observable<Product[]>{
     return this.httpClient.get<Product[]>(this.apiUrl);
   }
-  
+  getProductById(id:number):Observable<Product>{
+    return this.httpClient.get<Product>(this.apiUrl+"/"+id)
+  }
 }
