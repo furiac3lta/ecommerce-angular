@@ -12,7 +12,8 @@ export class ConfirmationComponent implements OnInit {
   constructor(private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    // Obtener el estado del pago de los parámetros de la URL
+    // Leer el estado del pago de los parámetros de la URL
     this.status = this.route.snapshot.queryParamMap.get('status') || 'unknown';
+    console.log("Estado del pago:", this.status);
   }
 }
