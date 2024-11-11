@@ -23,6 +23,7 @@ import { LoginComponent } from './components/authentication/login/login.componen
 import { LogoutComponent } from './components/logout/logout.component';
 import { authGuard } from './guards/auth.guard';
 import { CheckoutComponent } from './components/checkout/checkout.component';
+import { ConfirmationComponent } from './components/confirmation/confirmation.component';
 
 const routes: Routes = [
   {path: '', component:HomeComponent},
@@ -37,6 +38,7 @@ const routes: Routes = [
   {path: 'user/register', component: RegistrationComponent},
   {path: 'user/login', component: LoginComponent},
   {path: 'logout', component: LogoutComponent}
+  { path: 'confirmacion-pago', component: ConfirmationComponent }
 ];
 
 @NgModule({
@@ -55,6 +57,7 @@ const routes: Routes = [
     LoginComponent,
     LogoutComponent,
     CheckoutComponent,
+    ConfirmationComponent,
     
   ],
   imports: [
