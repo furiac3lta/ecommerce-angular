@@ -254,13 +254,18 @@ export class SumaryOrderComponent implements OnInit {
 
     // Crear el pedido en el backend antes de proceder al pago
     this.orderService.createOrder(order).subscribe(
-      (data) => {
-        console.log('Orden creada con id: ' + data.id);
-        // Una vez creada la orden, proceder con el pago
-        this.pay();
-      },
-      (error) => {
-        console.error('Error al crear la orden:', error);
+      {
+        next: (data) => {
+          console.log('Orden creada con id: ' + data.id);
+          // Una vez creada la orden, proceder con el pago
+
+        
+            this.pay();
+        
+        },
+        error: (error) => {
+          console.error('Error al crear la orden:', error);
+        }
       }
     );
   }
