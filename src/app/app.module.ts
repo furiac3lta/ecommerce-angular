@@ -22,6 +22,7 @@ import { RegistrationComponent } from './components/authentication/registration/
 import { LoginComponent } from './components/authentication/login/login.component';
 import { LogoutComponent } from './components/logout/logout.component';
 import { authGuard } from './guards/auth.guard';
+import { CheckoutComponent } from './components/checkout/checkout.component';
 
 const routes: Routes = [
   {path: '', component:HomeComponent},
@@ -53,6 +54,7 @@ const routes: Routes = [
     RegistrationComponent,
     LoginComponent,
     LogoutComponent,
+    CheckoutComponent,
     
   ],
   imports: [
