@@ -184,7 +184,7 @@ export class SumaryOrderComponent implements OnInit {
 // }
 
 //este hay que probar
-
+/* 
 import { Component, OnInit } from '@angular/core';
 import { ItemCart } from 'src/app/common/item-cart';
 import { Order } from 'src/app/common/order';
@@ -301,5 +301,108 @@ export class SumaryOrderComponent implements OnInit {
         console.error('Error al obtener la información del usuario:', error);
       }
     );
+  }
+}
+ */
+
+
+//ulitmo a borrar
+
+import { Component, OnInit } from '@angular/core';
+import { ItemCart } from 'src/app/common/item-cart';
+import { Order } from 'src/app/common/order';
+import { OrderProduct } from 'src/app/common/order-product';
+import { OrderState } from 'src/app/common/order-state';
+import { CartService } from 'src/app/services/cart.service';
+import { OrderService } from 'src/app/services/order.service';
+import { UserService } from 'src/app/services/user.service';
+import { PaymentService } from 'src/app/services/payment.service'; 
+import { SessionStorageService } from 'src/app/services/session-storage.service';
+
+@Component({
+  selector: 'app-sumary-order',
+  templateUrl: './sumary-order.component.html',
+  styleUrls: ['./sumary-order.component.css'],
+})
+export class SumaryOrderComponent implements OnInit {
+  items: ItemCart[] = [];
+  totalCart: number = 0;
+  firstName: string = '';
+  lastName: string = '';
+  email: string = '';
+  address: string = '';
+  orderProducts: OrderProduct[] = [];
+  userId: number = 0;
+  description: string = 'Compra de productos en la tienda';
+
+  constructor(
+    private cartService: CartService,
+    private userService: UserService,
+    private orderService: OrderService,
+    private paymentService: PaymentService, 
+    private sessionStorage: SessionStorageService
+  ) {}
+
+  ngOnInit(): void {
+    this.items = this.cartService.convertToListFromMap();
+    this.totalCart = this.cartService.totalCart();
+    this.userId = this.sessionStorage.getItem('token').id;
+    this.getUserById(this.userId);
+    setTimeout(() => {
+      this.sessionStorage.removeItem('token');
+    }, 600000);
+  }
+
+  generateOrder(): void {
+    // Crear los detalles de los productos en el pedido
+    this.items.forEach((item) => {
+      let orderProduct = new OrderProduct(null, item.productId, item.quantity, item.price);
+      this.orderProducts.push(orderProduct);
+    });
+
+    // Crear la orden
+    let order = new Order(null, new Date(), this.orderProducts, this.userId, OrderState.CANCELLED);
+    console.log('Order: ', order);
+
+    // Guardar la orden a través del servicio
+    this.orderService.createOrder(order).subscribe(
+      (createdOrder) => {
+        console.log('Orden creada:', createdOrder);
+        // Guardar la orden creada en el localStorage
+        localStorage.setItem('currentOrder', JSON.stringify(createdOrder));
+        
+        // Luego de crear la orden, redirigir a la página de pago de Mercado Pago
+        this.redirectToPayment();
+      },
+      (error) => {
+        console.error('Error al crear la orden:', error);
+      }
+    );
+  }
+
+  redirectToPayment(): void {
+    this.paymentService.createPreference(this.totalCart, this.description).subscribe(
+      (paymentUrl: string) => {
+        window.location.href = paymentUrl; // Redirige a la página de pago de Mercado Pago
+      },
+      (error) => {
+        console.error('Error al crear la preferencia de pago:', error);
+      }
+    );
+  }
+
+  deleteItemCart(productId: number): void {
+    this.cartService.deleteItemCart(productId);
+    this.items = this.cartService.convertToListFromMap();
+    this.totalCart = this.cartService.totalCart();
+  }
+
+  getUserById(id: number): void {
+    this.userService.getUserById(id).subscribe((data) => {
+      this.firstName = data.firstName;
+      this.lastName = data.lastName;
+      this.email = data.email;
+      this.address = data.address;
+    });
   }
 }
