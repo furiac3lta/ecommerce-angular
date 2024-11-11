@@ -26,19 +26,23 @@ import { CheckoutComponent } from './components/checkout/checkout.component';
 import { ConfirmationComponent } from './components/confirmation/confirmation.component';
 
 const routes: Routes = [
-  {path: '', component:HomeComponent},
-  {path:'admin/product', component:ProductListComponent},
-  {path: 'admin/product/addproduct', component:ProductAddComponent},
-  {path: 'admin/product/update/:id', component:ProductAddComponent },
-  {path: 'admin/category', component:CategoryListComponent },
-  {path: 'admin/category/add', component:CategoryAddComponent},
-  {path: 'admin/category/update/:id', component:CategoryAddComponent},
-  {path:'cart/detailproduct/:id', component:DetailProductComponent},
-  {path: 'cart/summary', component: SumaryOrderComponent, canActivate:[authGuard]},
-  {path: 'user/register', component: RegistrationComponent},
-  {path: 'user/login', component: LoginComponent},
-  {path: 'logout', component: LogoutComponent}
-  { path: 'confirmacion-pago', component: ConfirmationComponent }
+  { path: '', component: HomeComponent },
+  { path: 'admin/product', component: ProductListComponent },
+  { path: 'admin/product/addproduct', component: ProductAddComponent },
+  { path: 'admin/product/update/:id', component: ProductAddComponent },
+  { path: 'admin/category', component: CategoryListComponent },
+  { path: 'admin/category/add', component: CategoryAddComponent },
+  { path: 'admin/category/update/:id', component: CategoryAddComponent },
+  { path: 'cart/detailproduct/:id', component: DetailProductComponent },
+  {
+    path: 'cart/summary',
+    component: SumaryOrderComponent,
+    canActivate: [authGuard],
+  },
+  { path: 'user/register', component: RegistrationComponent },
+  { path: 'user/login', component: LoginComponent },
+  { path: 'logout', component: LogoutComponent },
+  { path: 'confirmacion-pago', component: ConfirmationComponent },
 ];
 
 @NgModule({
@@ -58,7 +62,6 @@ const routes: Routes = [
     LogoutComponent,
     CheckoutComponent,
     ConfirmationComponent,
-    
   ],
   imports: [
     BrowserModule,
@@ -67,9 +70,9 @@ const routes: Routes = [
     RouterModule.forRoot(routes),
     ToastrModule.forRoot(),
     BrowserAnimationsModule,
-    NavbarComponent
+    NavbarComponent,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
