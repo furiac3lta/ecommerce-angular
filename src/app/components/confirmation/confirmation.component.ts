@@ -74,33 +74,36 @@ export class ConfirmationComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // Leer el estado del pago de los parámetros de la URL
     this.status = this.route.snapshot.queryParamMap.get('status') || 'unknown';
     console.log("Estado del pago:", this.status);
-  
+
+    // Recuperar la orden del localStorage
     const orderData = localStorage.getItem('currentOrder');
     if (orderData) {
       this.order = JSON.parse(orderData);
     }
-  
+
+    // Verificar si order tiene un valor id válido
     if (this.order && this.order.id !== null) {
+      // Si el pago fue exitoso, actualizar el estado de la orden
       const orderId = this.order.id;
       const newState = this.status === 'approved' ? OrderState.CONFIRMED : OrderState.CANCELLED;
-      const token = this.sessionStorage.getItem('token');
-      if (token) {
-        this.orderService.updateOrderStatus(orderId, newState.toString()).subscribe(
-          () => {
-            console.log(`Estado de la orden actualizado a ${newState}`);
-            this.sessionStorage.removeItem('token');
-            localStorage.removeItem('currentOrder');
-          },
-          (error) => {
-            console.error('Error al actualizar la orden:', error);
-          }
-        );
-      } else {
-        console.error('Token no encontrado. No se puede actualizar la orden.');
-      }
+
+      this.orderService.updateOrderStatus(orderId, newState.toString()).subscribe(
+        () => {
+          console.log(`Estado de la orden actualizado a ${newState}`);
+          console.log('LogoutComponent: ' + this.sessionStorage.getItem('token'));
+
+          // Solo eliminar el token y limpiar el localStorage después de la actualización exitosa de la orden
+          this.sessionStorage.removeItem('token');
+          console.log('LogoutComponent eliminado: ' + this.sessionStorage.getItem('token'));
+          localStorage.removeItem('currentOrder');
+        },
+        (error) => {
+          console.error('Error al actualizar la orden:', error);
+        }
+      );
     }
   }
-  
 }
