@@ -38,7 +38,7 @@ export class ProductAddComponent implements OnInit{
     const token = this.sessionStorage.getItem('token');
     if (!token) {
       // Si no hay token, redirigir al login
-      this.router.navigate(['/login']);
+      this.router.navigate(['/user/login']);
       return;
     }
     this.getCategories();
