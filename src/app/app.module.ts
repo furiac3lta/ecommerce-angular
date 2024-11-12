@@ -28,10 +28,10 @@ import { ConfirmationComponent } from './components/confirmation/confirmation.co
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'admin/product', component: ProductListComponent },
+  { path: 'admin/product', component: ProductListComponent,  canActivate: [authGuard], },
   { path: 'admin/product/addproduct', component: ProductAddComponent },
   { path: 'admin/product/update/:id', component: ProductAddComponent },
-  { path: 'admin/category', component: CategoryListComponent },
+  { path: 'admin/category', component: CategoryListComponent,  canActivate: [authGuard], },
   { path: 'admin/category/add', component: CategoryAddComponent },
   { path: 'admin/category/update/:id', component: CategoryAddComponent },
   { path: 'cart/detailproduct/:id', component: DetailProductComponent },
