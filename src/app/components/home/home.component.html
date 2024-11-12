@@ -1,36 +1,20 @@
 <!-- Navigation -->
 <app-header-user></app-header-user>
 <!-- Page Content -->
-<div class="container">
   <app-navbar></app-navbar>
+  <app-hero></app-hero>
   <div class="main-content">
-    <div class="section-content section-content-p30">
-      <div class="container-fluid">
-        <div class="row">
-          <div *ngFor="let p of products" class="col-md-3">
 
-            <div class="product-box">
-             <!--  <img src="{{p.urlImage}}"> -->
-             <img [src]="p.urlImage + '?v=' + p.id" alt="{{p.name}}">
 
-              <h2 class="card-text">{{p.name}}</h2>
-              <div class="price">{{p.price}}</div>
-              <div class="product-show">
-                <a [routerLink]="['/cart/detailproduct', p.id]" href="#" class="primary-btn">Ver producto</a>
-              </div>
-            </div>
+    
+          
+          <div class="flex justify-center items-center flex-wrap gap-10 w-full my-20">
+            <app-product-card *ngFor="let p of products" [product]="p"></app-product-card>
           </div>
-        </div>
-      </div>
-    </div>
+      
+ 
   </div>
-</div>
 
 
   <!-- Footer -->
-<footer class="py-5 bg-dark">
-  <div class="container">
-    <p class="m-0 text-center text-white">Copyright &copy; Spring eCommerce 2023</p>
-  </div>
-  <!-- /.container -->
-</footer>
+  <app-footer></app-footer>

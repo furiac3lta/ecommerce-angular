@@ -1,0 +1,26 @@
+<section>
+  <swiper-container
+    #swiper
+    slides-per-view="1"
+    navigation="true"
+    pagination="true"
+    loop="true"
+  >
+    <swiper-slide *ngFor="let slide of slides">
+      <div class="w-100 h-[600px] relative flex justify-start items-center px-16">
+        <img
+          class="absolute w-full h-full top-0 left-0 object-cover"
+          [src]="slide.image"
+          alt=""
+        />
+
+        <div class="relative max-w-[550px]">
+          <h4 class="uppercase">{{slide.subtitle}}</h4>
+            <h2 class="!text-[2.6rem] font-bold capitalize !leading-[3.4rem]">{{slide.title}}</h2>
+            <p class="leading-6 !mb-5">{{slide.description}}</p>
+            <button mat-flat-button color="primary">{{slide.button}}</button>
+        </div>
+      </div>
+    </swiper-slide>
+  </swiper-container>
+</section>

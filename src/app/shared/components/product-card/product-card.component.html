@@ -1,0 +1,10 @@
+<mat-card class="w-[320px] hover:shadow-xl transition-all">
+    <img class="h-[360px] object-cover" mat-card-image [src]="product.urlImage" [alt]="product.name">
+    <mat-card-content class="flex justify-center items-center flex-col gap-1">
+        <h3 class="text-lg font-semibold">{{product.name}}</h3>
+        <span>{{product.price}}</span>
+    </mat-card-content>
+    <mat-card-actions class="flex justify-center py-5">
+        <button mat-flat-button color="primary">Agregar al carrito</button>
+    </mat-card-actions>
+</mat-card>

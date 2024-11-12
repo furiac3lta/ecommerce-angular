@@ -25,6 +25,9 @@ import { LogoutComponent } from './components/logout/logout.component';
 import { authGuard } from './guards/auth.guard';
 import { CheckoutComponent } from './components/checkout/checkout.component';
 import { ConfirmationComponent } from './components/confirmation/confirmation.component';
+import { FooterComponent } from './layout/footer/footer.component';
+import { HeroComponent } from './components/hero/hero.component';
+import { SharedModule } from './shared/shared.module';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -71,7 +74,10 @@ const routes: Routes = [
     RouterModule.forRoot(routes),
     ToastrModule.forRoot(),
     BrowserAnimationsModule,
+    SharedModule,
     NavbarComponent,
+    FooterComponent,
+    HeroComponent,
   ],
   providers: [
     {
