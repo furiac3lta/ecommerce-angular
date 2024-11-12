@@ -12,7 +12,7 @@ export class OrderService {
     throw new Error('Method not implemented.');
   } */
 
-    updateOrderStatus(orderId: number, status: string): Observable<void> {
+ /*   updateOrderStatus(orderId: number, status: string): Observable<void> {
       const updateUrl = `${this.apiUrl}/update/state/order`;
       const body = { id: orderId, state: status };
       return this.httpClient.post<void>(updateUrl, body, { headers: this.headerService.headers });
