@@ -10,10 +10,16 @@ import { HeaderService } from './header.service';
 export class UserService {
   private apiUrl: string = 'https://ecommerce-back-0cc9b90e39e5.herokuapp.com/api/v1/users';
 
-  constructor(private httpClient: HttpClient, private headerService:HeaderService) {}
+  constructor(private httpClient: HttpClient, private headerService: HeaderService) {}
 
   getUserById(id: number): Observable<User> {
-    // return this.httpClient.get<User>(this.apiUrl+ '/' + id)
-    return this.httpClient.get<User>(`${this.apiUrl}/${id}`,  {headers: this.headerService.headers});
+    const headers = this.headerService.headers;
+
+    // Asegúrate de que el encabezado Authorization esté presente y sea correcto.
+    if (!headers.has('Authorization') || headers.get('Authorization') === '') {
+      console.error('El encabezado Authorization no está configurado o es inválido.');
+    }
+
+    return this.httpClient.get<User>(`${this.apiUrl}/${id}`, { headers });
   }
 }
