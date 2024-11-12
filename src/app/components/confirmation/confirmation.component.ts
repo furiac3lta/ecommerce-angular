@@ -66,6 +66,7 @@ import { Order } from 'src/app/common/order';
 export class ConfirmationComponent implements OnInit {
   status: string = '';
   order: Order | null = null;
+  router: any;
 
   constructor(
     private route: ActivatedRoute,
@@ -99,6 +100,10 @@ export class ConfirmationComponent implements OnInit {
           this.sessionStorage.removeItem('token');
           console.log('LogoutComponent eliminado: ' + this.sessionStorage.getItem('token'));
           localStorage.removeItem('currentOrder');
+           // Redirigir al inicio después de un breve retardo
+           setTimeout(() => {
+            this.router.navigate(['/']);
+          }, 1000); // Espera un segundo antes de redirigir (opcional)
         },
         (error) => {
           console.error('Error al actualizar la orden:', error);
