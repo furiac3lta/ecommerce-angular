@@ -35,6 +35,12 @@ export class ProductAddComponent implements OnInit{
     ){}
 
   ngOnInit(): void {
+    const token = this.sessionStorage.getItem('token');
+    if (!token) {
+      // Si no hay token, redirigir al login
+      this.router.navigate(['/login']);
+      return;
+    }
     this.getCategories();
     this.getProductById();
     this.user = this.sessionStorage.getItem('token').id;

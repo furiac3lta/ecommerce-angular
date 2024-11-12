@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Product } from 'src/app/common/product';
 import { ProductService } from 'src/app/services/product.service';
 import Swal from 'sweetalert2';
+import { SessionStorageService } from 'src/app/services/session-storage.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-list',
@@ -10,10 +12,17 @@ import Swal from 'sweetalert2';
 })
 export class ProductListComponent implements OnInit {
   products : Product[] = [];
+  
 
-  constructor(private productService:ProductService){}
+  constructor(private productService:ProductService,  private sessionStorage:SessionStorageService, private router: Router){}
 
   ngOnInit(): void {
+    const token = this.sessionStorage.getItem('token');
+    if (!token) {
+      // Si no hay token, redirigir al login
+      this.router.navigate(['/login']);
+      return;
+    }
     this.listProducts();
   }
 
