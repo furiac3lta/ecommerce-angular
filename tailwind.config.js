@@ -4,7 +4,12 @@ module.exports = {
     "./src/**/*.{html,ts}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        customGreen: '#007c85', // Nombre personalizado para el color
+        customGreenHover:'#00585e'
+      },
+    },
   },
   plugins: [],
   important: true,
