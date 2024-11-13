@@ -15,6 +15,7 @@ import { SessionStorageService } from 'src/app/services/session-storage.service'
 export class NavbarComponent  implements OnInit {
   isAdmin: boolean = false;
   isLoggedIn: boolean = false;
+menuOpen: any;
 
   constructor(private sessionStorage: SessionStorageService, private router: Router) {}
 
