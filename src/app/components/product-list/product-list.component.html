@@ -1,39 +1,110 @@
+<!-- <app-header-admin></app-header-admin>
+ -->
+<div class="container mx-auto p-4">
+  <!-- Breadcrumb -->
+  <ol class="flex text-gray-600 mb-4">
+    <li class="mr-2">
+      <a routerLink="" class="hover:text-blue-500">Home</a>
+    </li>
+    <li>/</li>
+    <li class="ml-2">Ver Productos</li>
+  </ol>
 
-<app-header-admin></app-header-admin>
-        <!-- Page Content List Products-->
-        <div class="container">
-            <!-- Page Heading/Breadcrumbs -->
-           <!--  <h1 class="mt-4 mb-3">
-                Spring eCommerce <small>Productos</small>
-            </h1> -->
-        
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a routerLink="">Home</a></li>
-                <li class="breadcrumb-item active">Ver Productos</li>
-            </ol>
-        
-            <a class="btn btn-primary" routerLink="/admin/product/addproduct"> Crear Producto</a>
-            <h2>Productos</h2>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Código</th>
-                        <th>Nombre</th>
-                        <th>Descripción</th>
-                        <th>Precio</th>
-                        <th>Editar</th>
-                        <th>Eliminar</th>
-                    </tr>
-                </thead>
-                <tbody *ngFor="let producto of products">
-                    <tr>
-                        <td>{{producto.code}}</td>
-                        <td>{{producto.name}}</td>
-                        <td>{{producto.description}}</td>
-                        <td>{{producto.price}}</td>
-                        <td><button class="btn btn-warning" [routerLink]="['/admin/product/update', producto.id]">Editar</button> </td>
-                        <td><button class="btn btn-danger" (click)="deleteProductById(producto.id)">Eliminar</button>
-                    </tr>
-                </tbody>
-            </table>        
-        </div>
+  <!-- Botón Crear Producto -->
+  <a
+    class="button-item p-2"
+    routerLink="/admin/product/addproduct"
+    >Crear Producto</a
+  >
+
+  <h2 class="text-2xl font-semibold text-gray-800 mt-4">Productos</h2>
+
+  <!-- Tabla Angular Material -->
+  <table
+    mat-table
+    [dataSource]="products"
+    class="min-w-full border border-gray-200 rounded-lg shadow-md pt3"
+  >
+    <!-- Código -->
+    <ng-container matColumnDef="code">
+      <th mat-header-cell *matHeaderCellDef class="p-2 text-left text-gray-600">
+        Código
+      </th>
+      <td mat-cell *matCellDef="let product" class="p-2 text-gray-800">
+        {{ product.code }}
+      </td>
+    </ng-container>
+
+    <!-- Nombre -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef class="p-2 text-left text-gray-600">
+        Nombre
+      </th>
+      <td mat-cell *matCellDef="let product" class="p-2 text-gray-800">
+        {{ product.name }}
+      </td>
+    </ng-container>
+
+    <!-- Descripción -->
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef class="p-2 text-left text-gray-600">
+        Descripción
+      </th>
+      <td mat-cell *matCellDef="let product" class="p-2 text-gray-800">
+        {{ product.description }}
+      </td>
+    </ng-container>
+
+    <!-- Precio -->
+    <ng-container matColumnDef="price">
+      <th mat-header-cell *matHeaderCellDef class="p-2 text-left text-gray-600">
+        Precio
+      </th>
+      <td mat-cell *matCellDef="let product" class="p-2 text-gray-800">
+        {{ product.price | currency }}
+      </td>
+    </ng-container>
+
+    <!-- Editar -->
+    <ng-container matColumnDef="edit">
+      <th mat-header-cell *matHeaderCellDef class="p-2 text-left text-gray-600">
+        Editar
+      </th>
+      <td mat-cell *matCellDef="let product" class="p-2">
+        <button
+          mat-button
+          color="primary"
+          class="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-1 px-2 rounded"
+          [routerLink]="['/admin/product/update', product.id]"
+        >
+          Editar
+        </button>
+      </td>
+    </ng-container>
+
+    <!-- Eliminar -->
+    <ng-container matColumnDef="delete">
+      <th mat-header-cell *matHeaderCellDef class="p-2 text-left text-gray-600">
+        Eliminar
+      </th>
+      <td mat-cell *matCellDef="let product" class="p-2">
+        <button
+          mat-button
+          color="warn"
+          class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-2 rounded"
+          (click)="deleteProductById(product.id)"
+        >
+          Eliminar
+        </button>
+      </td>
+    </ng-container>
+
+    <!-- Header y filas de datos -->
+    <tr
+      mat-header-row
+      *matHeaderRowDef="displayedColumns"
+      class="bg-gray-100"
+    ></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+</div>

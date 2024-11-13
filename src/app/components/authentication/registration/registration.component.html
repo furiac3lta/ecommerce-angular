@@ -1,55 +1,119 @@
- <app-header-user></app-header-user>
- 
- <!-- Page Content -->
- <div class="container">
+<body class="bg-gray-10">
+  <form (ngSubmit)="register()">
+    <div class="flex justify-center items-center h-screen">
+      <div class="w-full md:w-1/4 flex flex-col items-center">
+        <!-- Título de Registro -->
+        <h1 class="text-2xl font-bold text-gray-600 mb-6">REGISTRO</h1>
 
-    <div class="card mb-3">
-      <div class="row no-gutters">
-        <div class="col-md-4"></div>
-        <div class="col-md-8">
-          <div class="card-body">
-            <h2>Registro</h2>
-
-          </div>
+        <!-- Nombre -->
+        <div class="w-3/4 mb-4">
+          <label for="name" class="block text-gray-600 text-s mb-1"
+            >Nombre:</label
+          >
+          <input
+            [(ngModel)]="name"
+            type="text"
+            class="hover:ring-teal-300 text-s w-full py-1 px-8 bg-slate-200 placeholder:font-normal rounded hover:ring-1 outline-teal-500"
+            id="name"
+            name="name"
+            placeholder="Ingrese su nombre"
+            autocomplete="off"
+          />
         </div>
+
+        <!-- Apellido -->
+        <div class="w-3/4 mb-4">
+          <label for="surname" class="block text-gray-600 text-s mb-1"
+            >Apellido:</label
+          >
+          <input
+            [(ngModel)]="surname"
+            type="text"
+            class="hover:ring-teal-300 text-s w-full py-1 px-8 bg-slate-200 placeholder:font-normal rounded hover:ring-1 outline-teal-500"
+            id="surname"
+            name="surname"
+            placeholder="Ingrese su apellido"
+            autocomplete="off"
+          />
+        </div>
+
+        <!-- Email -->
+        <div class="w-3/4 mb-4">
+          <label for="email" class="block text-gray-600 text-s mb-1"
+            >Email:</label
+          >
+          <input
+            [(ngModel)]="email"
+            type="email"
+            class="hover:ring-teal-300 text-s w-full py-1 px-8 bg-slate-200 placeholder:font-normal rounded hover:ring-1 outline-teal-500"
+            id="email"
+            name="email"
+            placeholder="Ingrese su email"
+            autocomplete="off"
+          />
+        </div>
+
+        <!-- Dirección -->
+        <div class="w-3/4 mb-4">
+          <label for="address" class="block text-gray-600 text-s mb-1"
+            >Dirección:</label
+          >
+          <input
+            [(ngModel)]="address"
+            type="text"
+            class="hover:ring-teal-300 text-s w-full py-1 px-8 bg-slate-200 placeholder:font-normal rounded hover:ring-1 outline-teal-500"
+            id="address"
+            name="address"
+            placeholder="Ingrese su dirección"
+            autocomplete="off"
+          />
+        </div>
+
+        <!-- Teléfono -->
+        <div class="w-3/4 mb-4">
+          <label for="cellphone" class="block text-gray-600 text-s mb-1"
+            >Teléfono:</label
+          >
+          <input
+            [(ngModel)]="cellphone"
+            type="text"
+            class="hover:ring-teal-300 text-s w-full py-1 px-8 bg-slate-200 placeholder:font-normal rounded hover:ring-1 outline-teal-500"
+            id="cellphone"
+            name="cellphone"
+            placeholder="Ingrese su teléfono"
+            autocomplete="off"
+          />
+        </div>
+
+        <!-- Contraseña -->
+        <div class="w-3/4 mb-4">
+          <label for="password" class="block text-gray-600 text-s mb-1"
+            >Contraseña:</label
+          >
+          <input
+            [(ngModel)]="password"
+            type="password"
+            class="hover:ring-teal-300 text-s w-full py-1 px-8 bg-slate-200 placeholder:font-normal rounded hover:ring-1 outline-teal-500"
+            id="password"
+            name="password"
+            placeholder="Ingrese su contraseña"
+            autocomplete="off"
+          />
+        </div>
+
+        <!-- Botón de Registro -->
+        <div class="w-3/4 mt-4">
+          <button
+            type="submit"
+            class="py-2 bg-teal-400 w-full rounded text-yellow-50 font-bold hover:bg-teal-700 transition-all duration-500"
+          >
+            GUARDAR
+          </button>
+        </div>
+        <div class="w-3/4 mt-4">
+            <a class="text-xs text-zinc-600 hover:text-zinc-900 md:w-1/4 text-center" [routerLink]="['/']">home</a>
+          </div>
       </div>
     </div>
-	<form (ngSubmit)="register()">
-      <div class="form-group">
-        <label for="name">Nombre:</label> <input [(ngModel)]="name" type="text"
-          class="form-control" id="name" name="name"
-          placeholder="Ingrese su nombre" autocomplete="off">
-      </div>
-	  
-	   <div class="form-group">
-        <label for="surname">Apellido:</label> <input [(ngModel)]="surname" type="text"
-          class="form-control" id="surname" name="surname"
-          placeholder="Ingrese su Apellido" autocomplete="off">
-      </div>
-
-      <div class="form-group">
-        <label for="email">Email:</label> <input [(ngModel)]="email" type="email"
-          class="form-control" id="email" name="email"
-          placeholder="Ingrese su email" autocomplete="off">
-      </div>
-
-      <div class="form-group">
-        <label for="address">Dirección:</label> <input [(ngModel)]="address" type="text"
-          class="form-control" id="address" name="address"
-          placeholder="Ingrese su dirección" autocomplete="off">
-      </div>
-	   <div class="form-group">
-        <label for="cellphone">Teléfono:</label> <input [(ngModel)]="cellphone" type="text"
-          class="form-control" id="cellphone" name="cellphone"
-          placeholder="Ingrese su teléfono" autocomplete="off">
-      </div>
-
-      <div class="form-group">
-        <label for="password">Contraseña</label> <input [(ngModel)]="password" type="password"
-          class="form-control" id="password" name="password" placeholder="Ingrese su contraseña" autocomplete="off">
-      </div>
-      <div class="col-sm-2">
-        <button type="submit" class="btn btn-success">Guardar</button>
-      </div>
-    </form>
-  </div>
+  </form>
+</body>

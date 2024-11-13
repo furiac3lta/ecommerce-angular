@@ -1,9 +1,9 @@
 <app-header-admin></app-header-admin>
 <!-- Page Content -->
-<div class="container">
+<!-- <div class="container"> -->
 
     <!-- Page Heading/Breadcrumbs -->
-    <h1 class="mt-4 mb-3">
+ <!--    <h1 class="mt-4 mb-3">
       eCommerce <small>Productos</small>
     </h1>
   
@@ -68,4 +68,64 @@
   
     </form>
   
+  </div> -->
+  <div class="flex justify-center items-center min-h-screen bg-gray-50 px-4">
+    <div class="w-full max-w-2xl bg-white shadow-lg rounded-lg p-8 md:p-12">
+      <!-- Título -->
+      <h2 class="text-3xl font-semibold text-center text-gray-800 mb-6">Crear Producto</h2>
+  
+      <!-- Formulario de Producto -->
+      <form (ngSubmit)="addProduct()" enctype="multipart/form-data" class="space-y-8">
+  
+        <!-- Campo Categoría -->
+        <div>
+          <label for="category" class="block text-gray-600 mb-2">Elija una categoría</label>
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-select [(ngModel)]="categoryId" name="category" id="category" required>
+              <mat-option *ngFor="let categoria of categories" [value]="categoria.id">
+                {{ categoria.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+  
+        <!-- Campo Nombre -->
+        <div>
+          <label for="nombre" class="block text-gray-600 mb-2">Nombre</label>
+          <mat-form-field appearance="outline" class="w-full">
+            <input matInput [(ngModel)]="name" type="text" id="nombre" name="nombre" placeholder="Ingrese el nombre del producto" autocomplete="off" required>
+          </mat-form-field>
+        </div>
+  
+        <!-- Campo Descripción -->
+        <div>
+          <label for="descripcion" class="block text-gray-600 mb-2">Descripción</label>
+          <mat-form-field appearance="outline" class="w-full">
+            <textarea matInput [(ngModel)]="description" id="descripcion" name="descripcion" placeholder="Ingrese la descripción del producto" required></textarea>
+          </mat-form-field>
+        </div>
+  
+        <!-- Campo Precio -->
+        <div>
+          <label for="precio" class="block text-gray-600 mb-2">Precio</label>
+          <mat-form-field appearance="outline" class="w-full">
+            <input matInput [(ngModel)]="price" type="number" step="any" id="precio" name="precio" placeholder="Ingrese el precio del producto" autocomplete="off" required>
+          </mat-form-field>
+        </div>
+  
+        <!-- Campo Imagen (input[type="file"] fuera de mat-form-field) -->
+        <div class="w-full">
+          <label for="img" class="block text-gray-600 mb-2">Imagen</label>
+          <input type="file" id="img" (change)="onFileSelected($event)" class="block w-full text-sm text-gray-600 border border-gray-300 rounded-lg cursor-pointer focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+        </div>
+  
+        <!-- Botón Guardar -->
+        <div class="flex justify-center">
+          <button type="submit" class="button-item">
+            Guardar
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
+  

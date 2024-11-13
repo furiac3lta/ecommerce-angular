@@ -13,7 +13,7 @@ import { SessionStorageService } from 'src/app/services/session-storage.service'
 })
 export class ProductAddComponent implements OnInit{
   
-  id: number = 3;
+  id: number = 0;
   code: string ='001';
   name: string ='';
   description: string='';
@@ -36,11 +36,6 @@ export class ProductAddComponent implements OnInit{
 
   ngOnInit(): void {
     const token = this.sessionStorage.getItem('token');
-    if (!token) {
-      // Si no hay token, redirigir al login
-      this.router.navigate(['/user/login']);
-      return;
-    }
     this.getCategories();
     this.getProductById();
     this.user = this.sessionStorage.getItem('token').id;

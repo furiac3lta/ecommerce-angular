@@ -28,15 +28,23 @@ import { ConfirmationComponent } from './components/confirmation/confirmation.co
 import { FooterComponent } from './layout/footer/footer.component';
 import { HeroComponent } from './components/hero/hero.component';
 import { SharedModule } from './shared/shared.module';
+import { MatTableModule } from '@angular/material/table';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'admin/product', component: ProductListComponent,  canActivate: [authGuard], },
-  { path: 'admin/product/addproduct', component: ProductAddComponent },
-  { path: 'admin/product/update/:id', component: ProductAddComponent },
+  { path: 'admin/product/addproduct', component: ProductAddComponent ,  canActivate: [authGuard],},
+  { path: 'admin/product/update/:id', component: ProductAddComponent ,  canActivate: [authGuard], },
   { path: 'admin/category', component: CategoryListComponent,  canActivate: [authGuard], },
-  { path: 'admin/category/add', component: CategoryAddComponent },
-  { path: 'admin/category/update/:id', component: CategoryAddComponent },
+  { path: 'admin/category/add', component: CategoryAddComponent ,  canActivate: [authGuard],},
+  { path: 'admin/category/update/:id', component: CategoryAddComponent ,  canActivate: [authGuard],},
   { path: 'cart/detailproduct/:id', component: DetailProductComponent },
   {
     path: 'cart/summary',
@@ -66,6 +74,7 @@ const routes: Routes = [
     LogoutComponent,
     CheckoutComponent,
     ConfirmationComponent,
+    
   ],
   imports: [
     BrowserModule,
@@ -78,6 +87,13 @@ const routes: Routes = [
     NavbarComponent,
     FooterComponent,
     HeroComponent,
+    MatTableModule,
+    MatIconModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatOptionModule,
   ],
   providers: [
     {
