@@ -1,4 +1,4 @@
-<header class="w-full h-20 flex items-center">
+<!-- <header class="w-full h-20 flex items-center">
   <div class="flex justify-between items-center max-w-[1024px] mx-auto">
     <div></div>
 
@@ -20,6 +20,54 @@
       </button>
       <button mat-icon-button >
         <mat-icon class="text-gray-700 text-3xl ml-8 mb-3" >person_outline</mat-icon>
+      </button>
+    </div>
+  </div>
+</header> -->
+<header class="w-full h-20 flex items-center">
+  <div class="flex justify-between items-center max-w-[1024px] mx-auto">
+    <!-- Logo / Icono principal (si aplica) -->
+    <div></div>
+
+    <!-- Navegación -->
+    <nav>
+      <ul class="flex justify-center items-center gap-12">
+        <!-- Enlaces comunes -->
+        <li class="nav-item"><a (click)="gotoHome()">Inicio</a></li>
+        <li class="nav-item"><a routerLink="/products">Productos</a></li>
+        
+        <!-- Título central -->
+        <li class="nav-item">
+          <h1 class="!tracking-widest !m-0 text-2xl">L&C COSMETICA</h1>
+        </li>
+
+        <!-- Enlaces condicionales -->
+        <ng-container *ngIf="isAdmin; else guestLinks">
+          <!-- Enlaces para Administrador -->
+          <li class="nav-item"><a routerLink="/dashboard">Dashboard</a></li>
+          <li class="nav-item"><a routerLink="/users">Usuarios</a></li>
+        </ng-container>
+        
+        <!-- Enlaces para Invitado -->
+        <ng-template #guestLinks>
+          <li class="nav-item"><a routerLink="/promotions">Promociones</a></li>
+          <li class="nav-item"><a routerLink="/about">Nosotros</a></li>
+        </ng-template>
+      </ul>
+    </nav>
+
+    <!-- Botones de Carrito y Usuario -->
+    <div>
+      <button mat-icon-button class="ml-8 mb-3" (click)="cart()">
+        <mat-icon class="text-gray-700 text-3xl" >local_mall</mat-icon>
+      </button>
+      <button mat-icon-button *ngIf="isLoggedIn" class="ml-8 mb-3" (click)="logout()">
+        <mat-icon class="text-gray-700 text-3xl">logout</mat-icon>
+      </button>
+
+      <!-- Botón de Login si el usuario no está logueado -->
+      <button mat-icon-button *ngIf="!isLoggedIn" class="ml-8 mb-3" (click)="handleUserIconClick()">
+        <mat-icon class="text-gray-700 text-3xl">person_outline</mat-icon>
       </button>
     </div>
   </div>

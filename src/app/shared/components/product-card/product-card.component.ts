@@ -1,5 +1,7 @@
 import { Component, Input } from '@angular/core';
+import { Router } from '@angular/router';
 import { Product } from 'src/app/core/interfaces/product.interface';
+
 
 @Component({
   selector: 'app-product-card',
@@ -20,4 +22,9 @@ export class ProductCardComponent {
     userId: 1,
     categoryId: 1
   };
+  constructor(private router: Router) {}
+
+  goToDetail() {
+    this.router.navigate([`/cart/detailproduct`, this.product.id]);
+  }
 }

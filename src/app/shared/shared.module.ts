@@ -4,13 +4,14 @@ import { ProductCardComponent } from './components/product-card/product-card.com
 import { MatCardModule } from '@angular/material/card';
 import {MatButtonModule} from '@angular/material/button';
 
-
 @NgModule({
   declarations: [
-    ProductCardComponent
+    ProductCardComponent,
+  
   ],
   exports: [
-    ProductCardComponent
+    ProductCardComponent,
+
   ],
   imports: [
     CommonModule,

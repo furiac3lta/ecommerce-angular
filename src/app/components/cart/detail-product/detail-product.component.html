@@ -1,109 +1,64 @@
-<app-header-user></app-header-user>
+<app-navbar></app-navbar>
 
-<!-- Page Content -->
-<!-- <div class="container"> -->
+<div class="container mx-auto px-4 py-8">
+  <!-- Encabezado de Página y Breadcrumbs -->
+  <h1 class="text-4xl font-semibold text-gray-800 mb-4">
+    <span class="text-gray-600">Detalle Producto</span>
+  </h1>
 
+  <!-- Tarjeta de Producto -->
+  <div class="bg-white shadow-lg rounded-lg overflow-hidden mb-8">
+    <div class="flex flex-col md:flex-row">
+      <!-- Imagen del Producto -->
+      <div class="md:w-1/2">
+        <a href="#">
+          <img class="w-1/2 h-3/4 object-fill" src="{{ urlImage }}" alt="" />
+        </a>
+      </div>
 
-    <!-- Page Heading/Breadcrumbs -->
-  <!--   <h1 class="mt-4 mb-3">
-      Spring eCommerce <small>Producto</small>
-    </h1>
+      <!-- Detalles del Producto -->
+      <div class="md:w-1/2 p-6">
+        <form action="#" method="POST" class="space-y-6">
+          <h2 class="text-3xl font-semibold text-gray-800 mb-4">{{ name }}</h2>
 
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-      <li class="breadcrumb-item active">Producto</li>
-    </ol>
- -->
-    <!-- Blog Post -->
- <!--    <div class="card mb-4">
-      <div class="card-body">
-        <div class="row">
-          <div class="col-lg-6">
-            <a href="#"> <img class="img-fluid rounded"
-              src="{{urlImage}}"  alt="">
-            </a>
-          </div>
-          <div class="col-lg-6">
-            <form action="#" method="POST">
-              <h2 class="card-title">{{name}}</h2>
+          <!-- Lista de Información del Producto -->
+          <ul class="space-y-4">
+            <li>
+              <h5 class="text-xl font-semibold text-gray-700">
+                Precio: <span class="text-gray-900">{{ price }}</span>
+              </h5>
+            </li>
+            <li>
+              <p class="text-gray-600">Descripción: {{ description }}</p>
+            </li>
+            <li>
+              <h6 class="text-lg font-medium text-gray-700">
+                Cantidad:
+                <input
+                  type="number"
+                  [(ngModel)]="quantity"
+                  id="quantity"
+                  name="quantity"
+                  class="border border-gray-300 rounded-lg px-3 py-1 w-20 ml-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  min="1"
+                  max="5"
+                  value="1"
+                  autocomplete="off"
+                />
+              </h6>
+            </li>
+          </ul>
 
-              <ul class="list-group">
-                <li class="list-group-item"><h5>Precio: {{price}} </h5></li>
-                <li class="list-group-item">
-                  <p>Descripción: {{description}}</p>
-                </li>
-                <li class="list-group-item"><h6>
-                  Cantidad: <input type="number" [(ngModel)]="quantity" id="quantity" name="quantity" autocomplete="off"
-                  min="1" max="5" value="1">
-                </h6></li>
-              </ul>
-
-
-              <button (click)="addCart(id)"  class="btn btn-dark">Añadir al carrito </button>
-
-            </form>
-          </div>
-        </div>
+          <!-- Botón Añadir al Carrito -->
+          <button
+            (click)="addCart(id)"
+            class="w-full bg-gray-800 text-white font-bold py-3 rounded-lg hover:bg-gray-900 transition duration-300"
+          >
+            Añadir al carrito
+          </button>
+        </form>
       </div>
     </div>
-
-  </div> -->
-  <!-- /.container -->
-
-  <div class="container mx-auto px-4 py-8">
-
-    <!-- Encabezado de Página y Breadcrumbs -->
-    <h1 class="text-4xl font-semibold text-gray-800 mb-4">
-      Spring eCommerce <span class="text-gray-600">Producto</span>
-    </h1>
-  
-    <nav class="flex mb-6 text-gray-600 text-sm">
-      <a href="index.html" class="hover:text-blue-500">Home</a>
-      <span class="mx-2">/</span>
-      <span class="text-gray-500">Producto</span>
-    </nav>
-  
-    <!-- Tarjeta de Producto -->
-    <div class="bg-white shadow-lg rounded-lg overflow-hidden mb-8">
-      <div class="flex flex-col md:flex-row">
-        <!-- Imagen del Producto -->
-        <div class="md:w-1/2">
-          <a href="#">
-            <img class="w-1/2 h-3/4 object-fill" src="{{urlImage}}" alt="">
-          </a>
-        </div>
-  
-        <!-- Detalles del Producto -->
-        <div class="md:w-1/2 p-6">
-          <form action="#" method="POST" class="space-y-6">
-            <h2 class="text-3xl font-semibold text-gray-800 mb-4">{{name}}</h2>
-  
-            <!-- Lista de Información del Producto -->
-            <ul class="space-y-4">
-              <li>
-                <h5 class="text-xl font-semibold text-gray-700">Precio: <span class="text-gray-900">{{price}}</span></h5>
-              </li>
-              <li>
-                <p class="text-gray-600">Descripción: {{description}}</p>
-              </li>
-              <li>
-                <h6 class="text-lg font-medium text-gray-700">
-                  Cantidad:
-                  <input type="number" [(ngModel)]="quantity" id="quantity" name="quantity"
-                         class="border border-gray-300 rounded-lg px-3 py-1 w-20 ml-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                         min="1" max="5" value="1" autocomplete="off">
-                </h6>
-              </li>
-            </ul>
-  
-            <!-- Botón Añadir al Carrito -->
-            <button (click)="addCart(id)" class="w-full bg-gray-800 text-white font-bold py-3 rounded-lg hover:bg-gray-900 transition duration-300">
-              Añadir al carrito
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
-    <a class="nav-link" [routerLink]="['/cart/summary']">Carrito</a>
   </div>
-  
+</div>
+<app-footer></app-footer>
