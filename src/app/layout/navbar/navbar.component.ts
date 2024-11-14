@@ -44,5 +44,11 @@ menuOpen: any;
   gotoHome(){
     this.router.navigate(['/']);
   }
+  gotoAbout(){
+    this.router.navigate(['/about']);
+  }
+  gotoContact(){
+    this.router.navigate(['/contact']);
+  }
 }
 

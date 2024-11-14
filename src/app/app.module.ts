@@ -35,10 +35,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
+import { AboutComponent } from './components/about/about.component';
+import { ContactFormComponent } from './components/contact-form/contact-form.component';
 
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
+  { path: 'about', component: AboutComponent },
+  { path: 'contact', component:ContactFormComponent},
   { path: 'admin/product', component: ProductListComponent,  canActivate: [authGuard], },
   { path: 'admin/product/addproduct', component: ProductAddComponent ,  canActivate: [authGuard],},
   { path: 'admin/product/update/:id', component: ProductAddComponent ,  canActivate: [authGuard], },
@@ -46,6 +50,7 @@ const routes: Routes = [
   { path: 'admin/category/add', component: CategoryAddComponent ,  canActivate: [authGuard],},
   { path: 'admin/category/update/:id', component: CategoryAddComponent ,  canActivate: [authGuard],},
   { path: 'cart/detailproduct/:id', component: DetailProductComponent },
+ 
   {
     path: 'cart/summary',
     component: SumaryOrderComponent,
@@ -74,6 +79,8 @@ const routes: Routes = [
     LogoutComponent,
     CheckoutComponent,
     ConfirmationComponent,
+    AboutComponent,
+    ContactFormComponent,
     
   ],
   imports: [

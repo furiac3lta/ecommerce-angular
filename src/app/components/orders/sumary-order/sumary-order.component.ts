@@ -10,6 +10,7 @@ import { PaymentService } from 'src/app/services/payment.service'; // Importar P
 import { environment } from 'src/enviroments/enviroment';
 import { SessionStorageService } from 'src/app/services/session-storage.service';
 
+
 declare var MercadoPago: any;
 
 @Component({

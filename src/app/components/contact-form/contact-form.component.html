@@ -1,0 +1,22 @@
+<app-navbar></app-navbar>
+
+<div class="contact-form-container flex items-center justify-center h-screen bg-gray-200 ">
+    <div class="contact-form p-8 bg-gray-100 rounded-lg shadow-lg w-full lg:w-1/2 xl:w-1/2 flex flex-col items-center">
+      <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Contáctanos</h2>
+      <form (ngSubmit)="onSubmit()" #contactForm="ngForm" class="w-full lg:w-2/3 xl:w-1/2">
+        <div class="w-full mb-6">
+          <input type="text" id="name" name="name" ngModel required class="hover:ring-teal-300 text-s w-full py-3 px-10 bg-slate-200 placeholder:font-normal rounded hover:ring-1 outline-teal-500" placeholder="Nombre">
+        </div>
+        <div class="w-full mb-6">
+          <input type="email" id="email" name="email" ngModel required class="hover:ring-teal-300 text-s w-full py-1 px-8 bg-slate-200 placeholder:font-normal rounded hover:ring-1 outline-teal-500" placeholder="Correo Electrónico">
+        </div>
+        <div class="w-full mb-6">
+          <textarea id="message" name="message" ngModel required class="hover:ring-teal-300 text-s w-full py-1 px-8 bg-slate-200 placeholder:font-normal rounded hover:ring-1 outline-teal-500" placeholder="Mensaje"></textarea>
+        </div>
+        <div class="w-full mt-4">
+          <button type="submit" [disabled]="!contactForm.valid" class="py-2 bg-teal-400 w-full rounded text-yellow-50 font-bold hover:bg-teal-700 transition-all duration-500">Enviar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+<app-footer></app-footer>
