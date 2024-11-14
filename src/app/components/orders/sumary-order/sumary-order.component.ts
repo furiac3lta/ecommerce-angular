@@ -9,7 +9,7 @@ import { UserService } from 'src/app/services/user.service';
 import { PaymentService } from 'src/app/services/payment.service'; // Importar PaymentService
 import { environment } from 'src/enviroments/enviroment';
 import { SessionStorageService } from 'src/app/services/session-storage.service';
-
+import { FormsModule } from '@angular/forms'; // Asegúrate de que FormsModule esté importado.
 
 declare var MercadoPago: any;
 
@@ -112,4 +112,14 @@ export class SumaryOrderComponent implements OnInit {
       }
     );
   }
+ 
+
+updateQuantity(item: ItemCart): void {
+  if (item.quantity < 1) {
+    item.quantity = 1; // Aseguramos que la cantidad sea al menos 1.
+  }
+  this.cartService.updateItemQuantity(item.productId, item.quantity);
+  this.totalCart = this.cartService.totalCart();
+}
+
 }

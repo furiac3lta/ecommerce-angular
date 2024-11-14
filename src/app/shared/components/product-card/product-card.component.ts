@@ -1,7 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { Product } from 'src/app/core/interfaces/product.interface';
-
+import { CartService } from 'src/app/services/cart.service';
+import { ToastrService } from 'ngx-toastr';
+import { ItemCart } from 'src/app/common/item-cart';
 
 @Component({
   selector: 'app-product-card',
@@ -22,9 +24,16 @@ export class ProductCardComponent {
     userId: 1,
     categoryId: 1
   };
-  constructor(private router: Router) {}
+
+  constructor(private router: Router, private cartService: CartService, private toastr: ToastrService) {}
 
   goToDetail() {
     this.router.navigate([`/cart/detailproduct`, this.product.id]);
+  }
+
+  addCart() {
+    const item = new ItemCart(this.product.id, this.product.name, 1, this.product.price);
+    this.cartService.addItemCart(item);
+    this.toastr.success('Producto añadido al carrito de compras', 'Carrito Compras');
   }
 }

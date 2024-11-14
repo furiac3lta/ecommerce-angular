@@ -35,4 +35,13 @@ export class CartService {
     });
     return this.itemList;
   }
+  updateItemQuantity(productId: number, quantity: number): void {
+    if (this.items.has(productId)) {
+      const item = this.items.get(productId);
+      if (item) {
+        item.quantity = quantity;
+        this.items.set(productId, item);
+      }
+    }
+  }
 }

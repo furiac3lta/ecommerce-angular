@@ -50,5 +50,8 @@ menuOpen: any;
   gotoContact(){
     this.router.navigate(['/contact']);
   }
+  gotoProduct(){
+    this.router.navigate(['/product']);
+  }
 }
 

@@ -1,4 +1,4 @@
-
+<!-- 
 <mat-card class="w-[320px] hover:shadow-xl transition-all">
     <img (click)="goToDetail()" class="h-[350px] object-cover cursor-pointer" mat-card-image [src]="product.urlImage" [alt]="product.name">
     <mat-card-content class="flex justify-center items-center flex-col gap-1 pt-3">
@@ -8,4 +8,16 @@
     <mat-card-actions class="flex justify-center p-5 ">
         <button mat-flat-button color="primary" class="bg-gray-300 text-gray-800 w-full hover:bg-customGreenHover hover:text-white transition-all duration-500">Añadir al carrito</button>
     </mat-card-actions>
+</mat-card> -->
+
+<mat-card class="w-[320px] hover:shadow-xl transition-all">
+    <img (click)="goToDetail()" class="h-[350px] object-cover cursor-pointer" mat-card-image [src]="product.urlImage" [alt]="product.name">
+    <mat-card-content class="flex justify-center items-center flex-col gap-1 pt-3">
+        <h3 (click)="goToDetail()" class="capitalize text-lg text-gray-800 font-semibold cursor-pointer hover:text-teal-700 transition-all">{{product.name}}</h3>
+        <span>{{product.price}}</span>
+    </mat-card-content>
+    <mat-card-actions class="flex justify-center p-5 ">
+        <button (click)="addCart()" mat-flat-button color="primary" class="bg-gray-300 text-gray-800 w-full hover:bg-customGreenHover hover:text-white transition-all duration-500">Añadir al carrito</button>
+    </mat-card-actions>
 </mat-card>
+

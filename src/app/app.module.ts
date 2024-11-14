@@ -37,6 +37,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { AboutComponent } from './components/about/about.component';
 import { ContactFormComponent } from './components/contact-form/contact-form.component';
+import { ProductHomeComponent } from './components/product-home/product-home.component';
 
 
 const routes: Routes = [
@@ -50,7 +51,7 @@ const routes: Routes = [
   { path: 'admin/category/add', component: CategoryAddComponent ,  canActivate: [authGuard],},
   { path: 'admin/category/update/:id', component: CategoryAddComponent ,  canActivate: [authGuard],},
   { path: 'cart/detailproduct/:id', component: DetailProductComponent },
- 
+ { path:'product', component:ProductHomeComponent},
   {
     path: 'cart/summary',
     component: SumaryOrderComponent,
@@ -81,6 +82,7 @@ const routes: Routes = [
     ConfirmationComponent,
     AboutComponent,
     ContactFormComponent,
+    ProductHomeComponent,
     
   ],
   imports: [
