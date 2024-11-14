@@ -9,6 +9,9 @@ module.exports = {
         customGreen: '#007c85', // Nombre personalizado para el color
         customGreenHover:'#00585e'
       },
+      height: {
+        'without-layout': 'calc(100vh - 209px)',
+      },
     },
   },
   plugins: [],
