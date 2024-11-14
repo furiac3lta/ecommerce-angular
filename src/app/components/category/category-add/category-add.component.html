@@ -1,32 +1,28 @@
 <app-navbar></app-navbar>
-<!-- Page Content Add Categories -->
-<div class="container">
+<div class="container mx-auto p-4">
     <!-- Page Heading/Breadcrumbs -->
-    <h1 class="mt-4 mb-3">
-        eCommerce <small>Categorías</small>
+    <h1 class="text-2xl font-bold mt-4 mb-2">
+        eCommerce <small class="text-gray-500 font-normal">/ Categorías</small>
     </h1>
 
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="">Categorias</a></li>
-        <li class="breadcrumb-item active">Crear Categoría</li>
-    </ol>
+   
 
-    <h2>Crear Categoría</h2>
-    <form class="form-horizontal">
+    <h2 class="text-xl font-semibold mb-4 mt-8">Crear Categoría</h2>
+
+    <form class="space-y-4">
         <input type="hidden" [(ngModel)]="id" name="id">
-        <div class="form-group">
-            <label class="control-label col-sm-2" for="nombre">Nombre:</label>
-            <div class="col-sm-10">
-                <input [(ngModel)]="name" class="form-control" id="name" name="name"
-                    placeholder="Ingrese el nombre de la categoría" autocomplete="off" minlength="5">
-            </div>
+        
+        <div class="flex flex-col space-y-2">
+            <label for="nombre" class="text-gray-700">Nombre:</label>
+            <input [(ngModel)]="name" class="input-item w-1/2" id="name" name="name"
+                placeholder="Ingrese el nombre de la categoría" autocomplete="off" minlength="5">
         </div>
-        <div class="row">
-            <div class="col-sm-2">
-                <button class="btn btn-success" (click)="addCategory()">
-                    <span class="glyphicon glyphicon-saved"></span> Guardar
-                </button>
-            </div>
+
+        <div class="flex">
+            <button class="button-item w-32 text-center py-2 px-4 rounded flex items-center" (click)="addCategory()">
+                <span class="material-icons">save</span> Guardar
+            </button>
         </div>
     </form>
 </div>
+<app-footer></app-footer>

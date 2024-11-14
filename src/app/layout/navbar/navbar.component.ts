@@ -53,5 +53,11 @@ menuOpen: any;
   gotoProduct(){
     this.router.navigate(['/product']);
   }
+  gotoProd(){
+    this.router.navigate(['/admin/product']);
+  }
+  gotoCat(){
+    this.router.navigate(['/admin/category']);
+  }
 }
 

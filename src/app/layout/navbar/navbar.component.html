@@ -32,8 +32,8 @@
         <!-- Enlaces condicionales -->
         <ng-container *ngIf="isAdmin; else guestLinks">
           <!-- Enlaces para Administrador -->
-          <li class="nav-item"><a routerLink="/dashboard">Dashboard</a></li>
-          <li class="nav-item"><a routerLink="/users">Usuarios</a></li>
+          <li class="nav-item"><a (click)="gotoProd()">abm Prod</a></li>
+          <li class="nav-item"><a (click)="gotoCat()">abm Cat</a></li>
         </ng-container>
 
         <!-- Enlaces para Invitado -->
