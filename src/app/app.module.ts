@@ -44,23 +44,20 @@ const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'about', component: AboutComponent },
   { path: 'contact', component:ContactFormComponent},
+  { path: 'user/register', component: RegistrationComponent },
+  { path: 'user/login', component: LoginComponent },
+  { path: 'logout', component: LogoutComponent },
+  { path: 'confirmacion-pago', component: ConfirmationComponent },
+  { path: 'cart/detailproduct/:id', component: DetailProductComponent },
+  { path:'product', component:ProductHomeComponent},
   { path: 'admin/product', component: ProductListComponent,  canActivate: [authGuard], },
   { path: 'admin/product/addproduct', component: ProductAddComponent ,  canActivate: [authGuard],},
   { path: 'admin/product/update/:id', component: ProductAddComponent ,  canActivate: [authGuard], },
   { path: 'admin/category', component: CategoryListComponent,  canActivate: [authGuard], },
   { path: 'admin/category/add', component: CategoryAddComponent ,  canActivate: [authGuard],},
   { path: 'admin/category/update/:id', component: CategoryAddComponent ,  canActivate: [authGuard],},
-  { path: 'cart/detailproduct/:id', component: DetailProductComponent },
- { path:'product', component:ProductHomeComponent},
-  {
-    path: 'cart/summary',
-    component: SumaryOrderComponent,
-    canActivate: [authGuard],
-  },
-  { path: 'user/register', component: RegistrationComponent },
-  { path: 'user/login', component: LoginComponent },
-  { path: 'logout', component: LogoutComponent },
-  { path: 'confirmacion-pago', component: ConfirmationComponent },
+  { path: 'cart/summary',component: SumaryOrderComponent, canActivate: [authGuard],},
+ 
 ];
 
 @NgModule({
