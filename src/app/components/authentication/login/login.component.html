@@ -1,88 +1,53 @@
-  
-<!--  <app-header-user></app-header-user>
- -->
-  <!-- Page Content -->
-<!--   <div class="">
+<app-navbar></app-navbar>
+<body class="bg-gray-10">
+  <form (ngSubmit)="login()">
+    <div class="flex justify-center items-center h-without-layout">
+      <div class="w-full md:w-1/4 flex flex-col items-center">
+        <!-- text login -->
 
-    <div class="">
-      <div class="">
-        <div class="">
+        <h1 class="text-xl font-bold text-gray-600 mb-6">LOGIN</h1>
+
+        <!-- email input -->
+        <div class="w-3/4 mb-6">
+          <input
+            [(ngModel)]="username"
+            type="email"
+            name="email"
+            id="email"
+            class="hover:ring-teal-300 text-s size w-full py-1 px-8 bg-slate-200 placeholder:font-normal rounded hover:ring-1 outline-teal-500"
+            placeholder="Ingrese su correo"
+          />
         </div>
-        <div class="">
-          <div class="">
-            <h2>Ingresar</h2>
-
-          </div>
+        <!-- password input -->
+        <div class="w-3/4 mb-6">
+          <input
+            [(ngModel)]="password"
+            type="password"
+            name="password"
+            id="password"
+            class="hover:ring-teal-300 text-s size w-full py-1 px-8 bg-slate-200 placeholder:font-normal rounded hover:ring-1 outline-teal-500"
+            placeholder="Ingrese su contraseña"
+          />
         </div>
-      </div>
-    </div>
+        <!-- remember input -->
 
-    
-    <form  (ngSubmit)="login()">
-      <div class="">
-        <label for="email"> Email:  </label>      
-        <input [(ngModel)]="username" type="email" class="form-control" id="email" name="email" placeholder="Ingrese su email" required autocomplete="off"> 
-
-      </div>
-
-      <div class="flex justify-center items-center">
-        <label for="pwd"> Contraseña:</label>
-        <input [(ngModel)]="password" type="password"  class="form-control" id="password" name="password" placeholder="Ingrese su contraseña" required>       
-      </div>
-
-      <div class="form-group">
-        <div class="col-sm-2">
-          <button type="submit" class="btn btn-dark"> <span class="glyphicon glyphicon-ok"></span> Ingresar</button>
-        </div>      
-      </div>    
-    </form>
-    
-    <a class="card-link" [routerLink]= "['/user/register']">Si aún no tiene cuenta aqui puede registrarse</a>
-  </div> -->
-  <!-- /.container -->
-   <!-- component -->
-<body class="bg-gray-10 ">
- 
-
-  <form  (ngSubmit)="login()">
-    <div class="flex justify-center  items-center h-screen">
-     
-      <div class="w-full md:w-1/4 flex flex-col items-center" >
-          <!-- text login -->
-          
-          <h1 class="text-xl font-bold text-gray-600 mb-6">LOGIN</h1>
-         
-          <!-- email input -->
-          <div class="w-3/4 mb-6">
-              <input [(ngModel)]="username"  type="email" name="email" id="email" class="hover:ring-teal-300 text-s size w-full py-1 px-8 bg-slate-200 placeholder:font-normal rounded hover:ring-1 outline-teal-500" placeholder="Ingrese su correo">
-          </div>
-          <!-- password input -->
-          <div class="w-3/4 mb-6">
-              <input [(ngModel)]="password"  type="password" name="password" id="password" class="hover:ring-teal-300 text-s size w-full py-1 px-8 bg-slate-200 placeholder:font-normal rounded hover:ring-1 outline-teal-500 " placeholder="Ingrese su contraseña">
-          </div>
-          <!-- remember input -->
-          
-          <!-- button -->
-          <div class="w-3/4 mt-4">
-              <button type="submit" class="py-2 bg-teal-400 w-full rounded text-yellow-50 font-bold hover:bg-teal-700 transition-all duration-500"> LOGIN</button>
-          </div>
-          <div class="w-3/4 mt-4">
+        <!-- button -->
+        <div class="w-3/4 mt-4">
+          <button
+            type="submit"
+            class="py-2 bg-teal-400 w-full rounded text-yellow-50 font-bold hover:bg-teal-700 transition-all duration-500"
+          >
+            LOGIN
+          </button>
+        </div>
+         <div class="w-3/4 mt-4">
             <a class="text-xs text-zinc-600 hover:text-zinc-900 md:w-1/4 text-center" [routerLink]="['/user/register']">Si aún no tiene cuenta, aquí puede registrarse</a>
           </div>
-          <div class="w-3/4 mt-4">
-            <a
-              class="text-xs text-zinc-600 hover:text-zinc-900 md:w-1/4 text-center"
-              [routerLink]="['/']"
-              >home</a
-            >
-          </div>
-          
+
+         
       </div>
-     
-     </div>
-    
-   </form>
-  
-
-
+    </div>
+  </form>
 </body>
+
+<app-footer></app-footer>

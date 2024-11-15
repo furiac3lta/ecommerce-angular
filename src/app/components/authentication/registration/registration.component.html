@@ -1,6 +1,8 @@
+<app-navbar></app-navbar>
+
 <body class="bg-gray-10">
   <form (ngSubmit)="register()">
-    <div class="flex justify-center items-center h-screen">
+    <div class="flex justify-center items-center h-without-layout">
       <div class="w-full md:w-1/4 flex flex-col items-center">
         <!-- Título de Registro -->
         <h1 class="text-2xl font-bold text-gray-600 mb-6">REGISTRO</h1>
@@ -110,14 +112,9 @@
             GUARDAR
           </button>
         </div>
-        <div class="w-3/4 mt-4">
-          <a
-            class="text-xs text-zinc-600 hover:text-zinc-900 md:w-1/4 text-center"
-            [routerLink]="['/']"
-            >home</a
-          >
-        </div>
+  
       </div>
     </div>
   </form>
 </body>
+<app-footer></app-footer>
