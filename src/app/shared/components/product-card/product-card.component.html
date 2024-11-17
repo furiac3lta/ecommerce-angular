@@ -15,9 +15,9 @@
     >
       {{ product.name }}
     </h3>
-    <span><b>$</b> {{ product.price }}</span>
   </mat-card-content>
-  <span class="ml-3">{{product.code}}</span>
+  <span class="text-2xl mt-4 ml-3"><b>$</b> {{ product.price }}</span>
+  <span class="ml-3 text-teal-600">{{ product.code }}</span>
   <mat-card-actions class="flex justify-center p-5">
     <button
       (click)="addCart()"
