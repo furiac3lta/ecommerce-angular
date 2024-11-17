@@ -43,7 +43,13 @@
             <input matInput [(ngModel)]="price" type="number" step="any" id="precio" name="precio" placeholder="Ingrese el precio del producto" autocomplete="off" required>
           </mat-form-field>
         </div>
-  
+        <!-- Campo cuotas -->
+        <div>
+          <label for="precio" class="block text-gray-600 mb-2">Cuotas</label>
+          <mat-form-field appearance="outline" class="w-full">
+            <input matInput [(ngModel)]="code" type="text" step="any" id="code" name="code" placeholder="Ingrese cantidad decuotas" autocomplete="off" required>
+          </mat-form-field>
+        </div>
         <!-- Campo Imagen (input[type="file"] fuera de mat-form-field) -->
         <div class="w-full">
           <label for="img" class="block text-gray-600 mb-2">Imagen</label>

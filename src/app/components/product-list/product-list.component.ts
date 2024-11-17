@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 export class ProductListComponent implements OnInit {
   products : Product[] = [];
   // Define la lista de columnas que la tabla debe mostrar
-  displayedColumns: string[] = ['code', 'name', 'description', 'price', 'edit', 'delete'];
+  displayedColumns: string[] = ['id', 'name', 'description', 'price', 'code', 'edit', 'delete'];
   
 
   constructor(private productService:ProductService,  private sessionStorage:SessionStorageService, private router: Router){}
