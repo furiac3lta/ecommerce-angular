@@ -1,13 +1,16 @@
   <app-navbar></app-navbar>
   <app-hero></app-hero>
+
+   
   <div class="main-content">
-          <div class="flex justify-center items-center flex-wrap gap-10 w-full my-20">
-            <app-product-card *ngFor="let p of products" [product]="p"></app-product-card>
-          </div>
-          <div class="flex justify-center mt-10">
-            <button (click)="gotoProduct()" class="button-item w-48 px-6 py-3 rounded">Ver Más</button>
-          </div>
-  </div>
+    <div class="flex justify-center items-center flex-wrap gap-10 w-full my-20">
+      <app-product-card *ngFor="let p of products" [product]="p"></app-product-card>
+    </div>
+    <div class="flex justify-center mt-10">
+      <button (click)="gotoProduct()" class="button-item w-48 px-6 py-3 rounded">Ver Más</button>
+    </div>
+</div>
+ 
 
 
   <!-- Footer -->

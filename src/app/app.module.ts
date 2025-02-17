@@ -38,6 +38,7 @@ import { MatOptionModule } from '@angular/material/core';
 import { AboutComponent } from './components/about/about.component';
 import { ContactFormComponent } from './components/contact-form/contact-form.component';
 import { ProductHomeComponent } from './components/product-home/product-home.component';
+import { AsideProductsComponent } from './layout/aside-products/aside-products.component';
 
 
 const routes: Routes = [
@@ -79,8 +80,7 @@ const routes: Routes = [
     ConfirmationComponent,
     AboutComponent,
     ContactFormComponent,
-    ProductHomeComponent,
-    
+    ProductHomeComponent,  
   ],
   imports: [
     BrowserModule,
@@ -100,6 +100,7 @@ const routes: Routes = [
     MatInputModule,
     MatSelectModule,
     MatOptionModule,
+    AsideProductsComponent,
   ],
   providers: [
     {

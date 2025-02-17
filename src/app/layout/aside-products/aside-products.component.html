@@ -1,0 +1,28 @@
+<aside class="w-full md:w-[220px] px-4 sm:px-0">
+  <mat-accordion>
+    <mat-expansion-panel [expanded]="!isMobile">
+      <mat-expansion-panel-header>
+        <mat-panel-title class="text-lg font-semibold text-gray-600">
+            Categorías
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div>
+        <ul>
+          <button (click)="selectCategory(null)" mat-stroked-button color="primary"
+            class="w-full text-sm mb-2 md:mb-4" *ngIf="currentCategory">
+            Ver todos
+          </button>
+          <li *ngFor="let category of categories">
+            <button (click)="selectCategory(category)" mat-stroked-button
+              class="w-full text-sm mb-2 md:mb-4" [ngClass]="{
+                  'bg-customGreen text-white': currentCategory === category
+                }">
+              {{ category.name }}
+            </button>
+          </li>
+        </ul>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+</aside>

@@ -1,4 +1,4 @@
-<mat-card class="w-[320px] hover:shadow-xl transition-all">
+ <mat-card class="w-[300px] hover:shadow-xl transition-all">
   <img
     (click)="goToDetail()"
     class="h-[350px] object-cover cursor-pointer"
@@ -7,7 +7,7 @@
     [alt]="product.name"
   />
   <mat-card-content
-    class="flex justify-center items-center flex-col gap-1 pt-3"
+    class="flex justify-center items-center flex-col gap-1 pt-3 "
   >
     <h3
       (click)="goToDetail()"
@@ -16,7 +16,7 @@
       {{ product.name }}
     </h3>
   </mat-card-content>
-  <span class="text-2xl mt-4 ml-3"><b>$</b> {{ product.price }}</span>
+  <span class="text-2xl mt-4 ml-3">{{ product.price | currency: 'ARS' : 'symbol-narrow'  }}</span>
   <span class="ml-3 text-teal-600">{{ product.code }}</span>
   <mat-card-actions class="flex justify-center p-5">
     <button

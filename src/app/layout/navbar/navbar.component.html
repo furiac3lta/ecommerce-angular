@@ -46,7 +46,7 @@
 
     <!-- Botones de Carrito y Usuario -->
     <div class="flex items-center space-x-4">
-      <button mat-icon-button class="ml-8 mb-3" (click)="cart()">
+      <button mat-icon-button class="ml-8 mb-3 cart-button" (click)="cart()"  [matBadge]="cartItemsQty"  matBadgeColor="accent">
         <mat-icon class="text-gray-700 text-3xl">local_mall</mat-icon>
       </button>
       <button

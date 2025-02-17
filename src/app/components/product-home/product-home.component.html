@@ -1,12 +1,32 @@
 <app-navbar></app-navbar>
+<div class="flex justify-center w-full mb-4">
+</div>
+<div class="max-w-[1260px] mx-auto my-20 flex flex-col md:flex-row gap-8">
+     <!-- Botón para mostrar todas las categorías -->
+  
+  <!-- Aside -->
+  <app-aside-products 
+    class="w-full md:w-[220px] flex-shrink-0" 
+    (categorySelected)="filterByCategory($event)">
+  </app-aside-products>
 
-<div class="main-content">
-  <div class="flex justify-center items-center flex-wrap gap-10 w-full my-20">
+ <!-- Productos o Mensaje de "No hay productos" -->
+ <div class="flex justify-center items-center flex-wrap gap-8 w-full">
+  <!-- Mensaje si no hay productos -->
+  <p *ngIf="productsFiltered.length === 0" class="text-center text-gray-600 text-lg w-full font-bold">
+    No hay productos
+  </p>
+
+  <!-- Productos -->
+  <div class="flex justify-center items-center flex-wrap gap-8 w-full">
     <app-product-card
-      *ngFor="let p of products"
+      *ngFor="let p of productsFiltered"
       [product]="p"
     ></app-product-card>
   </div>
 </div>
+</div>
 
 <app-footer></app-footer>
+
+
