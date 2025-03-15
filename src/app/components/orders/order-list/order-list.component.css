@@ -1,32 +1,71 @@
-.table th {
-    background-color: #343a40; /* Color oscuro para el encabezado */
-    color: white;
-    font-weight: bold;
-    text-transform: uppercase;
-  }
-  
-  .table td {
-    vertical-align: middle;
-  }
-  
-  .badge {
-    font-size: 14px;
-    padding: 5px 10px;
-    border-radius: 5px;
-  }
-  
-  .badge-CANCELLED {
-    background-color: #dc3545; /* Rojo */
-    color: white;
-  }
-  
-  .badge-PENDING {
-    background-color: #ffc107; /* Amarillo */
-    color: black;
-  }
-  
-  .badge-COMPLETED {
-    background-color: #28a745; /* Verde */
-    color: white;
-  }
-  
+.orders-container {
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+}
+
+.order-card {
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: #fff;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.order-card:hover {
+  transform: scale(1.02);
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #007bff;
+  color: white;
+  padding: 10px;
+  font-weight: bold;
+  border-radius: 8px 8px 0 0;
+}
+
+.order-body {
+  padding: 15px;
+}
+
+.badge {
+  font-size: 0.85rem;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.badge-cancelled {
+  background-color: #dc3545;
+  color: white;
+}
+
+.badge-completed {
+  background-color: #28a745;
+  color: white;
+}
+
+.badge-pending {
+  background-color: #ffc107;
+  color: black;
+}
+
+.list-group-item {
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.total-container {
+  text-align: right;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #28a745;
+  padding-top: 10px;
+}
