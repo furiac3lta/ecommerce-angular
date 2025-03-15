@@ -1,0 +1,32 @@
+.table th {
+    background-color: #343a40; /* Color oscuro para el encabezado */
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  
+  .table td {
+    vertical-align: middle;
+  }
+  
+  .badge {
+    font-size: 14px;
+    padding: 5px 10px;
+    border-radius: 5px;
+  }
+  
+  .badge-CANCELLED {
+    background-color: #dc3545; /* Rojo */
+    color: white;
+  }
+  
+  .badge-PENDING {
+    background-color: #ffc107; /* Amarillo */
+    color: black;
+  }
+  
+  .badge-COMPLETED {
+    background-color: #28a745; /* Verde */
+    color: white;
+  }
+  

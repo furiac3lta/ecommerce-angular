@@ -30,4 +30,8 @@ export class OrderService {
   getOrderById(orderId: number): Observable<Order> {
     return this.httpClient.get<Order>(`${this.apiUrl}/${orderId}`, { headers: this.headerService.headers });
   }
+  
+  getAllOrders(): Observable<Order[]> {
+    return this.httpClient.get<Order[]>(this.apiUrl, { headers: this.headerService.headers });
+  }
 }

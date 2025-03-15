@@ -39,6 +39,7 @@ import { AboutComponent } from './components/about/about.component';
 import { ContactFormComponent } from './components/contact-form/contact-form.component';
 import { ProductHomeComponent } from './components/product-home/product-home.component';
 import { AsideProductsComponent } from './layout/aside-products/aside-products.component';
+import { OrderListComponent } from './components/orders/order-list/order-list.component';
 
 
 const routes: Routes = [
@@ -58,7 +59,7 @@ const routes: Routes = [
   { path: 'admin/category/add', component: CategoryAddComponent ,  canActivate: [authGuard],},
   { path: 'admin/category/update/:id', component: CategoryAddComponent ,  canActivate: [authGuard],},
   { path: 'cart/summary',component: SumaryOrderComponent, canActivate: [authGuard],},
- 
+  { path: 'admin/orders', component: OrderListComponent, canActivate:[authGuard],},
 ];
 
 @NgModule({
@@ -80,7 +81,8 @@ const routes: Routes = [
     ConfirmationComponent,
     AboutComponent,
     ContactFormComponent,
-    ProductHomeComponent,  
+    ProductHomeComponent,
+    OrderListComponent,  
   ],
   imports: [
     BrowserModule,
