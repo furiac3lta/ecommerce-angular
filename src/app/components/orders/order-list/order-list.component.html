@@ -1,3 +1,5 @@
+<app-navbar></app-navbar>
+
 <div *ngIf="orders && orders.length > 0; else noOrders">
   <div class="container">
     <div class="row">
@@ -71,3 +73,5 @@
 <ng-template #noOrders>
   <p class="text-center text-muted">No hay órdenes disponibles.</p>
 </ng-template>
+
+<app-footer></app-footer>
