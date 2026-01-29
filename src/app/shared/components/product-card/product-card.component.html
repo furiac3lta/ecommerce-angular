@@ -1,31 +1,25 @@
- <mat-card class="w-[300px] hover:shadow-xl transition-all">
-  <img
-    (click)="goToDetail()"
-    class="h-[350px] object-cover cursor-pointer"
-    mat-card-image
-    [src]="product.urlImage"
-    [alt]="product.name"
-  />
-  <mat-card-content
-    class="flex justify-center items-center flex-col gap-1 pt-3 "
-  >
-    <h3
-      (click)="goToDetail()"
-      class="capitalize text-lg text-gray-800 font-semibold cursor-pointer hover:text-teal-700 transition-all"
-    >
-      {{ product.name }}
-    </h3>
+<mat-card class="product-card">
+  <div class="product-media" (click)="goToDetail()">
+    <img
+      mat-card-image
+      [src]="product.urlImage"
+      [alt]="product.name"
+    />
+    <span class="product-tag">BJJ Gi</span>
+  </div>
+  <mat-card-content class="product-body">
+    <h3 (click)="goToDetail()" class="product-title">{{ product.name }}</h3>
+    <p class="product-meta">Código {{ product.code }}</p>
+    <div class="product-price">{{ product.price | currency: 'ARS' : 'symbol-narrow' }}</div>
   </mat-card-content>
-  <span class="text-2xl mt-4 ml-3">{{ product.price | currency: 'ARS' : 'symbol-narrow'  }}</span>
-  <span class="ml-3 text-teal-600">{{ product.code }}</span>
-  <mat-card-actions class="flex justify-center p-5">
+  <mat-card-actions class="product-actions">
     <button
       (click)="addCart()"
       mat-flat-button
       color="primary"
-      class="bg-gray-300 text-gray-800 w-full hover:bg-customGreenHover hover:text-white transition-all duration-500"
+      class="product-cta"
     >
-      Añadir al carrito
+      Elegir talle
     </button>
   </mat-card-actions>
 </mat-card>

@@ -71,12 +71,12 @@ export class CartService {
   }
 
   addItemCart(itemCart: ItemCart) {
-    this.items.set(itemCart.productId, itemCart);
+    this.items.set(itemCart.productVariantId, itemCart);
     this.updateCartState();
   }
 
-  deleteItemCart(productId: number) {
-    this.items.delete(productId);
+  deleteItemCart(productVariantId: number) {
+    this.items.delete(productVariantId);
     this.updateCartState();
   }
 
@@ -92,12 +92,12 @@ export class CartService {
     return Array.from(this.items.values());
   }
 
-  updateItemQuantity(productId: number, quantity: number): void {
-    if (this.items.has(productId)) {
-      const item = this.items.get(productId);
+  updateItemQuantity(productVariantId: number, quantity: number): void {
+    if (this.items.has(productVariantId)) {
+      const item = this.items.get(productVariantId);
       if (item) {
         item.quantity = quantity;
-        this.items.set(productId, item);
+        this.items.set(productVariantId, item);
         this.updateCartState();
       }
     }

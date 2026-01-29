@@ -1,62 +1,82 @@
 <app-navbar></app-navbar>
 
-<div class="container mx-auto px-4 py-8" >
-  <!-- Encabezado de Página y Breadcrumbs -->
-  <h1 class="text-4xl font-semibold text-gray-800 mb-4">
-    <span class="text-gray-600">Detalle Producto</span>
-  </h1>
+<div class="max-w-[1100px] mx-auto px-4 py-10">
+  <div class="grid gap-8 md:grid-cols-2">
+    <div class="product-image-card">
+      <img class="product-image" src="{{ urlImage }}" alt="{{ name }}" />
+    </div>
 
-  <!-- Tarjeta de Producto -->
-  <div class="bg-white shadow-lg rounded-lg overflow-hidden mb-8">
-    <div class="flex flex-col md:flex-row">
-      <!-- Imagen del Producto -->
-      <div class="md:w-1/2">
-        <a href="#">
-          <img class="w-1/2 h-3/4 object-fill" src="{{ urlImage }}" alt="" />
-        </a>
+    <div class="space-y-6">
+      <div>
+        <p class="text-xs uppercase tracking-[0.3em] text-gray-500">Producto</p>
+        <h2 class="text-3xl">{{ name }}</h2>
+        <p class="text-gray-600 mt-2">{{ description }}</p>
       </div>
 
-      <!-- Detalles del Producto -->
-      <div class="md:w-1/2 p-6">
-        <form action="#" method="POST" class="space-y-6">
-          <h2 class="text-3xl font-semibold text-gray-800 mb-4">{{ name }}</h2>
+      <div class="flex items-center gap-4">
+        <span class="text-3xl font-semibold text-main">{{ price | currency: 'ARS' : 'symbol-narrow' }}</span>
+        <span *ngIf="selectedVariant?.gsm" class="text-xs uppercase tracking-[0.25em] text-secondary">GSM {{ selectedVariant?.gsm }}</span>
+      </div>
 
-          <!-- Lista de Información del Producto -->
-          <ul class="space-y-4">
-            <li>
-              <h5 class="text-xl font-semibold text-gray-700">
-                Precio: <span class="text-gray-900">{{ price }}</span>
-              </h5>
-            </li>
-            <li>
-              <p class="text-gray-600">Descripción: {{ description }}</p>
-            </li>
-            <li>
-              <h6 class="text-lg font-medium text-gray-700">
-                Cantidad:
-                <input
-                  type="number"
-                  [(ngModel)]="quantity"
-                  id="quantity"
-                  name="quantity"
-                  class="border border-gray-300 rounded-lg px-3 py-1 w-20 ml-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  min="1"
-                  max="5"
-                  value="1"
-                  autocomplete="off"
-                />
-              </h6>
-            </li>
-          </ul>
+      <div class="grid gap-4">
+        <label class="text-sm text-secondary">Talle y color</label>
+        <select
+          class="input-item"
+          [(ngModel)]="selectedVariantId"
+        >
+          <option *ngFor="let variant of variants" [ngValue]="variant.id">
+            {{ variant.size }} · {{ variant.color }} · {{ variant.gsm || 0 }} GSM
+          </option>
+        </select>
+        <p *ngIf="variants.length === 0" class="text-xs text-red-600">
+          No hay variantes disponibles. Consultar por WhatsApp.
+        </p>
+        <p *ngIf="selectedVariant?.availableStock !== undefined" class="text-xs text-secondary">
+          Disponible: {{ selectedVariant?.availableStock }}
+        </p>
+        <p *ngIf="selectedVariant && selectedVariant.availableStock !== undefined && selectedVariant.availableStock <= 2" class="text-xs text-red-600">
+          Últimas unidades disponibles.
+        </p>
+      </div>
 
-          <!-- Botón Añadir al Carrito -->
-          <button
-            (click)="addCart(id)"
-            class="w-full bg-gray-800 text-white font-bold py-3 rounded-lg hover:bg-gray-900 transition duration-300"
-          >
-            Añadir al carrito
-          </button>
-        </form>
+      <div class="grid gap-4">
+        <label class="text-sm text-secondary">Cantidad</label>
+        <input
+          type="number"
+          [(ngModel)]="quantity"
+          id="quantity"
+          name="quantity"
+          class="input-item w-24"
+          min="1"
+          max="5"
+          value="1"
+          autocomplete="off"
+        />
+      </div>
+
+      <button
+        (click)="addCart(id)"
+        class="w-full bg-black text-white font-semibold py-4 rounded-full hover:bg-red-700 transition duration-300"
+      >
+        Añadir al carrito
+      </button>
+
+      <div class="grid gap-3 text-sm text-secondary">
+        <div class="flex justify-between border-b border-divider pb-2">
+          <span>Talle</span><span>{{ selectedVariant?.size || '-' }}</span>
+        </div>
+        <div class="flex justify-between border-b border-divider pb-2">
+          <span>Color</span><span>{{ selectedVariant?.color || '-' }}</span>
+        </div>
+        <div class="flex justify-between border-b border-divider pb-2">
+          <span>Uso</span><span>{{ selectedVariant?.usage || '-' }}</span>
+        </div>
+        <div class="flex justify-between border-b border-divider pb-2">
+          <span>Material</span><span>{{ selectedVariant?.material || '-' }}</span>
+        </div>
+        <div class="flex justify-between border-b border-divider pb-2">
+          <span>SKU</span><span>{{ selectedVariant?.sku || '-' }}</span>
+        </div>
       </div>
     </div>
   </div>

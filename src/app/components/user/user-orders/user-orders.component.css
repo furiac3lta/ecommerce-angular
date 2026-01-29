@@ -1,0 +1,81 @@
+.user-orders {
+  display: grid;
+  gap: 16px;
+}
+
+.orders-list {
+  display: grid;
+  gap: 16px;
+}
+
+.order-card {
+  border-radius: 18px;
+  border: 1px solid var(--border-divider);
+  background: var(--bg-surface);
+  padding: 16px;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+  display: grid;
+  gap: 12px;
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.order-total {
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.shipment-box {
+  border-top: 1px solid var(--border-divider);
+  padding-top: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.status-pill {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.badge-COMPLETED {
+  background: rgba(34, 197, 94, 0.2);
+  color: #16a34a;
+}
+
+.badge-PENDING {
+  background: rgba(250, 204, 21, 0.2);
+  color: #ca8a04;
+}
+
+.badge-CANCELLED {
+  background: rgba(239, 68, 68, 0.2);
+  color: #dc2626;
+}
+
+.shipment-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.shipment-grid span {
+  display: block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  margin-bottom: 2px;
+}
+
+.section-title {
+  font-weight: 600;
+}

@@ -19,24 +19,24 @@ export class HeroComponent {
   @ViewChild('swiper',{static: false}) swiperEl!: ElementRef;
   slides = [
     {
-      title: 'El Acondicionador Perfecto para tu Cabello',
-      subtitle: 'combinación ideal',
-      description: 'Encuentra el acondicionador ideal para un cabello saludable y brillante con nuestra guía de fórmulas e ingredientes específicos para tu tipo de cabello.',
-      image: 'https://nov-costica.myshopify.com/cdn/shop/files/s-6-3.jpg?v=1728016535&width=1500',
+      title: 'Classic para entrenar diario',
+      subtitle: 'Modelo más elegido',
+      description: 'Chaqueta pearl weave 400–450 GSM + pantalón gabardina 12 oz. Listo para entrenar y competir.',
+      image: 'assets/bjj/kimono1.jpg',
       button: 'Comprar ahora'
     },
     {
-      title: 'Elige el Tratamiento Ideal para un Cabello Radiante',
-      subtitle: 'combinación ideal',
-      description: 'Escoge el tratamiento adecuado para un cabello radiante y bien cuidado siguiendo nuestra guía con las mejores fórmulas e ingredientes según tus necesidades.',
-      image: 'https://nov-costica.myshopify.com/cdn/shop/files/s-6-2.jpg?v=1728016535&width=1500',
-      button: 'Comprar ahora'
+      title: 'Lion Armor edición especial',
+      subtitle: 'Más resistente y ligero',
+      description: 'Pearl weave 450 GSM, 100% algodón. Baja contracción (≈4%) y máxima durabilidad.',
+      image: 'assets/bjj/kimono2.jpg',
+      button: 'Ver modelos'
     },{
-      title: 'Cómo Hidratar tu Cabello para un Brillo Saludable',
-      subtitle: 'combinación ideal',
-      description: 'Descubre cómo elegir el mejor producto hidratante para mantener tu cabello sano y luminoso con nuestra guía adaptada a cada tipo de cabello.',
-      image: 'https://nov-costica.myshopify.com/cdn/shop/files/s-6-1.jpg?v=1728016536&width=2000',
-      button: 'Comprar ahora'
+      title: 'Ripstop para climas cálidos',
+      subtitle: 'Peso mínimo',
+      description: 'Tela antidesgarro y liviana para entrenar en verano o competir con peso ajustado.',
+      image: 'assets/bjj/kimono3.jpg',
+      button: 'Explorar talles'
     }
   ]
   constructor(private swiperCustomElementService: SwiperCustomElementService,private router: Router) {}

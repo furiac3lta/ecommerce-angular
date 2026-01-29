@@ -1,69 +1,193 @@
 <app-navbar></app-navbar>
 
-  <div class="flex justify-center items-center min-h-screen bg-gray-50 px-4 ">
-    <div class="w-full max-w-2xl bg-white shadow-lg rounded-lg p-8 md:p-12">
-      <!-- Título -->
-      <h2 class="text-3xl font-semibold text-center text-gray-800 mb-6">Crear Producto</h2>
-  
-      <!-- Formulario de Producto -->
-      <form (ngSubmit)="addProduct()" enctype="multipart/form-data" class="space-y-8">
-  
-        <!-- Campo Categoría -->
-        <div>
-          <label for="category" class="block text-gray-600 mb-2">Elija una categoría</label>
-          <mat-form-field appearance="outline" class="w-full">
-            <mat-select [(ngModel)]="categoryId" name="category" id="category" required>
-              <mat-option *ngFor="let categoria of categories" [value]="categoria.id">
-                {{ categoria.name }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-  
-        <!-- Campo Nombre -->
-        <div>
-          <label for="nombre" class="block text-gray-600 mb-2">Nombre</label>
-          <mat-form-field appearance="outline" class="w-full">
-            <input matInput [(ngModel)]="name" type="text" id="nombre" name="nombre" placeholder="Ingrese el nombre del producto" autocomplete="off" required>
-          </mat-form-field>
-        </div>
-  
-        <!-- Campo Descripción -->
-        <div>
-          <label for="descripcion" class="block text-gray-600 mb-2">Descripción</label>
-          <mat-form-field appearance="outline" class="w-full">
-            <textarea matInput [(ngModel)]="description" id="descripcion" name="descripcion" placeholder="Ingrese la descripción del producto" required></textarea>
-          </mat-form-field>
-        </div>
-  
-        <!-- Campo Precio -->
-        <div>
-          <label for="precio" class="block text-gray-600 mb-2">Precio</label>
-          <mat-form-field appearance="outline" class="w-full">
-            <input matInput [(ngModel)]="price" type="number" step="any" id="precio" name="precio" placeholder="Ingrese el precio del producto" autocomplete="off" required>
-          </mat-form-field>
-        </div>
-        <!-- Campo cuotas -->
-        <div>
-          <label for="precio" class="block text-gray-600 mb-2">Cuotas</label>
-          <mat-form-field appearance="outline" class="w-full">
-            <input matInput [(ngModel)]="code" type="text" step="any" id="code" name="code" placeholder="Ingrese cantidad decuotas" autocomplete="off" required>
-          </mat-form-field>
-        </div>
-        <!-- Campo Imagen (input[type="file"] fuera de mat-form-field) -->
-        <div class="w-full">
-          <label for="img" class="block text-gray-600 mb-2">Imagen</label>
-          <input type="file" id="img" (change)="onFileSelected($event)" class="block w-full text-sm text-gray-600 border border-gray-300 rounded-lg cursor-pointer focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
-        </div>
-  
-        <!-- Botón Guardar -->
-        <div class="flex justify-center">
-          <button type="submit" class="button-item">
-            Guardar
-          </button>
-        </div>
-      </form>
+<div class="product-add-page">
+  <div class="product-add-shell">
+    <div class="product-add-hero">
+      <div>
+        <span class="eyebrow">Panel / Productos</span>
+        <h2>Crear producto</h2>
+        <p>Configurá la ficha, subí la imagen y agregá variantes con su stock en un flujo claro.</p>
+      </div>
+      <div class="hero-card">
+        <span class="hero-kicker">Checklist</span>
+        <ul>
+          <li>Datos básicos</li>
+          <li>Imagen del producto</li>
+          <li>Variantes y stock</li>
+        </ul>
+      </div>
     </div>
+
+    <form (ngSubmit)="addProduct()" enctype="multipart/form-data" class="product-form">
+      <section class="form-section">
+        <div class="section-head">
+          <div>
+            <h3>Información general</h3>
+            <p>Definí la categoría, el nombre visible y el precio final.</p>
+          </div>
+          <span class="section-chip">Paso 1</span>
+        </div>
+
+        <div class="form-grid">
+          <div class="field-block">
+            <label for="category">Elija una categoría</label>
+            <mat-form-field appearance="outline" class="w-full modern-field">
+              <mat-select [(ngModel)]="categoryId" name="category" id="category" (selectionChange)="refreshAllSkus()" required>
+                <mat-option *ngFor="let categoria of categories" [value]="categoria.id">
+                  {{ categoria.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="field-block">
+            <label for="nombre">Nombre</label>
+            <mat-form-field appearance="outline" class="w-full modern-field">
+              <input matInput [(ngModel)]="name" type="text" id="nombre" name="nombre" placeholder="Nombre del producto" autocomplete="off" required>
+            </mat-form-field>
+          </div>
+
+          <div class="field-block span-2">
+            <label for="descripcion">Descripción</label>
+            <mat-form-field appearance="outline" class="w-full modern-field">
+              <textarea matInput [(ngModel)]="description" id="descripcion" name="descripcion" placeholder="Breve descripción y detalles" required></textarea>
+            </mat-form-field>
+          </div>
+
+          <div class="field-block">
+            <label for="precio">Precio</label>
+            <mat-form-field appearance="outline" class="w-full modern-field">
+              <input matInput [(ngModel)]="price" type="number" step="any" id="precio" name="precio" placeholder="0.00" autocomplete="off" required>
+            </mat-form-field>
+          </div>
+
+          <div class="field-block">
+            <label for="code">Cuotas</label>
+            <mat-form-field appearance="outline" class="w-full modern-field">
+              <input matInput [(ngModel)]="code" (input)="refreshAllSkus()" type="text" step="any" id="code" name="code" placeholder="Cantidad de cuotas" autocomplete="off" required>
+            </mat-form-field>
+          </div>
+        </div>
+      </section>
+
+      <section class="form-section media-section">
+        <div class="section-head">
+          <div>
+            <h3>Imagen principal</h3>
+            <p>Subí una imagen clara; será la portada en el catálogo.</p>
+          </div>
+          <span class="section-chip">Paso 2</span>
+        </div>
+
+        <div class="upload-box">
+          <div>
+            <h4>Arrastrá tu archivo o hacé click</h4>
+            <p>Formatos recomendados: JPG o PNG · 1200×1200 px.</p>
+          </div>
+          <label class="upload-action" for="img">Seleccionar imagen</label>
+          <input type="file" id="img" (change)="onFileSelected($event)">
+        </div>
+      </section>
+
+      <section class="form-section variants-section">
+        <div class="section-head">
+          <div>
+            <h3>Variantes</h3>
+            <p>Personalizá talla, color, material y stock para cada combinación.</p>
+          </div>
+          <button type="button" class="ghost-btn" (click)="addVariant()">Agregar variante</button>
+        </div>
+
+        <div class="variants-list">
+          <div *ngFor="let variant of variants; let i = index" class="variant-card">
+            <div class="variant-head">
+              <div>
+                <span class="variant-index">Variante {{ i + 1 }}</span>
+                <p>Completá los datos clave para inventario y ventas.</p>
+              </div>
+              <button type="button" class="danger-link" (click)="removeVariant(i)" *ngIf="variants.length > 1">Eliminar</button>
+            </div>
+
+            <div class="variant-grid">
+              <div class="field-stack">
+                <label class="field-label" for="size-{{i}}">Talle</label>
+                <mat-form-field appearance="outline" class="w-full modern-field">
+                  <input matInput [(ngModel)]="variant.size" (input)="updateSku(i)" id="size-{{i}}" name="size-{{i}}" placeholder="A1, A2..." required>
+                </mat-form-field>
+              </div>
+
+              <div class="field-stack">
+                <label class="field-label" for="color-{{i}}">Color</label>
+                <mat-form-field appearance="outline" class="w-full modern-field">
+                  <input matInput [(ngModel)]="variant.color" (input)="updateSku(i)" id="color-{{i}}" name="color-{{i}}" placeholder="blanco / azul / negro" required>
+                </mat-form-field>
+              </div>
+
+              <div class="field-stack" *ngIf="isKimonoSelected()">
+                <label class="field-label" for="gsm-{{i}}">GSM</label>
+                <mat-form-field appearance="outline" class="w-full modern-field">
+                  <input matInput [(ngModel)]="variant.gsm" (input)="updateSku(i)" id="gsm-{{i}}" name="gsm-{{i}}" type="number" placeholder="450">
+                </mat-form-field>
+              </div>
+
+              <div class="field-stack">
+                <label class="field-label" for="material-{{i}}">Material</label>
+                <mat-form-field appearance="outline" class="w-full modern-field">
+                  <input matInput [(ngModel)]="variant.material" id="material-{{i}}" name="material-{{i}}" placeholder="Pearl Weave / Ripstop">
+                </mat-form-field>
+              </div>
+
+              <div class="field-stack">
+                <label class="field-label" for="usage-{{i}}">Uso</label>
+                <mat-form-field appearance="outline" class="w-full modern-field">
+                  <input matInput [(ngModel)]="variant.usage" id="usage-{{i}}" name="usage-{{i}}" placeholder="entrenamiento / competencia">
+                </mat-form-field>
+              </div>
+
+              <div class="field-stack">
+                <label class="field-label" for="sku-{{i}}">SKU</label>
+                <mat-form-field appearance="outline" class="w-full modern-field">
+                  <input matInput [(ngModel)]="variant.sku" (input)="markSkuManual(i)" id="sku-{{i}}" name="sku-{{i}}" placeholder="LB-CL-A2-BLK" required>
+                </mat-form-field>
+              </div>
+
+              <div class="field-stack">
+                <label class="field-label" for="stockCurrent-{{i}}">Stock actual</label>
+                <mat-form-field appearance="outline" class="w-full modern-field">
+                  <input matInput [(ngModel)]="variant.stockCurrent" id="stockCurrent-{{i}}" name="stockCurrent-{{i}}" type="number" min="0">
+                </mat-form-field>
+              </div>
+
+              <div class="field-stack">
+                <label class="field-label" for="stockMinimum-{{i}}">Stock mínimo</label>
+                <mat-form-field appearance="outline" class="w-full modern-field">
+                  <input matInput [(ngModel)]="variant.stockMinimum" id="stockMinimum-{{i}}" name="stockMinimum-{{i}}" type="number" min="0">
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="variant-footer">
+              <div class="field-stack compact">
+                <label class="field-label" for="active-{{i}}">Activo</label>
+                <mat-form-field appearance="outline" class="w-40 modern-field">
+                  <mat-select [(ngModel)]="variant.active" id="active-{{i}}" name="active-{{i}}">
+                    <mat-option [value]="true">Sí</mat-option>
+                    <mat-option [value]="false">No</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <span class="variant-hint">Solo se muestra en tienda si está activo.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="form-actions">
+        <button type="submit" class="button-item">Guardar producto</button>
+      </div>
+    </form>
   </div>
-  <app-footer></app-footer>
+</div>
+
+<app-footer></app-footer>
   

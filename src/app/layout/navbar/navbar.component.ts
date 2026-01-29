@@ -7,6 +7,8 @@ import { SessionStorageService } from 'src/app/services/session-storage.service'
 import { MatBadgeModule } from '@angular/material/badge';
 import { CartService } from 'src/app/services/cart.service';
 import { Subscription } from 'rxjs';
+import { ThemeService } from 'src/app/services/theme.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-navbar',
@@ -20,18 +22,33 @@ export class NavbarComponent implements OnInit, OnDestroy {
   isLoggedIn: boolean = false;
   menuOpen: any;
   cartItemsQty: number = 0;
+  isDarkMode: boolean = false;
+  userLabel: string = '';
   private cartSubscription!: Subscription;
 
   constructor(
     private sessionStorage: SessionStorageService,
     private router: Router,
-    private cartService: CartService
+    private cartService: CartService,
+    private themeService: ThemeService,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
     const token = this.sessionStorage.getItem('token');
     this.isAdmin = token && token.type === 'ADMIN';
     this.isLoggedIn = !!token;
+    if (token?.id) {
+      this.userService.getUserById(token.id).subscribe({
+        next: (user) => {
+          const name = `${user.firstName || ''} ${user.lastName || ''}`.trim();
+          this.userLabel = name || user.email || '';
+        },
+        error: () => {
+          this.userLabel = '';
+        }
+      });
+    }
 
     // Suscribirse al carrito y actualizar la cantidad en tiempo real
     this.cartSubscription = this.cartService.getCart().subscribe((items) => {
@@ -40,6 +57,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
     // Inicializar cantidad del carrito
     this.updateCartQty(this.cartService.convertToListFromMap());
+    this.isDarkMode = this.themeService.theme === 'dark';
   }
 
   private updateCartQty(items: any[]): void {
@@ -88,6 +106,14 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
   gotoOrders(){
     this.router.navigate(['/admin/orders'])
+  }
+  gotoStock() {
+    this.router.navigate(['/admin/stock']);
+  }
+
+  toggleTheme(): void {
+    this.themeService.toggleTheme();
+    this.isDarkMode = this.themeService.theme === 'dark';
   }
 
   ngOnDestroy(): void {

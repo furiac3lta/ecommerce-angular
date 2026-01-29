@@ -1,0 +1,13 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="800" fill="#0B0B0B"/>
+  <circle cx="220" cy="160" r="180" fill="#B0121B" fill-opacity="0.25"/>
+  <circle cx="1040" cy="120" r="220" fill="#D7B35C" fill-opacity="0.18"/>
+  <rect x="160" y="130" width="880" height="540" rx="36" fill="#121212" stroke="#2B2B2B" stroke-width="2"/>
+  <path d="M420 210L600 180L780 210L840 300L760 360L680 300L600 320L520 300L440 360L360 300L420 210Z" fill="#F7F7F5"/>
+  <path d="M520 320L600 360L680 320L720 560H480L520 320Z" fill="#E2E2DF"/>
+  <path d="M360 300L280 440L360 560L440 520L420 360L360 300Z" fill="#E2E2DF"/>
+  <path d="M840 300L920 440L840 560L760 520L780 360L840 300Z" fill="#E2E2DF"/>
+  <rect x="520" y="360" width="160" height="18" rx="9" fill="#B0121B"/>
+  <rect x="515" y="560" width="170" height="24" rx="12" fill="#0B0B0B"/>
+  <text x="520" y="578" font-family="Oswald, Arial" font-size="14" fill="#F7F7F5" letter-spacing="2">IBJJF</text>
+</svg>

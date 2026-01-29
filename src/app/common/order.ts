@@ -22,6 +22,9 @@ export class Order {
     public totalOrderPrice: number; // Agregar la propiedad
     public userName?: string;  // ➜ Agregar el nombre del usuario
     public userEmail?: string; // ➜ Agregar el email del usuario
+    public paymentMethod?: string;
+    public paidAt?: Date;
+    public total?: number;
     
     constructor(
         public id: number | null,
@@ -31,6 +34,7 @@ export class Order {
         public orderState: OrderState
     ) {
         this.totalOrderPrice = this.calculateTotal(); // Calcular el total al instanciar
+        this.paymentMethod = 'TRANSFERENCIA';
     }
 
     private calculateTotal(): number {

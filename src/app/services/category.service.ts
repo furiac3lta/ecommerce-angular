@@ -3,12 +3,13 @@ import { Injectable } from '@angular/core';
 import { Category } from '../common/category';
 import { Observable } from 'rxjs';
 import { HeaderService } from './header.service';
+import { environment } from 'src/enviroments/enviroment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CategoryService {
-  private apiUrl: string = 'https://ecommerce-back-0cc9b90e39e5.herokuapp.com/api/v1/admin/categories';
+  private apiUrl: string = `${environment.apiBaseUrl}/api/v1/admin/categories`;
   constructor(private http:HttpClient, private headerService:HeaderService) { }
 
   getCategoryList():Observable<Category[]>{

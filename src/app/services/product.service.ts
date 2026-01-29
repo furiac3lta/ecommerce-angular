@@ -3,13 +3,14 @@ import {HttpClient} from '@angular/common/http'
 import { Observable } from 'rxjs';
 import { Product } from '../common/product';
 import { HeaderService } from './header.service';
+import { environment } from 'src/enviroments/enviroment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
 
-  private apiUrl:string ="https://ecommerce-back-0cc9b90e39e5.herokuapp.com/api/v1/admin/products";
+  private apiUrl:string = `${environment.apiBaseUrl}/api/v1/admin/products`;
 
   constructor(private httpClient:HttpClient, private headerService:HeaderService) { }
   

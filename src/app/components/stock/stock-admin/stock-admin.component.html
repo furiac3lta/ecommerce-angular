@@ -1,0 +1,172 @@
+<app-navbar></app-navbar>
+
+<section class="stock-page max-w-[1400px] mx-auto px-4 py-8">
+  <div class="stock-header">
+    <div>
+      <p class="text-xs uppercase tracking-[0.3em] text-secondary">Admin</p>
+      <h2 class="text-3xl">Gestión de stock</h2>
+      <p class="text-sm text-secondary">Registrá ingresos, egresos y consultá movimientos por variante.</p>
+    </div>
+    <div class="stock-help">
+      <p>Ingresar = compra, devolución o corrección.</p>
+      <p>Ajustar/Egreso = reduce stock con trazabilidad.</p>
+      <p>Tip: usá “Ver movimientos” para auditar quién hizo cada cambio.</p>
+    </div>
+  </div>
+
+  <div class="stock-toolbar">
+    <input
+      class="input-item"
+      type="text"
+      placeholder="Buscar por producto, SKU, talle o color"
+      [(ngModel)]="searchTerm"
+      (input)="applyFilter()"
+    />
+  </div>
+
+  <div class="stock-cards md:hidden">
+    <div *ngFor="let variant of filteredVariants" class="stock-card">
+      <div class="stock-card-header">
+        <div>
+          <p class="text-xs uppercase tracking-[0.2em] text-secondary">Producto</p>
+          <h3 class="text-lg font-semibold">{{ variant.productName || 'Producto' }}</h3>
+          <p class="text-xs text-secondary">SKU {{ variant.sku || '—' }}</p>
+        </div>
+        <span class="status-pill" [ngClass]="getStatusClass(variant)">{{ getStatusLabel(variant) }}</span>
+      </div>
+
+      <div class="stock-meta">
+        <span>Talle: {{ variant.size || '—' }}</span>
+        <span>Color: {{ variant.color || '—' }}</span>
+        <span *ngIf="variant.gsm">GSM: {{ variant.gsm }}</span>
+      </div>
+
+      <div class="stock-grid">
+        <div>
+          <p class="label">Stock actual</p>
+          <p class="value">{{ variant.stockCurrent || 0 }}</p>
+        </div>
+        <div>
+          <p class="label">Reservado</p>
+          <p class="value">{{ variant.reservedStock || 0 }}</p>
+        </div>
+        <div>
+          <p class="label">Disponible</p>
+          <p class="value">{{ variant.availableStock || 0 }}</p>
+        </div>
+      </div>
+
+      <div class="stock-actions">
+        <button class="button-item button-item--sm" (click)="openInModal(variant)">Ingresar stock</button>
+        <button class="button-item button-item--outline button-item--sm" (click)="openOutModal(variant)">Ajustar / Egreso</button>
+        <button class="button-item button-item--outline button-item--sm" (click)="openMovements(variant)">Ver movimientos</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="hidden md:block">
+    <div class="overflow-x-auto">
+      <table class="table-shell">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Variante</th>
+            <th>SKU</th>
+            <th>Stock</th>
+            <th>Reservado</th>
+            <th>Disponible</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let variant of filteredVariants">
+            <td>{{ variant.productName || 'Producto' }}</td>
+            <td>{{ variant.size || '—' }} · {{ variant.color || '—' }}<span *ngIf="variant.gsm"> · {{ variant.gsm }} GSM</span></td>
+            <td>{{ variant.sku || '—' }}</td>
+            <td>{{ variant.stockCurrent || 0 }}</td>
+            <td>{{ variant.reservedStock || 0 }}</td>
+            <td>{{ variant.availableStock || 0 }}</td>
+            <td><span class="status-pill" [ngClass]="getStatusClass(variant)">{{ getStatusLabel(variant) }}</span></td>
+            <td>
+              <div class="flex gap-2">
+                <button class="button-item button-item--sm" (click)="openInModal(variant)">Ingresar</button>
+                <button class="button-item button-item--outline button-item--sm" (click)="openOutModal(variant)">Egreso</button>
+                <button class="button-item button-item--outline button-item--sm" (click)="openMovements(variant)">Movimientos</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="modal-backdrop" *ngIf="showInModal || showOutModal || showMovementsModal" (click)="closeModals()"></div>
+
+<div class="modal-card" *ngIf="showInModal">
+  <h3>Ingresar stock</h3>
+  <p class="text-sm text-secondary">Este movimiento quedará registrado y afectará el stock disponible.</p>
+  <div class="modal-grid">
+    <label>Cantidad</label>
+    <input type="number" class="input-item" [(ngModel)]="inQty" min="1" />
+    <label>Motivo</label>
+    <select class="input-item" [(ngModel)]="inReason">
+      <option *ngFor="let reason of inReasons" [value]="reason.value">{{ reason.label }}</option>
+    </select>
+    <label>Nota / comentario</label>
+    <textarea class="input-item" rows="3" [(ngModel)]="inNote"></textarea>
+  </div>
+  <div class="modal-actions">
+    <button class="button-item button-item--outline" (click)="closeModals()">Cancelar</button>
+    <button class="button-item" (click)="submitIn()">Confirmar ingreso</button>
+  </div>
+</div>
+
+<div class="modal-card" *ngIf="showOutModal">
+  <h3>Ajustar / Egreso</h3>
+  <p class="text-sm text-secondary">No se permite stock negativo. Este cambio queda auditado.</p>
+  <div class="modal-grid">
+    <label>Cantidad</label>
+    <input type="number" class="input-item" [(ngModel)]="outQty" min="1" />
+    <label>Motivo</label>
+    <select class="input-item" [(ngModel)]="outReason">
+      <option *ngFor="let reason of outReasons" [value]="reason.value">{{ reason.label }}</option>
+    </select>
+    <label>Nota / comentario</label>
+    <textarea class="input-item" rows="3" [(ngModel)]="outNote"></textarea>
+  </div>
+  <div class="modal-actions">
+    <button class="button-item button-item--outline" (click)="closeModals()">Cancelar</button>
+    <button class="button-item button-item--danger" (click)="submitOut()">Confirmar egreso</button>
+  </div>
+</div>
+
+<div class="modal-card modal-wide" *ngIf="showMovementsModal">
+  <h3>Movimientos</h3>
+  <p class="text-sm text-secondary">Historial de ingresos y egresos para esta variante.</p>
+  <div class="modal-grid">
+    <label>Desde</label>
+    <input type="datetime-local" class="input-item" [(ngModel)]="movementFrom" />
+    <label>Hasta</label>
+    <input type="datetime-local" class="input-item" [(ngModel)]="movementTo" />
+    <button class="button-item button-item--outline" (click)="fetchMovements()">Filtrar</button>
+  </div>
+  <div class="movements-list">
+    <p *ngIf="movementsLoading" class="text-sm text-secondary">Cargando movimientos...</p>
+    <p *ngIf="!movementsLoading && movements.length === 0" class="text-sm text-secondary">Sin movimientos registrados.</p>
+    <div *ngFor="let movement of movements" class="movement-card">
+      <div>
+        <p class="movement-title">{{ movement.type }} · {{ movement.reason }}</p>
+        <p class="movement-meta">{{ movement.createdAt ? (movement.createdAt | date:'short') : '—' }} · {{ movement.createdBy || '—' }}</p>
+      </div>
+      <div class="movement-qty">x{{ movement.qty }}</div>
+      <p class="movement-note">{{ movement.note }}</p>
+    </div>
+  </div>
+  <div class="modal-actions">
+    <button class="button-item button-item--outline" (click)="closeModals()">Cerrar</button>
+  </div>
+</div>
+
+<app-footer></app-footer>

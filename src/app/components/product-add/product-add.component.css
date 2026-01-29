@@ -1,0 +1,359 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap');
+
+:host {
+  display: block;
+}
+
+.product-add-page {
+  min-height: 100vh;
+  padding: 48px 16px 80px;
+  background:
+    radial-gradient(circle at 20% 10%, #f8ede3 0%, transparent 55%),
+    radial-gradient(circle at 80% 0%, #e6f2ff 0%, transparent 52%),
+    #f6f7fb;
+  color: #0f172a;
+  font-family: 'Manrope', 'Segoe UI', sans-serif;
+}
+
+.product-add-shell {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  gap: 28px;
+}
+
+.product-add-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 280px);
+  gap: 24px;
+  align-items: end;
+}
+
+.product-add-hero h2 {
+  font-family: 'Syne', 'Segoe UI', sans-serif;
+  font-size: clamp(2rem, 3vw, 2.6rem);
+  font-weight: 700;
+  margin: 8px 0 12px;
+}
+
+.product-add-hero p {
+  color: #475569;
+  margin: 0;
+}
+
+.eyebrow {
+  font-size: 0.78rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.hero-card {
+  background: #0f172a;
+  color: #f8fafc;
+  border-radius: 20px;
+  padding: 20px 22px;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.35);
+}
+
+.hero-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 0;
+  display: grid;
+  gap: 8px;
+  font-size: 0.95rem;
+}
+
+.hero-card li::before {
+  content: '•';
+  margin-right: 8px;
+  color: #94a3b8;
+}
+
+.hero-kicker {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+.product-form {
+  display: grid;
+  gap: 24px;
+}
+
+.form-section {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 28px;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.section-head h3 {
+  margin: 0;
+  font-family: 'Syne', 'Segoe UI', sans-serif;
+  font-size: 1.3rem;
+}
+
+.section-head p {
+  margin: 8px 0 0;
+  color: #64748b;
+}
+
+.section-chip {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #e2e8f0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.form-grid {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.field-block label {
+  display: block;
+  margin-bottom: 8px;
+  color: #475569;
+  font-weight: 600;
+}
+
+.field-block.span-2 {
+  grid-column: span 2;
+}
+
+.media-section .upload-box {
+  border: 1px dashed #94a3b8;
+  border-radius: 20px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: #f8fafc;
+}
+
+.upload-box h4 {
+  margin: 0 0 6px;
+  font-size: 1rem;
+}
+
+.upload-box p {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.upload-box input[type='file'] {
+  display: none;
+}
+
+.upload-action {
+  padding: 12px 18px;
+  border-radius: 999px;
+  background: #0f172a;
+  color: #f8fafc;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.variants-section {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+}
+
+.ghost-btn {
+  border: 1px solid #0f172a;
+  color: #0f172a;
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-weight: 600;
+  background: transparent;
+  cursor: pointer;
+}
+
+.variants-list {
+  display: grid;
+  gap: 20px;
+}
+
+.variant-card {
+  border-radius: 20px;
+  padding: 20px;
+  background: #ffffff;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+}
+
+.variant-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.variant-index {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.variant-head p {
+  margin: 6px 0 0;
+  color: #64748b;
+}
+
+.danger-link {
+  background: none;
+  border: none;
+  color: #ef4444;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.variant-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.field-stack {
+  display: grid;
+  gap: 6px;
+}
+
+.field-stack.compact {
+  gap: 4px;
+}
+
+.field-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.variant-footer {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.variant-hint {
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.primary-btn {
+  background: #0f172a;
+  color: #f8fafc;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 14px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.3);
+}
+
+.modern-field ::ng-deep .mat-mdc-form-field-flex {
+  border-radius: 16px;
+  background: #f8fafc;
+  border: 1px solid rgba(148, 163, 184, 0.6);
+}
+
+.modern-field ::ng-deep .mat-mdc-form-field-infix {
+  padding: 16px 18px 14px;
+  min-height: 52px;
+}
+
+.modern-field ::ng-deep .mat-mdc-input-element {
+  padding: 0;
+}
+
+.modern-field ::ng-deep .mdc-floating-label {
+  top: 26px;
+}
+
+.modern-field ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+  margin-top: 6px;
+}
+
+.modern-field ::ng-deep .mdc-notched-outline {
+  display: none;
+}
+
+.modern-field ::ng-deep .mat-mdc-input-element,
+.modern-field ::ng-deep .mat-mdc-select-value {
+  font-family: 'Manrope', 'Segoe UI', sans-serif;
+}
+
+@media (max-width: 960px) {
+  .product-add-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .form-grid,
+  .variant-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .field-block.span-2 {
+    grid-column: span 1;
+  }
+
+  .variant-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .media-section .upload-box {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 640px) {
+  .product-add-page {
+    padding: 32px 16px 64px;
+  }
+
+  .form-section {
+    padding: 20px;
+  }
+
+  .section-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .form-actions {
+    justify-content: stretch;
+  }
+
+  .primary-btn {
+    width: 100%;
+  }
+}

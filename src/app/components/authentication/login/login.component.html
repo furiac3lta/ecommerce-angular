@@ -1,53 +1,41 @@
 <app-navbar></app-navbar>
-<body class="bg-gray-10">
-  <form (ngSubmit)="login()">
-    <div class="flex justify-center items-center h-without-layout">
-      <div class="w-full md:w-1/4 flex flex-col items-center">
-        <!-- text login -->
+<form (ngSubmit)="login()">
+  <div class="flex justify-center items-center h-without-layout px-4 py-12">
+    <div class="w-full md:w-1/3 bg-white rounded-3xl shadow-xl border border-black/10 p-8 flex flex-col items-center">
+      <p class="text-xs uppercase tracking-[0.3em] text-gray-500">Acceso</p>
+      <h1 class="text-2xl font-bold text-gray-900 mb-6">Iniciar sesión</h1>
 
-        <h1 class="text-xl font-bold text-gray-600 mb-6">LOGIN</h1>
+      <div class="w-full mb-4">
+        <input
+          [(ngModel)]="username"
+          type="email"
+          name="email"
+          id="email"
+          class="input-item"
+          placeholder="Correo"
+        />
+      </div>
+      <div class="w-full mb-6">
+        <input
+          [(ngModel)]="password"
+          type="password"
+          name="password"
+          id="password"
+          class="input-item"
+          placeholder="Contraseña"
+        />
+      </div>
 
-        <!-- email input -->
-        <div class="w-3/4 mb-6">
-          <input
-            [(ngModel)]="username"
-            type="email"
-            name="email"
-            id="email"
-            class="hover:ring-teal-300 text-s size w-full py-1 px-8 bg-slate-200 placeholder:font-normal rounded hover:ring-1 outline-teal-500"
-            placeholder="Ingrese su correo"
-          />
-        </div>
-        <!-- password input -->
-        <div class="w-3/4 mb-6">
-          <input
-            [(ngModel)]="password"
-            type="password"
-            name="password"
-            id="password"
-            class="hover:ring-teal-300 text-s size w-full py-1 px-8 bg-slate-200 placeholder:font-normal rounded hover:ring-1 outline-teal-500"
-            placeholder="Ingrese su contraseña"
-          />
-        </div>
-        <!-- remember input -->
-
-        <!-- button -->
-        <div class="w-3/4 mt-4">
-          <button
-            type="submit"
-            class="py-2 bg-teal-400 w-full rounded text-yellow-50 font-bold hover:bg-teal-700 transition-all duration-500"
-          >
-            LOGIN
-          </button>
-        </div>
-         <div class="w-3/4 mt-4">
-            <a class="text-xs text-zinc-600 hover:text-zinc-900 md:w-1/4 text-center" [routerLink]="['/user/register']">Si aún no tiene cuenta, aquí puede registrarse</a>
-          </div>
-
-         
+      <div class="w-full">
+        <button type="submit" class="button-item w-full">
+          Entrar
+        </button>
+      </div>
+      <div class="w-full mt-4 text-center">
+        <a class="text-xs text-zinc-600 hover:text-zinc-900" [routerLink]="['/user/register']">Crear cuenta nueva</a>
       </div>
     </div>
-  </form>
-</body>
+  </div>
+</form>
 
 <app-footer></app-footer>

@@ -1,4 +1,4 @@
-<section>
+<section class="hero-section">
   <swiper-container
     #swiper
     slides-per-view="1"
@@ -7,18 +7,36 @@
     loop="true"
   >
     <swiper-slide *ngFor="let slide of slides">
-      <div class="w-100 h-[600px] relative flex justify-start items-center px-16">
-        <img
-          class="absolute w-full h-full top-0 left-0 object-cover"
-          [src]="slide.image"
-          alt=""
-        />
-
-        <div class="relative max-w-[550px]">
-          <h4 class="uppercase">{{slide.subtitle}}</h4>
-            <h2 class="!text-[2.6rem] font-bold capitalize !leading-[3.4rem]">{{slide.title}}</h2>
-            <p class="leading-6 !mb-5">{{slide.description}}</p>
-            <button (click)="goToDetail()" mat-flat-button class="bg-customGreen text-white hover:bg-customGreenHover transition-all duration-500" >{{slide.button}}</button>
+      <div class="hero-slide">
+        <div class="hero-copy">
+          <p class="hero-eyebrow">{{slide.subtitle}}</p>
+          <h2 class="hero-title">{{slide.title}}</h2>
+          <p class="hero-text">{{slide.description}}</p>
+          <div class="hero-cta">
+            <button (click)="goToDetail()" mat-flat-button class="hero-button">{{slide.button}}</button>
+            <div class="hero-badges">
+              <span>IBJJF / AJP</span>
+              <span>350–550 GSM</span>
+              <span>Costura doble</span>
+            </div>
+          </div>
+        </div>
+        <div class="hero-art">
+          <img [src]="slide.image" alt="Kimono BJJ" />
+          <div class="hero-stats">
+            <div>
+              <strong>+20%</strong>
+              <span>refuerzos</span>
+            </div>
+            <div>
+              <strong>90 días</strong>
+              <span>garantía</span>
+            </div>
+            <div>
+              <strong>Desde A0</strong>
+              <span>hasta A4</span>
+            </div>
+          </div>
         </div>
       </div>
     </swiper-slide>

@@ -1,70 +1,65 @@
-<header class="w-full h-20 flex items-center bg-white">
-  <div class="flex justify-between items-center max-w-[1024px] mx-auto px-4 w-full">
-    <!-- Logo / Icono principal (si aplica) -->
-    <div>
-      <!-- Puedes agregar tu logo aquí -->
+<header class="navbar-shell w-full sticky top-0 z-20">
+  <div class="flex justify-between items-center max-w-[1400px] mx-auto px-4 py-3 w-full">
+    <div class="flex items-center gap-3">
+      <img class="h-10 w-10 object-contain" src="assets/bjj/logo.png" alt="Lions Brand logo" />
+      <div class="leading-tight">
+        <p class="text-xs uppercase tracking-[0.3em] text-secondary">BJJ Kimonos</p>
+        <h1 class="text-xl md:text-2xl !m-0">Lions Brand</h1>
+      </div>
     </div>
 
-    <!-- Botón de menú para dispositivos pequeños -->
     <button
-      class="block lg:hidden"
+      class="block lg:hidden rounded-lg border border-divider px-3 py-2"
       (click)="menuOpen = !menuOpen"
       aria-label="Abrir menú"
     >
-      <mat-icon class="text-3xl">menu</mat-icon>
+      <mat-icon class="text-2xl text-main">menu</mat-icon>
     </button>
 
-    <!-- Navegación principal -->
     <nav
       [ngClass]="{ 'hidden': !menuOpen, 'block': menuOpen }"
-      class="w-full lg:flex lg:items-center lg:justify-between lg:static absolute top-20 left-0 right-0 bg-white lg:bg-transparent z-10 p-4 lg:p-0"
+      class="w-full lg:flex lg:items-center lg:justify-between lg:static absolute top-[62px] left-0 right-0 bg-surface lg:bg-transparent z-10 p-4 lg:p-0 border-b lg:border-0 border-divider"
     >
-      <ul class="flex flex-col lg:flex-row items-center gap-6 lg:gap-12">
-        <!-- Enlaces comunes -->
+      <ul class="flex flex-col lg:flex-row items-center gap-4 lg:gap-8">
         <li class="nav-item"><a (click)="gotoHome()">Inicio</a></li>
         <li class="nav-item"><a (click)="gotoProduct()">Productos</a></li>
+        <li class="nav-item" *ngIf="isLoggedIn && !isAdmin"><a (click)="handleUserIconClick()">Mis pedidos</a></li>
 
-        <!-- Título central (visible solo en pantallas grandes) -->
-        <li class="nav-item hidden lg:block">
-          <h1 class="!tracking-widest !m-0 text-2xl">L&C COSMETICA</h1>
-        </li>
-
-        <!-- Enlaces condicionales -->
         <ng-container *ngIf="isAdmin; else guestLinks">
-          <!-- Enlaces para Administrador -->
-          <li class="nav-item"><a (click)="gotoProd()">abm Prod</a></li>
-          <li class="nav-item"><a (click)="gotoCat()">abm Cat</a></li>
-          <li class="nav-item"><a (click)="gotoOrders()">Ordenes</a></li>
+          <li class="nav-item"><a (click)="gotoProd()">ABM Prod</a></li>
+          <li class="nav-item"><a (click)="gotoCat()">ABM Cat</a></li>
+          <li class="nav-item"><a (click)="gotoStock()">Stock</a></li>
+          <li class="nav-item"><a (click)="gotoOrders()">Órdenes</a></li>
         </ng-container>
 
-        <!-- Enlaces para Invitado -->
         <ng-template #guestLinks>
           <li class="nav-item"><a (click)="gotoContact()">Contacto</a></li>
-          <li class="nav-item"><a (click)="gotoAbout()">Nosotros</a></li>
+          <li class="nav-item"><a (click)="gotoAbout()">La Marca</a></li>
         </ng-template>
       </ul>
     </nav>
 
-    <!-- Botones de Carrito y Usuario -->
-    <div class="flex items-center space-x-4">
-      <button mat-icon-button class="ml-8 mb-3 cart-button" (click)="cart()"  [matBadge]="cartItemsQty"  matBadgeColor="accent">
-        <mat-icon class="text-gray-700 text-3xl">local_mall</mat-icon>
+    <div class="flex items-center gap-2">
+      <span *ngIf="isLoggedIn && userLabel" class="text-sm text-secondary hidden md:inline">{{ userLabel }}</span>
+      <button mat-icon-button class="icon-button" (click)="toggleTheme()">
+        <mat-icon class="text-2xl">{{ isDarkMode ? 'light_mode' : 'dark_mode' }}</mat-icon>
+      </button>
+      <button mat-icon-button class="cart-button" (click)="cart()" [matBadge]="cartItemsQty" matBadgeColor="warn">
+        <mat-icon class="text-3xl text-main">local_mall</mat-icon>
       </button>
       <button
         mat-icon-button
         *ngIf="isLoggedIn"
-        class="ml-8 mb-3"
         (click)="logout()"
       >
-        <mat-icon class="text-gray-700 text-3xl">logout</mat-icon>
+        <mat-icon class="text-3xl text-main">logout</mat-icon>
       </button>
       <button
         mat-icon-button
         *ngIf="!isLoggedIn"
-        class="ml-8 mb-3"
         (click)="handleUserIconClick()"
       >
-        <mat-icon class="text-gray-700 text-3xl">person_outline</mat-icon>
+        <mat-icon class="text-3xl text-main">person_outline</mat-icon>
       </button>
     </div>
   </div>

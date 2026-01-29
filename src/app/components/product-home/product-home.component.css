@@ -1,0 +1,39 @@
+.catalog-shell {
+  display: grid;
+  gap: 32px;
+}
+
+@media (min-width: 1024px) {
+  .catalog-shell {
+    grid-template-columns: 280px 1fr;
+    align-items: start;
+  }
+}
+
+.catalog-aside {
+  width: 100%;
+}
+
+.catalog-content {
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .catalog-aside {
+    width: 280px;
+    max-width: 280px;
+  }
+}
+
+.catalog-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+}
+
+@media (min-width: 1024px) {
+  .catalog-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: stretch;
+  }
+}

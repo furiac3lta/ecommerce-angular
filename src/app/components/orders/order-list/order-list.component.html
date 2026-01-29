@@ -1,33 +1,196 @@
 <app-navbar></app-navbar>
-<div *ngIf="orders && orders.length > 0; else noOrders" class="orders-container">
-  <div *ngFor="let order of orders" class="order-card">
-    <div class="order-header">
-      <span>Orden ID: {{ order.id }}</span>
-      <span class="badge" [ngClass]="getStatusClass(order.orderState)">
-        {{ order.orderState }}
-      </span>
-    </div>
-
-    <div class="order-body">
-      <p><strong>Fecha de Creación:</strong> {{ order.dateCreated | date : "short" }}</p>
-      <p><strong>Nombre:</strong> {{ order.userName || "No disponible" }}</p>
-      <p><strong>Email:</strong> {{ order.userEmail || "No disponible" }}</p>
-
-      <hr />
-
-      <h6><i class="fas fa-box"></i> Productos:</h6>
-      <ul class="list-group">
-        <li *ngFor="let product of order.orderProducts" class="list-group-item">
-          <span>{{ product.productName || "Desconocido" }}</span>
-          <span>x{{ product.quantity }} - {{ product.price | currency }}</span>
-        </li>
-      </ul>
-
-      <hr />
-
-      <div class="total-container">
-        Total Pedido: {{ order.totalOrderPrice || 0 | currency }}
+<div class="max-w-[1200px] mx-auto px-4 py-6">
+  <div class="bg-white rounded-2xl border border-black/10 p-6 mb-6">
+    <h2 class="text-xl font-semibold text-gray-800 mb-4">Herramientas Admin</h2>
+    <p class="text-sm text-gray-500 mb-4">Usá los reportes para auditar ventas y stock. Los rangos de fechas son obligatorios.</p>
+    <div class="grid gap-4 md:grid-cols-3">
+      <div class="space-y-3">
+        <p class="text-sm font-semibold text-gray-700">Importación Excel</p>
+        <input type="file" (change)="onFileSelected($event)" class="text-sm" />
+        <div class="flex gap-2">
+          <button class="button-item button-item--sm" (click)="uploadExcel()">Importar</button>
+          <button class="button-item button-item--outline button-item--sm" (click)="downloadTemplate()">Plantilla</button>
+        </div>
+        <div *ngIf="importResult" class="text-xs text-gray-600">
+          Creados: {{ importResult.created }} · Actualizados: {{ importResult.updated }} · Errores: {{ importResult.errors.length }}
+        </div>
       </div>
+      <div class="space-y-3">
+        <p class="text-sm font-semibold text-gray-700">Reporte de ventas</p>
+        <div class="grid gap-3">
+          <label class="text-xs uppercase tracking-[0.2em] text-gray-500">Desde</label>
+          <input type="datetime-local" [(ngModel)]="reportFrom" class="input-item" />
+          <label class="text-xs uppercase tracking-[0.2em] text-gray-500">Hasta</label>
+          <input type="datetime-local" [(ngModel)]="reportTo" class="input-item" />
+        </div>
+        <p class="text-xs text-gray-500">Tip: podés filtrar por rango de 30 días para evitar PDFs muy pesados.</p>
+        <button class="button-item button-item--sm" (click)="downloadSalesReport()">Descargar PDF</button>
+      </div>
+      <div class="space-y-3">
+        <p class="text-sm font-semibold text-gray-700">Reporte de stock</p>
+        <p class="text-xs text-gray-500">Si no completás filtros, se genera un reporte completo.</p>
+        <div class="grid gap-2">
+          <label class="text-xs uppercase tracking-[0.2em] text-gray-500">Variante (opcional)</label>
+          <input type="number" [(ngModel)]="stockVariantId" class="input-item" placeholder="Variant ID" />
+          <label class="text-xs uppercase tracking-[0.2em] text-gray-500">Tipo (opcional)</label>
+          <select class="input-item" [(ngModel)]="stockType">
+            <option value="">Todos</option>
+            <option value="IN">IN</option>
+            <option value="OUT">OUT</option>
+            <option value="ADJUST">ADJUST</option>
+          </select>
+          <label class="text-xs uppercase tracking-[0.2em] text-gray-500">Motivo (opcional)</label>
+          <select class="input-item" [(ngModel)]="stockReason">
+            <option value="">Todos</option>
+            <option value="SALE">SALE</option>
+            <option value="RESTOCK">RESTOCK</option>
+            <option value="RETURN">RETURN</option>
+            <option value="MANUAL_ADJUST">MANUAL_ADJUST</option>
+            <option value="CORRECTION">CORRECTION</option>
+            <option value="OTHER">OTHER</option>
+          </select>
+        </div>
+        <button class="button-item button-item--sm" (click)="downloadStockReport()">Descargar PDF</button>
+        <div class="pt-3 space-y-2">
+          <p class="text-sm font-semibold text-gray-700">Kardex por variante</p>
+          <input type="number" [(ngModel)]="kardexVariantId" class="input-item" placeholder="Variant ID" />
+          <button class="button-item button-item--sm" (click)="downloadKardexReport()">Descargar Kardex</button>
+        </div>
+        <div class="pt-3 space-y-2">
+          <p class="text-sm font-semibold text-gray-700">Reporte Órdenes + Envíos</p>
+          <button class="button-item button-item--sm" (click)="downloadOrdersShipmentsReport()">Descargar PDF</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="orders && orders.length > 0; else noOrders">
+  <div class="orders-container md:hidden">
+    <div *ngFor="let order of orders" class="order-card">
+      <div class="order-header">
+        <span>Orden ID: {{ order.id }}</span>
+        <span class="badge" [ngClass]="getStatusClass(order.orderState)">
+          {{ order.orderState }}
+        </span>
+      </div>
+
+      <div class="order-body">
+        <p><strong>Fecha de Creación:</strong> {{ order.dateCreated | date : "short" }}</p>
+        <p><strong>Nombre:</strong> {{ order.userName || "No disponible" }}</p>
+        <p><strong>Email:</strong> {{ order.userEmail || "No disponible" }}</p>
+
+        <hr />
+
+        <h6><i class="fas fa-box"></i> Productos:</h6>
+        <ul class="list-group">
+          <li *ngFor="let product of order.orderProducts" class="list-group-item">
+            <span>{{ product.productName || "Desconocido" }}</span>
+            <span>{{ product.size }} · {{ product.color }}</span>
+            <span>x{{ product.quantity }} - {{ product.price | currency }}</span>
+          </li>
+        </ul>
+
+        <hr />
+
+        <div class="total-container">
+          Total Pedido: {{ order.total || order.totalOrderPrice || 0 | currency }}
+        </div>
+        <div class="mt-4 flex gap-3" *ngIf="order.orderState === 'PENDING'">
+          <button class="button-item button-item--sm" (click)="confirmOrder(order.id!)">
+            Confirmar pago
+          </button>
+          <button class="button-item button-item--danger button-item--sm" (click)="cancelOrder(order.id!)">
+            Cancelar
+          </button>
+        </div>
+        <div class="mt-3" *ngIf="order.orderState === 'COMPLETED'">
+          <ng-container *ngIf="order.id && shipmentsByOrder[order.id] as shipment; else createShipment">
+            <button class="button-item button-item--outline button-item--sm" (click)="openShipmentModal(order, 'edit')">
+              Editar envío
+            </button>
+            <button class="button-item button-item--outline button-item--sm" (click)="openShipmentModal(order, 'view')">
+              Ver envío
+            </button>
+          </ng-container>
+          <ng-template #createShipment>
+            <button class="button-item button-item--outline button-item--sm" (click)="openShipmentModal(order, 'edit')">
+              Cargar envío
+            </button>
+          </ng-template>
+        </div>
+        <div class="mt-3" *ngIf="order.id && shipmentsByOrder[order.id] as shipment">
+          <p class="text-xs text-secondary">Envío: {{ shipment.status }} · {{ shipment.trackingNumber }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hidden md:block max-w-[1200px] mx-auto px-4 pb-10">
+    <div class="overflow-x-auto">
+      <p class="text-sm text-gray-500 mb-3">Confirmá pagos para descontar stock. Los envíos solo se cargan en órdenes COMPLETED.</p>
+      <table class="table-shell">
+        <thead>
+          <tr>
+            <th>Orden</th>
+            <th>Fecha</th>
+            <th>Cliente</th>
+            <th>Email</th>
+            <th>Estado</th>
+            <th>Total</th>
+            <th>Envío</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let order of orders">
+            <tr>
+              <td>#{{ order.id }}</td>
+              <td>{{ order.dateCreated | date : 'short' }}</td>
+              <td>{{ order.userName || '—' }}</td>
+              <td>{{ order.userEmail || '—' }}</td>
+              <td>
+                <span class="status-pill" [ngClass]="getStatusClass(order.orderState)">
+                  {{ order.orderState }}
+                </span>
+              </td>
+              <td>{{ order.total || order.totalOrderPrice || 0 | currency }}</td>
+              <td>
+                <ng-container *ngIf="order.id && shipmentsByOrder[order.id] as shipment; else noShipment">
+                  <div class="text-xs">
+                    <div>{{ shipment.status || 'CREATED' }}</div>
+                    <div class="text-secondary">{{ shipment.trackingNumber }}</div>
+                  </div>
+                </ng-container>
+                <ng-template #noShipment>—</ng-template>
+              </td>
+              <td>
+                <div class="flex gap-2" *ngIf="order.orderState === 'PENDING'">
+                  <button class="button-item button-item--sm" (click)="confirmOrder(order.id!)">Confirmar</button>
+                  <button class="button-item button-item--danger button-item--sm" (click)="cancelOrder(order.id!)">Cancelar</button>
+                </div>
+                <div class="flex gap-2" *ngIf="order.orderState === 'COMPLETED'">
+                  <ng-container *ngIf="order.id && shipmentsByOrder[order.id] as shipment; else createShipmentTable">
+                    <button class="button-item button-item--outline button-item--sm" (click)="openShipmentModal(order, 'edit')">Editar envío</button>
+                    <button class="button-item button-item--outline button-item--sm" (click)="openShipmentModal(order, 'view')">Ver envío</button>
+                  </ng-container>
+                  <ng-template #createShipmentTable>
+                    <button class="button-item button-item--outline button-item--sm" (click)="openShipmentModal(order, 'edit')">Cargar envío</button>
+                  </ng-template>
+                </div>
+              </td>
+            </tr>
+            <tr class="order-products-row">
+              <td colspan="8">
+                <div class="order-products">
+                  <span *ngFor="let product of order.orderProducts" class="order-product-chip">
+                    {{ product.productName || 'Desconocido' }} · {{ product.size }} · {{ product.color }} · x{{ product.quantity }}
+                  </span>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
@@ -36,5 +199,43 @@
   <p class="text-center text-muted">No hay órdenes disponibles.</p>
 </ng-template>
 
+<div class="modal-backdrop" *ngIf="showShipmentModal" (click)="closeShipmentModal()"></div>
+<div class="modal-card" *ngIf="showShipmentModal">
+  <h3>Cargar envío</h3>
+  <p class="text-sm text-secondary">Cargá los datos del transporte para que el cliente pueda hacer seguimiento.</p>
+  <div class="modal-grid" *ngIf="shipmentForm">
+    <label>Empresa de transporte</label>
+    <input class="input-item" type="text" [(ngModel)]="shipmentForm.carrier" [disabled]="shipmentModalMode === 'view'" />
+    <label>Medio de envío</label>
+    <select class="input-item" [(ngModel)]="shipmentForm.shippingMethod" [disabled]="shipmentModalMode === 'view'">
+      <option value="Correo">Correo</option>
+      <option value="Expreso">Expreso</option>
+      <option value="Moto">Moto</option>
+      <option value="Retiro">Retiro en local</option>
+    </select>
+    <label>Número de guía / tracking</label>
+    <input class="input-item" type="text" [(ngModel)]="shipmentForm.trackingNumber" [disabled]="shipmentModalMode === 'view'" />
+    <label>Nombre del destinatario</label>
+    <input class="input-item" type="text" [(ngModel)]="shipmentForm.recipientName" [disabled]="shipmentModalMode === 'view'" />
+    <label>Teléfono del destinatario</label>
+    <input class="input-item" type="text" [(ngModel)]="shipmentForm.recipientPhone" [disabled]="shipmentModalMode === 'view'" />
+    <label>Dirección</label>
+    <textarea class="input-item" rows="2" [(ngModel)]="shipmentForm.recipientAddress" [disabled]="shipmentModalMode === 'view'"></textarea>
+    <label>Estado</label>
+    <select class="input-item" [(ngModel)]="shipmentForm.status" [disabled]="shipmentModalMode === 'view'">
+      <option *ngFor="let status of shipmentStatusOptions" [value]="status">{{ status }}</option>
+    </select>
+    <label>Nota interna</label>
+    <textarea class="input-item" rows="2" [(ngModel)]="shipmentForm.notes" [disabled]="shipmentModalMode === 'view'"></textarea>
+    <div *ngIf="shipmentForm.createdAt || shipmentForm.updatedAt" class="text-xs text-secondary">
+      <p *ngIf="shipmentForm.createdAt">Creado: {{ shipmentForm.createdAt | date:'short' }} · {{ shipmentForm.createdBy || '—' }}</p>
+      <p *ngIf="shipmentForm.updatedAt">Editado: {{ shipmentForm.updatedAt | date:'short' }} · {{ shipmentForm.updatedBy || '—' }}</p>
+    </div>
+  </div>
+  <div class="modal-actions">
+    <button class="button-item button-item--outline" (click)="closeShipmentModal()">Cancelar</button>
+    <button class="button-item" *ngIf="shipmentModalMode === 'edit'" (click)="saveShipment()">Guardar envío</button>
+  </div>
+</div>
 
 <app-footer></app-footer>

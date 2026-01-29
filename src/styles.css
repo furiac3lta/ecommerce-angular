@@ -3,21 +3,256 @@
 @tailwind utilities;
 
 /* You can add global styles to this file, and also import other style files */
-@import url(https://fonts.googleapis.com/css?family=Urbanist:100,200,300,regular,500,600,700,800,900,100italic,200italic,300italic,italic,500italic,600italic,700italic,800italic,900italic);
+@import url(https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap);
+
+:root {
+  --bg-main: #ffffff;
+  --bg-surface: #f6f6f6;
+  --text-main: #111111;
+  --text-secondary: #555555;
+  --brand-black: #0f0f0f;
+  --accent-gold: #c9a24d;
+  --border-divider: #e0e0e0;
+  --success: #2e7d32;
+  --warning: #c62828;
+  --disabled: #bdbdbd;
+  --btn-primary-bg: #0f0f0f;
+  --btn-primary-text: #ffffff;
+  --btn-primary-hover: #c9a24d;
+  --btn-secondary-border: #e0e0e0;
+  --btn-secondary-text: #111111;
+  --footer-bg: #0f0f0f;
+  --footer-text: #ffffff;
+}
+
+[data-theme='dark'] {
+  --bg-main: #0e0e0e;
+  --bg-surface: #161616;
+  --text-main: #ffffff;
+  --text-secondary: #b0b0b0;
+  --brand-black: #0e0e0e;
+  --accent-gold: #d4af37;
+  --border-divider: #2a2a2a;
+  --success: #4caf50;
+  --warning: #ef5350;
+  --disabled: #555555;
+  --btn-primary-bg: #d4af37;
+  --btn-primary-text: #0e0e0e;
+  --btn-primary-hover: #e6c76a;
+  --btn-secondary-border: #2a2a2a;
+  --btn-secondary-text: #ffffff;
+  --footer-bg: #000000;
+  --footer-text: #ffffff;
+}
+
+[data-theme='dark'] .bg-white {
+  background-color: var(--bg-surface) !important;
+}
+[data-theme='dark'] .bg-gray-50 {
+  background-color: #1a1a1a !important;
+}
+[data-theme='dark'] .bg-gray-100 {
+  background-color: #1e1e1e !important;
+}
+[data-theme='dark'] .text-gray-900,
+[data-theme='dark'] .text-gray-800,
+[data-theme='dark'] .text-gray-700 {
+  color: var(--text-main) !important;
+}
+[data-theme='dark'] .text-gray-600,
+[data-theme='dark'] .text-gray-500,
+[data-theme='dark'] .text-gray-400 {
+  color: var(--text-secondary) !important;
+}
+[data-theme='dark'] .border-gray-200,
+[data-theme='dark'] .border-gray-300 {
+  border-color: var(--border-divider) !important;
+}
 
 html, body {
-  font-family: 'Urbanist', sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 16px;
-  line-height: 1.5;
-  color: #333;
-  background-color: #f4f4f4;
+  line-height: 1.6;
+  color: var(--text-main);
+  background: var(--bg-main);
 }
+
+html, body {
+  height: 100%;
+}
+
+app-home,
+app-product-list,
+app-category-list,
+app-category-add,
+app-product-add,
+app-order-list,
+app-sumary-order,
+app-checkout,
+app-confirmation,
+app-contact-form,
+app-about,
+app-detail-product,
+app-product-home,
+app-login,
+app-registration,
+app-logout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+app-footer {
+  margin-top: auto;
+  display: block;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Montserrat', sans-serif;
+  letter-spacing: 0.02em;
+}
+
 .nav-item {
-  @apply hover:text-green-500 text-black py-2 px-4 rounded transition-all duration-500;
+  color: var(--text-main);
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  transition: color 0.2s ease;
+}
+.nav-item:hover {
+  color: var(--accent-gold);
 }
 .input-item{
-  @apply hover:ring-teal-300 text-sm w-full py-1 px-8 bg-slate-200 placeholder:font-normal rounded hover:ring-1 outline-teal-500;
+  font-size: 0.875rem;
+  width: 100%;
+  padding: 0.75rem 1.25rem;
+  background: var(--bg-main);
+  border-radius: 0.75rem;
+  border: 1px solid var(--border-divider);
+  outline: none;
+  color: var(--text-main);
+}
+
+.input-item[type="datetime-local"],
+.input-item[type="date"],
+.input-item[type="time"] {
+  color-scheme: light;
+}
+
+[data-theme='dark'] .input-item[type="datetime-local"],
+[data-theme='dark'] .input-item[type="date"],
+[data-theme='dark'] .input-item[type="time"] {
+  color-scheme: dark;
+}
+.input-item::placeholder {
+  color: var(--text-secondary);
+}
+.input-item:focus {
+  border-color: var(--accent-gold);
+  box-shadow: 0 0 0 2px rgba(201, 162, 77, 0.25);
 }
 .button-item{
-  @apply py-2 bg-teal-400 w-full rounded text-yellow-50 font-bold hover:bg-teal-700 transition-all duration-500
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.1rem;
+  background: var(--btn-primary-bg);
+  border-radius: 999px;
+  border: 1px solid transparent;
+  color: var(--btn-primary-text);
+  font-weight: 600;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.button-item:hover{
+  background: var(--btn-primary-hover);
+  color: var(--brand-black);
+}
+
+.button-item--outline {
+  background: transparent;
+  color: var(--text-main);
+  border-color: var(--btn-secondary-border);
+}
+.button-item--outline:hover {
+  background: var(--bg-surface);
+  color: var(--text-main);
+}
+
+.button-item--danger {
+  background: #dc2626;
+  color: #ffffff;
+}
+.button-item--danger:hover {
+  background: #b91c1c;
+  color: #ffffff;
+}
+
+.button-item--sm {
+  padding: 0.45rem 0.9rem;
+  font-size: 0.85rem;
+}
+
+.table-shell {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--bg-main);
+  border: 1px solid var(--border-divider);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(15, 15, 15, 0.06);
+}
+
+.table-shell th,
+.table-shell td {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 0.92rem;
+  color: var(--text-main);
+}
+
+.table-shell thead tr,
+.table-shell .mat-mdc-header-row {
+  background: var(--bg-surface);
+}
+
+.table-shell tbody tr {
+  border-top: 1px solid var(--border-divider);
+}
+
+.table-shell tbody tr:hover,
+.table-shell .mat-mdc-row:hover {
+  background: rgba(201, 162, 77, 0.08);
+}
+
+[data-theme='dark'] .table-shell {
+  background: var(--bg-surface);
+  border-color: var(--border-divider);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+[data-theme='dark'] .table-shell thead tr,
+[data-theme='dark'] .table-shell .mat-mdc-header-row {
+  background: #1c1c1c;
+}
+
+[data-theme='dark'] .table-shell tbody tr {
+  border-top-color: var(--border-divider);
+}
+
+[data-theme='dark'] .table-shell tbody tr:hover,
+[data-theme='dark'] .table-shell .mat-mdc-row:hover {
+  background: rgba(201, 162, 77, 0.12);
+}
+.text-secondary {
+  color: var(--text-secondary);
+}
+.text-main {
+  color: var(--text-main);
+}
+.bg-surface {
+  background: var(--bg-surface);
+}
+.border-divider {
+  border-color: var(--border-divider);
 }

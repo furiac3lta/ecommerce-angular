@@ -40,6 +40,8 @@ import { ContactFormComponent } from './components/contact-form/contact-form.com
 import { ProductHomeComponent } from './components/product-home/product-home.component';
 import { AsideProductsComponent } from './layout/aside-products/aside-products.component';
 import { OrderListComponent } from './components/orders/order-list/order-list.component';
+import { StockAdminComponent } from './components/stock/stock-admin/stock-admin.component';
+import { UserOrdersComponent } from './components/user/user-orders/user-orders.component';
 
 
 const routes: Routes = [
@@ -58,8 +60,10 @@ const routes: Routes = [
   { path: 'admin/category', component: CategoryListComponent,  canActivate: [authGuard], },
   { path: 'admin/category/add', component: CategoryAddComponent ,  canActivate: [authGuard],},
   { path: 'admin/category/update/:id', component: CategoryAddComponent ,  canActivate: [authGuard],},
-  { path: 'cart/summary',component: SumaryOrderComponent, canActivate: [authGuard],},
+  { path: 'cart/summary',component: SumaryOrderComponent },
   { path: 'admin/orders', component: OrderListComponent, canActivate:[authGuard],},
+  { path: 'admin/stock', component: StockAdminComponent, canActivate:[authGuard],},
+  { path: 'profile', component: UserOrdersComponent, canActivate:[authGuard],},
 ];
 
 @NgModule({
@@ -83,6 +87,8 @@ const routes: Routes = [
     ContactFormComponent,
     ProductHomeComponent,
     OrderListComponent,  
+    StockAdminComponent,
+    UserOrdersComponent,
   ],
   imports: [
     BrowserModule,

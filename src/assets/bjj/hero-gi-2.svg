@@ -1,0 +1,11 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="800" fill="#F7F7F5"/>
+  <rect x="140" y="120" width="920" height="560" rx="40" fill="#FFFFFF" stroke="#1A1A1A" stroke-width="3"/>
+  <path d="M360 240L600 200L840 240L900 340L820 400L720 330L600 360L480 330L380 400L300 340L360 240Z" fill="#111111"/>
+  <path d="M480 360L600 430L720 360L760 600H440L480 360Z" fill="#1A1A1A"/>
+  <path d="M300 340L220 480L310 610L420 560L390 380L300 340Z" fill="#222222"/>
+  <path d="M900 340L980 480L890 610L780 560L810 380L900 340Z" fill="#222222"/>
+  <rect x="500" y="440" width="200" height="16" rx="8" fill="#D7B35C"/>
+  <rect x="470" y="610" width="260" height="26" rx="13" fill="#B0121B"/>
+  <text x="490" y="628" font-family="Oswald, Arial" font-size="14" fill="#FFFFFF" letter-spacing="2">PEARL WEAVE</text>
+</svg>

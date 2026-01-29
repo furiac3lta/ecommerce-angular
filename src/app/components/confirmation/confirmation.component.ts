@@ -36,9 +36,9 @@ export class ConfirmationComponent implements OnInit {
     if (this.order && this.order.id !== null) {
       // Si el pago fue exitoso, actualizar el estado de la orden
       const orderId = this.order.id;
-      const newState = this.status === 'approved' ? OrderState.CONFIRMED : OrderState.CANCELLED;
+      const newState = this.status === 'approved' ? OrderState.COMPLETED : OrderState.CANCELLED;
 
-      this.orderService.updateOrderStatus(orderId, newState.toString()).subscribe(
+      this.orderService.updateOrderStatus(orderId, newState).subscribe(
         () => {
           console.log(`Estado de la orden actualizado a ${newState}`);
           console.log('LogoutComponent: ' + this.sessionStorage.getItem('token'));

@@ -1,72 +1,106 @@
 <app-navbar></app-navbar>
 
-<div class="container mx-auto px-4">
-  <!-- Título y Breadcrumbs -->
+<div class="max-w-[1200px] mx-auto px-4 py-10">
+  <div class="grid gap-8 lg:grid-cols-[2fr,1fr]">
+    <div class="bg-white shadow-md rounded-2xl p-6 border border-black/10">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4">Carrito</h2>
 
-  <nav
-    class="flex mb-6 text-gray-600 text-sm justify-center md:justify-start"
-  ></nav>
+      <div class="space-y-5 md:hidden">
+        <div *ngFor="let item of items" class="rounded-2xl border border-black/10 bg-white p-4 shadow-sm">
+          <div class="flex gap-4">
+            <img
+              [src]="item.imageUrl || 'assets/bjj/kimono.png'"
+              [alt]="item.productName"
+              class="h-28 w-28 rounded-xl object-cover border border-black/10"
+            />
+            <div class="flex-1">
+              <h3 class="text-lg font-semibold text-gray-900">{{ item.productName }}</h3>
+              <p class="text-sm text-gray-600 mt-1">
+                Talle: <span class="font-medium text-gray-900">{{ item.size || '—' }}</span>
+              </p>
+              <p class="text-sm text-gray-600">
+                Color: <span class="font-medium text-gray-900">{{ item.color || '—' }}</span>
+              </p>
+              <p class="text-sm text-gray-600">
+                Precio unitario:
+                <span class="font-semibold text-gray-900">{{ item.price | currency: 'ARS' : 'symbol-narrow' }}</span>
+              </p>
+            </div>
+          </div>
 
-  <!-- Tarjeta Principal -->
-  <div class="bg-white shadow-md rounded-lg mb-8 p-6">
-    <div class="md:flex">
-      <!-- Sección de Datos de la Orden -->
-      <div class="md:w-3/4 md:pr-8">
-        <h2
-          class="text-2xl font-semibold text-gray-700 mb-4 text-center md:text-left"
-        >
-          Datos
-        </h2>
-        <p class="text-gray-700">
-          <strong>Nombre:</strong> {{ firstName }} {{ lastName }}
-        </p>
-        <p class="text-gray-700"><strong>Correo:</strong> {{ email }}</p>
-        <p class="text-gray-700"><strong>Dirección:</strong> {{ address }}</p>
+          <div class="mt-4 flex items-center justify-between gap-3">
+            <div class="flex items-center rounded-full border border-black/10 bg-gray-50 px-2 py-1">
+              <button
+                class="h-9 w-9 rounded-full bg-black text-white text-lg"
+                (click)="decreaseQuantity(item)"
+              >
+                −
+              </button>
+              <span class="w-10 text-center font-semibold text-gray-900">{{ item.quantity }}</span>
+              <button
+                class="h-9 w-9 rounded-full bg-black text-white text-lg"
+                (click)="increaseQuantity(item)"
+              >
+                +
+              </button>
+            </div>
+            <div class="text-right">
+              <p class="text-xs uppercase tracking-wide text-gray-500">Subtotal</p>
+              <p class="text-lg font-semibold text-gray-900">
+                {{ item.getTotalPriceItem() | currency: 'ARS' : 'symbol-narrow' }}
+              </p>
+            </div>
+          </div>
 
-            <!-- Sección de Productos -->
-            <h2
-            class="text-2xl font-semibold text-gray-700 mt-6 mb-4 text-center md:text-left"
+          <button
+            class="mt-4 w-full rounded-full border border-red-500/40 bg-white py-2 text-sm font-semibold text-red-600"
+            (click)="deleteItemCart(item.productVariantId)"
           >
-            Consultar stock de productos al whatsapp
-          </h2>
-        <!-- Sección de Productos -->
-        <h2
-          class="text-2xl font-semibold text-gray-700 mt-6 mb-4 text-center md:text-left"
-        >
-          Productos
-        </h2>
+            Eliminar producto
+          </button>
+        </div>
+      </div>
+
+      <div class="hidden md:block">
         <div class="overflow-x-auto">
-          <table class="w-full border border-gray-200 rounded-lg shadow-sm">
-            <thead class="bg-gray-100 border-b border-gray-200">
+          <table class="table-shell">
+            <thead>
               <tr>
-                <th class="px-4 py-2 text-left text-gray-700">Producto</th>
-                <th class="px-4 py-2 text-left text-gray-700">Precio</th>
-                <th class="px-4 py-2 text-left text-gray-700">Cantidad</th>
-                <th class="px-4 py-2 text-left text-gray-700">Total</th>
-                <th class="px-4 py-2 text-left text-gray-700">Eliminar</th>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Precio unitario</th>
+                <th>Subtotal</th>
+                <th>Eliminar</th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let item of items" class="border-b border-gray-200">
-                <td class="px-4 py-2 text-gray-800">{{ item.productName }}</td>
-                <td class="px-4 py-2 text-gray-800">{{ item.price }}</td>
-                <td class="px-4 py-2 text-gray-800">
-                  <input
-                    type="number"
-                    [(ngModel)]="item.quantity"
-                    (change)="updateQuantity(item)"
-                    min="1"
-                    class="w-16 border border-gray-300 rounded-lg px-2 py-1"
-                  />
+              <tr *ngFor="let item of items">
+                <td>
+                  <div class="flex items-center gap-3">
+                    <img
+                      [src]="item.imageUrl || 'assets/bjj/kimono.png'"
+                      [alt]="item.productName"
+                      class="h-14 w-14 rounded-lg object-cover border border-black/10"
+                    />
+                    <div>
+                      <p class="font-semibold text-gray-900">{{ item.productName }}</p>
+                      <p class="text-sm text-gray-600">Talle: {{ item.size || '—' }} · Color: {{ item.color || '—' }}</p>
+                    </div>
+                  </div>
                 </td>
-                <td class="px-4 py-2 text-gray-800">{{ item.quantity }}</td>
-                <td class="px-4 py-2 text-gray-800">
-                  {{ item.getTotalPriceItem() }}
+                <td>
+                  <div class="flex items-center gap-2">
+                    <button class="h-8 w-8 rounded-full border border-black/20" (click)="decreaseQuantity(item)">−</button>
+                    <span class="w-8 text-center font-semibold">{{ item.quantity }}</span>
+                    <button class="h-8 w-8 rounded-full border border-black/20" (click)="increaseQuantity(item)">+</button>
+                  </div>
                 </td>
-                <td class="px-4 py-2">
+                <td>{{ item.price | currency: 'ARS' : 'symbol-narrow' }}</td>
+                <td>{{ item.getTotalPriceItem() | currency: 'ARS' : 'symbol-narrow' }}</td>
+                <td>
                   <button
-                    class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
-                    (click)="deleteItemCart(item.productId)"
+                    class="button-item button-item--outline button-item--sm"
+                    (click)="deleteItemCart(item.productVariantId)"
                   >
                     Quitar
                   </button>
@@ -77,28 +111,61 @@
         </div>
       </div>
 
-      <!-- Sección de Resumen de la Orden -->
-      <div class="md:w-1/4 mt-6 md:mt-0">
-        <h2
-          class="text-2xl font-semibold text-gray-700 mb-4 text-center md:text-left"
+      <div class="mt-8" *ngIf="!isLoggedIn">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Finalizar compra</h3>
+        <div class="flex gap-3 mb-6">
+          <button class="px-4 py-2 rounded-full border" [class]="!isRegisterMode ? 'bg-black text-white' : 'bg-white text-black'" (click)="isRegisterMode = false">Ya tengo cuenta</button>
+          <button class="px-4 py-2 rounded-full border" [class]="isRegisterMode ? 'bg-black text-white' : 'bg-white text-black'" (click)="isRegisterMode = true">Crear cuenta</button>
+        </div>
+
+        <div *ngIf="!isRegisterMode" class="grid gap-4 md:grid-cols-2">
+          <input [(ngModel)]="loginEmail" type="email" class="input-item" placeholder="Email" />
+          <input [(ngModel)]="loginPassword" type="password" class="input-item" placeholder="Contraseña" />
+          <button class="button-item w-full md:col-span-2" (click)="login()">Ingresar</button>
+        </div>
+
+        <div *ngIf="isRegisterMode" class="grid gap-4 md:grid-cols-2">
+          <input [(ngModel)]="registerName" type="text" class="input-item" placeholder="Nombre" />
+          <input [(ngModel)]="registerSurname" type="text" class="input-item" placeholder="Apellido" />
+          <input [(ngModel)]="registerEmail" type="email" class="input-item md:col-span-2" placeholder="Email" />
+          <input [(ngModel)]="registerCellphone" type="text" class="input-item" placeholder="Teléfono" />
+          <input [(ngModel)]="registerAddress" type="text" class="input-item" placeholder="Dirección (opcional)" />
+          <p class="text-xs text-gray-500 md:col-span-2">Tu teléfono se usará como contraseña para este acceso.</p>
+          <button class="button-item w-full md:col-span-2" (click)="register()">Crear cuenta y continuar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="space-y-6">
+      <div class="bg-white shadow-md rounded-2xl p-6 border border-black/10 md:sticky md:top-6">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Resumen</h2>
+        <div class="text-lg font-semibold text-gray-700 mb-4">
+          Total: {{ totalCart | currency: 'ARS' : 'symbol-narrow' }}
+        </div>
+        <p class="text-sm text-gray-500 mb-4">Envío a coordinar.</p>
+        <button
+          class="button-item w-full"
+          (click)="generateOrder()"
         >
-          Resumen Orden
-        </h2>
-        <ul
-          class="bg-gray-100 border border-gray-200 rounded-lg shadow-sm p-4 space-y-2 text-center md:text-left"
-        >
-          <li class="text-lg font-semibold text-gray-700">
-            Total: {{ totalCart }}
-          </li>
-          <li>
-            <button
-              class="bg-gray-800 hover:bg-gray-900 text-white font-bold py-2 px-4 w-full rounded mt-4"
-              (click)="generateOrder()"
-            >
-              Pagar con Mercado Pago
-            </button>
-          </li>
-        </ul>
+          Finalizar compra
+        </button>
+        <p class="text-xs text-gray-500 mt-4">Pago por transferencia. Confirmación manual.</p>
+        <p class="text-xs text-gray-500">Reservamos tu producto por 30 minutos mientras realizás el pago.</p>
+      </div>
+
+      <div *ngIf="orderCreated" class="bg-black text-white rounded-2xl p-6">
+        <h3 class="text-xl font-semibold mb-4">Datos para transferencia</h3>
+        <div class="text-sm text-gray-200 space-y-2">
+          <p><strong>Alias:</strong> {{ environment.transferAlias }}</p>
+          <p><strong>CBU:</strong> {{ environment.transferCbu }}</p>
+          <p><strong>Banco:</strong> {{ environment.transferBank }}</p>
+          <p><strong>Titular:</strong> {{ environment.transferHolder }}</p>
+          <p><strong>Orden:</strong> #{{ orderCreated.id }}</p>
+          <p><strong>Monto:</strong> {{ totalCart | currency: 'ARS' : 'symbol-narrow' }}</p>
+        </div>
+        <button class="button-item w-full mt-6" (click)="sendWhatsapp()">
+          Enviar comprobante por WhatsApp
+        </button>
       </div>
     </div>
   </div>

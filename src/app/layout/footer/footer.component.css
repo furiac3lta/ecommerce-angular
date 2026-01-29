@@ -1,0 +1,13 @@
+.footer-shell {
+  background: var(--footer-bg);
+  color: var(--footer-text);
+}
+
+.footer-link {
+  color: var(--footer-text);
+  transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+  color: var(--accent-gold);
+}

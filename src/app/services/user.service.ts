@@ -30,12 +30,13 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { User } from '../common/user';
 import { HeaderService } from './header.service';
+import { environment } from 'src/enviroments/enviroment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  private apiUrl: string = 'https://ecommerce-back-0cc9b90e39e5.herokuapp.com/api/v1/users';
+  private apiUrl: string = `${environment.apiBaseUrl}/api/v1/users`;
 
   constructor(private httpClient: HttpClient, private headerService: HeaderService) {}
 

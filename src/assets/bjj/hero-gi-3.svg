@@ -1,0 +1,11 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="800" fill="#0F0F0F"/>
+  <rect x="120" y="110" width="960" height="580" rx="48" fill="#151515" stroke="#2B2B2B" stroke-width="2"/>
+  <path d="M340 230L600 190L860 230L930 340L830 420L720 340L600 380L480 340L370 420L270 340L340 230Z" fill="#F7F7F5"/>
+  <path d="M480 380L600 460L720 380L760 610H440L480 380Z" fill="#E2E2DF"/>
+  <path d="M270 340L190 490L280 640L420 580L380 400L270 340Z" fill="#E2E2DF"/>
+  <path d="M930 340L1010 490L920 640L780 580L820 400L930 340Z" fill="#E2E2DF"/>
+  <rect x="520" y="470" width="160" height="14" rx="7" fill="#B0121B"/>
+  <rect x="520" y="610" width="160" height="22" rx="11" fill="#D7B35C"/>
+  <text x="532" y="626" font-family="Oswald, Arial" font-size="12" fill="#0B0B0B" letter-spacing="1.5">350 GSM</text>
+</svg>

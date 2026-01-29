@@ -4,12 +4,13 @@ import { Observable } from 'rxjs';
 import { User } from '../common/user';
 import { Userdto } from '../common/userdto';
 import { Jwtclient } from '../common/jwtclient';
+import { environment } from 'src/enviroments/enviroment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
-  private apiUrl:string= 'https://ecommerce-back-0cc9b90e39e5.herokuapp.com/api/v1/security'
+  private apiUrl:string= `${environment.apiBaseUrl}/api/v1/security`;
 
   constructor(private httpClient:HttpClient) {  }
 

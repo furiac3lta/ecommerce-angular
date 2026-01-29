@@ -1,22 +1,24 @@
 <app-navbar></app-navbar>
 
-<div class="contact-form-container flex items-center justify-center bg-gray-200 h-without-layout">
-    <div class="contact-form p-8 bg-gray-100 rounded-lg shadow-lg w-full lg:w-1/2 xl:w-1/2 flex flex-col items-center">
-      <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Contáctanos</h2>
-      <form (ngSubmit)="onSubmit()" #contactForm="ngForm" class="w-full lg:w-2/3 xl:w-1/2">
-        <div class="w-full mb-6">
-          <input type="text" id="name" name="name" ngModel required class="hover:ring-teal-300 text-s w-full py-3 px-10 bg-slate-200 placeholder:font-normal rounded hover:ring-1 outline-teal-500" placeholder="Nombre">
-        </div>
-        <div class="w-full mb-6">
-          <input type="email" id="email" name="email" ngModel required class="hover:ring-teal-300 text-s w-full py-1 px-8 bg-slate-200 placeholder:font-normal rounded hover:ring-1 outline-teal-500" placeholder="Correo Electrónico">
-        </div>
-        <div class="w-full mb-6">
-          <textarea id="message" name="message" ngModel required class="hover:ring-teal-300 text-s w-full py-1 px-8 bg-slate-200 placeholder:font-normal rounded hover:ring-1 outline-teal-500" placeholder="Mensaje"></textarea>
-        </div>
-        <div class="w-full mt-4">
-          <button type="submit" [disabled]="!contactForm.valid" class="py-2 bg-teal-400 w-full rounded text-yellow-50 font-bold hover:bg-teal-700 transition-all duration-500">Enviar</button>
-        </div>
-      </form>
-    </div>
+<div class="contact-form-container flex items-center justify-center bg-transparent py-16 px-4">
+  <div class="contact-form p-8 bg-white rounded-3xl shadow-xl w-full lg:w-1/2 xl:w-1/2 flex flex-col items-center border border-black/10">
+    <p class="text-xs uppercase tracking-[0.3em] text-gray-500">Contacto</p>
+    <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">Habla con Lions Brand</h2>
+    <p class="text-sm text-gray-600 mb-8 text-center">Consultas sobre talles, envíos o disponibilidad. También podés escribirnos por Instagram.</p>
+    <form (ngSubmit)="onSubmit()" #contactForm="ngForm" class="w-full lg:w-2/3 xl:w-1/2 space-y-5">
+      <div class="w-full">
+        <input type="text" id="name" name="name" ngModel required class="input-item" placeholder="Nombre">
+      </div>
+      <div class="w-full">
+        <input type="email" id="email" name="email" ngModel required class="input-item" placeholder="Correo Electrónico">
+      </div>
+      <div class="w-full">
+        <textarea id="message" name="message" ngModel required class="input-item h-28" placeholder="Mensaje"></textarea>
+      </div>
+      <div class="w-full">
+        <button type="submit" [disabled]="!contactForm.valid" class="button-item w-full">Enviar</button>
+      </div>
+    </form>
   </div>
+</div>
 <app-footer></app-footer>

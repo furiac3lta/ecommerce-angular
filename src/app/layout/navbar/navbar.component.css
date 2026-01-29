@@ -1,3 +1,20 @@
-#mat-badge-content-0{
-    right: 100px !important;
+.cart-button {
+  position: relative;
+}
+
+::ng-deep .mat-badge-content {
+  font-size: 11px;
+  min-width: 18px;
+  height: 18px;
+  line-height: 18px;
+}
+
+.navbar-shell {
+  background: var(--bg-main);
+  border-bottom: 1px solid var(--border-divider);
+  backdrop-filter: blur(10px);
+}
+
+.icon-button {
+  color: var(--text-main);
 }
