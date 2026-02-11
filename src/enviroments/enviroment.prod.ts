@@ -1,7 +1,7 @@
 // src/environments/environment.prod.ts
 export const environment = {
     production: true,
-    apiBaseUrl: 'https://ecommerce-back-0cc9b90e39e5.herokuapp.com',
+    apiBaseUrl: 'ecommerce-backend-production-3fca.up.railway.app',
     transferAlias: 'LIONS.BRAND',
     transferCbu: '0000000000000000000000',
     transferBank: 'Banco',
