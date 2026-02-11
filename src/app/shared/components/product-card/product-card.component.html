@@ -1,25 +1,70 @@
 <mat-card class="product-card">
-  <div class="product-media" (click)="goToDetail()">
-    <img
-      mat-card-image
-      [src]="product.urlImage"
-      [alt]="product.name"
-    />
+  <div
+    class="product-media"
+    (click)="goToDetail()"
+    (mouseenter)="pauseAutoSlide()"
+    (mouseleave)="resumeAutoSlide()"
+  >
+    <div class="product-slider">
+      <img
+        *ngFor="let image of images; let i = index"
+        mat-card-image
+        [src]="image"
+        [alt]="product.name"
+        [class.is-active]="i === currentImageIndex"
+      />
+    </div>
+    <div class="product-badges" *ngIf="getDeliveryLabel() as deliveryLabel">
+      <span class="product-badge badge-warning">{{ deliveryLabel }}</span>
+    </div>
+    <button
+      *ngIf="images.length > 1"
+      type="button"
+      class="media-nav prev"
+      (click)="prevImage($event)"
+      aria-label="Imagen anterior"
+    >
+      ‹
+    </button>
+    <button
+      *ngIf="images.length > 1"
+      type="button"
+      class="media-nav next"
+      (click)="nextImage($event)"
+      aria-label="Imagen siguiente"
+    >
+      ›
+    </button>
+    <div class="media-dots" *ngIf="images.length > 1">
+      <button
+        *ngFor="let image of images; let i = index"
+        type="button"
+        class="media-dot"
+        [class.is-active]="i === currentImageIndex"
+        (click)="goToImage(i, $event)"
+        [attr.aria-label]="'Ir a imagen ' + (i + 1)"
+      ></button>
+    </div>
     <span class="product-tag">BJJ Gi</span>
   </div>
   <mat-card-content class="product-body">
-    <h3 (click)="goToDetail()" class="product-title">{{ product.name }}</h3>
     <p class="product-meta">Código {{ product.code }}</p>
+    <h3 (click)="goToDetail()" class="product-title">{{ product.name }}</h3>
     <div class="product-price">{{ product.price | currency: 'ARS' : 'symbol-narrow' }}</div>
   </mat-card-content>
   <mat-card-actions class="product-actions">
     <button
       (click)="addCart()"
-      mat-flat-button
-      color="primary"
-      class="product-cta"
+      class="button-item product-cta product-cta--primary"
     >
       Elegir talle
+    </button>
+    <button
+      type="button"
+      class="button-item button-item--outline product-cta"
+      (click)="goToDetail()"
+    >
+      Ver detalles
     </button>
   </mat-card-actions>
 </mat-card>

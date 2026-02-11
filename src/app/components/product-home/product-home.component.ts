@@ -11,16 +11,27 @@ import { Category } from 'src/app/common/category';
 export class ProductHomeComponent implements OnInit {
   products: Product[] = [];
   productsFiltered: Product[] = [];
+  isLoading = false;
   constructor(private homeService:HomeService){
 
   }
   ngOnInit(): void {
+    this.isLoading = true;
     this.homeService.getProducts().subscribe({
       next: products => {
-        this.products = products;
-        this.productsFiltered = products;
+        const normalized = products.map(product => ({
+          ...product,
+          price: product.price != null ? Number(product.price) : product.price
+        }));
+        const visible = normalized.filter(product => product.sellOnline !== false);
+        this.products = visible;
+        this.productsFiltered = visible;
+        this.isLoading = false;
       },
-      error: err => console.log(err)
+      error: err => {
+        console.log(err);
+        this.isLoading = false;
+      }
     }
     )
   }

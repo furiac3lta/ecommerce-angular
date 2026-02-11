@@ -4,15 +4,19 @@ import { Order } from 'src/app/common/order';
 import { OrderProduct } from 'src/app/common/order-product';
 import { OrderState } from 'src/app/common/order-state';
 import { CartService } from 'src/app/services/cart.service';
+import { HomeService } from 'src/app/services/home.service';
+import { forkJoin } from 'rxjs';
 import { OrderService } from 'src/app/services/order.service';
 import { environment } from 'src/enviroments/enviroment';
 import { SessionStorageService } from 'src/app/services/session-storage.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { Userdto } from 'src/app/common/userdto';
 import { User } from 'src/app/common/user';
-import { ToastrService } from 'ngx-toastr';
 import { UserType } from 'src/app/common/user-type';
 import { UserService } from 'src/app/services/user.service';
+import { ProductVariantService } from 'src/app/services/product-variant.service';
+import { AlertService } from 'src/app/services/alert.service';
+import { MICROCOPY } from 'src/app/constants/microcopy';
 
 @Component({
   selector: 'app-sumary-order',
@@ -33,6 +37,9 @@ export class SumaryOrderComponent implements OnInit {
   orderCreated: Order | null = null;
   isLoggedIn: boolean = false;
   isRegisterMode: boolean = false;
+  deliveryInfo: Record<number, { type: 'IMMEDIATE' | 'DELAYED'; date?: string; days?: number; note?: string }> = {};
+  hasDelayedItems = false;
+  isSubmitting = false;
 
   loginEmail: string = '';
   loginPassword: string = '';
@@ -48,13 +55,17 @@ export class SumaryOrderComponent implements OnInit {
     private orderService: OrderService,
     private sessionStorage: SessionStorageService,
     private authentication: AuthenticationService,
-    private toastr: ToastrService,
-    private userService: UserService
+    private alertService: AlertService,
+    private userService: UserService,
+    private homeService: HomeService,
+    private productVariantService: ProductVariantService
   ) {}
 
   ngOnInit(): void {
     this.items = this.cartService.convertToListFromMap();
     this.totalCart = this.cartService.totalCart();
+    this.refreshCartPrices();
+    this.refreshDeliveryInfo();
     const userToken = this.sessionStorage.getItem('token');
     if (userToken && userToken.id) {
       this.userId = userToken.id;
@@ -63,11 +74,113 @@ export class SumaryOrderComponent implements OnInit {
     }
   }
 
-  generateOrder(): void {
-    if (!this.isLoggedIn) {
-      this.toastr.error('Inicia sesión o registrate para continuar', 'Acceso requerido');
+  private refreshCartPrices(): void {
+    if (!this.items.length) {
       return;
     }
+    const requests = this.items.map((item) => this.homeService.getProductById(item.productId));
+    forkJoin(requests).subscribe({
+      next: (products) => {
+        products.forEach((product, index) => {
+          const item = this.items[index];
+          if (item && product && product.price != null) {
+            this.cartService.updateItemPrice(item.productVariantId, product.price);
+          }
+        });
+        this.items = this.cartService.convertToListFromMap();
+        this.totalCart = this.cartService.totalCart();
+      },
+      error: () => {
+        // Si falla, se mantiene el precio actual del carrito.
+      }
+    });
+  }
+
+  private refreshDeliveryInfo(): void {
+    if (!this.items.length) {
+      this.deliveryInfo = {};
+      this.hasDelayedItems = false;
+      return;
+    }
+    const requests = this.items.map((item) =>
+      forkJoin({
+        product: this.homeService.getProductById(item.productId),
+        variant: this.productVariantService.getById(item.productVariantId),
+      })
+    );
+    forkJoin(requests).subscribe({
+      next: (results) => {
+        const infoMap: Record<number, { type: 'IMMEDIATE' | 'DELAYED'; date?: string; days?: number; note?: string }> = {};
+        let delayed = false;
+        results.forEach((result, index) => {
+          const item = this.items[index];
+          const variant = result.variant;
+          const product = result.product;
+          const type = (variant?.deliveryType || product?.deliveryType || 'IMMEDIATE') as 'IMMEDIATE' | 'DELAYED';
+          const date = variant?.estimatedDeliveryDate || product?.estimatedDeliveryDate || undefined;
+          const days = variant?.estimatedDeliveryDays ?? product?.estimatedDeliveryDays;
+          const note = variant?.deliveryNote || product?.deliveryNote || undefined;
+          infoMap[item.productVariantId] = { type, date, days, note };
+          if (type === 'DELAYED') {
+            delayed = true;
+          }
+        });
+        this.deliveryInfo = infoMap;
+        this.hasDelayedItems = delayed;
+      },
+      error: () => {
+        this.deliveryInfo = {};
+        this.hasDelayedItems = false;
+      }
+    });
+  }
+
+  getDeliveryLabel(item: ItemCart): string | null {
+    const info = this.deliveryInfo[item.productVariantId];
+    if (!info || info.type !== 'DELAYED') {
+      return null;
+    }
+    if (info.date) {
+      return `Entrega estimada: ${new Date(info.date).toLocaleDateString()}`;
+    }
+    if (info.days !== undefined && info.days !== null && info.days > 0) {
+      return `Entrega estimada en ${info.days} días`;
+    }
+    if (info.note) {
+      return info.note;
+    }
+    return 'Este producto tiene demora de entrega.';
+  }
+
+  getGlobalDeliveryMessage(): string | null {
+    if (!this.hasDelayedItems) {
+      return null;
+    }
+    const dates: Date[] = [];
+    Object.values(this.deliveryInfo).forEach((info) => {
+      if (info.type !== 'DELAYED') {
+        return;
+      }
+      if (info.date) {
+        dates.push(new Date(info.date));
+      }
+    });
+    if (dates.length) {
+      const latest = new Date(Math.max(...dates.map((d) => d.getTime())));
+      return `Entrega estimada para: ${latest.toLocaleDateString()}.`;
+    }
+    return 'Tu pedido incluye productos con entrega diferida.';
+  }
+
+  generateOrder(): void {
+    if (!this.isLoggedIn) {
+      this.alertService.errorAlert('Iniciá sesión o registrate para continuar.');
+      return;
+    }
+    if (this.isSubmitting || this.orderCreated) {
+      return;
+    }
+    this.isSubmitting = true;
 
     this.orderProducts = [];
     this.items.forEach((item) => {
@@ -84,15 +197,18 @@ export class SumaryOrderComponent implements OnInit {
     });
     let order = new Order(null, new Date(), this.orderProducts, this.userId, OrderState.PENDING);
 
-    this.orderService.createOrder(order).subscribe({
-      next: (data) => {
-        this.orderCreated = data;
-        this.toastr.success('Orden creada. Realiza la transferencia.', 'Orden PENDING');
-      },
-      error: (error) => {
-        console.error('Error al crear la orden:', error);
-        this.toastr.error('No hay stock disponible para uno de los productos', 'Stock insuficiente');
-      }
+    this.alertService.infoAlert(MICROCOPY.cart.reserveStock, 'Confirmar compra').then(() => {
+      this.orderService.createOrder(order).subscribe({
+        next: (data) => {
+          this.orderCreated = data;
+          this.alertService.successAlert(MICROCOPY.cart.orderPending);
+        },
+        error: (error) => {
+          console.error('Error al crear la orden:', error);
+          this.alertService.errorAlert('No hay stock disponible para uno de los productos.');
+          this.isSubmitting = false;
+        }
+      });
     });
   }
 
@@ -170,10 +286,10 @@ updateQuantity(item: ItemCart): void {
         this.userId = token.id;
         this.isLoggedIn = true;
         this.loadUserById(this.userId);
-        this.toastr.success('Sesión iniciada', 'Bienvenido');
+        this.alertService.successAlert('Sesión iniciada.', 'Bienvenido');
       },
     error: () => {
-      this.toastr.error('Credenciales inválidas', 'Login');
+      this.alertService.errorAlert('Credenciales inválidas.');
     }
   });
 }
@@ -196,11 +312,11 @@ updateQuantity(item: ItemCart): void {
     next: () => {
       this.loginEmail = this.registerEmail;
       this.loginPassword = password;
-      this.toastr.success('Usuario registrado', 'Registro');
+      this.alertService.successAlert('Usuario registrado.');
       this.login();
     },
     error: () => {
-      this.toastr.error('No se pudo registrar', 'Registro');
+      this.alertService.errorAlert('No se pudo registrar.');
     }
   });
 }

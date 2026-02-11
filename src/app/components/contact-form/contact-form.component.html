@@ -1,9 +1,9 @@
 <app-navbar></app-navbar>
 
 <div class="contact-form-container flex items-center justify-center bg-transparent py-16 px-4">
-  <div class="contact-form p-8 bg-white rounded-3xl shadow-xl w-full lg:w-1/2 xl:w-1/2 flex flex-col items-center border border-black/10">
+  <div class="contact-form p-8 ds-card w-full lg:w-1/2 xl:w-1/2 flex flex-col items-center">
     <p class="text-xs uppercase tracking-[0.3em] text-gray-500">Contacto</p>
-    <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">Habla con Lions Brand</h2>
+    <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">Hablá con Lions Brand</h2>
     <p class="text-sm text-gray-600 mb-8 text-center">Consultas sobre talles, envíos o disponibilidad. También podés escribirnos por Instagram.</p>
     <form (ngSubmit)="onSubmit()" #contactForm="ngForm" class="w-full lg:w-2/3 xl:w-1/2 space-y-5">
       <div class="w-full">
@@ -18,6 +18,7 @@
       <div class="w-full">
         <button type="submit" [disabled]="!contactForm.valid" class="button-item w-full">Enviar</button>
       </div>
+      <p class="text-xs text-gray-500 text-center">Te respondemos dentro de las 24 a 48 horas hábiles.</p>
     </form>
   </div>
 </div>

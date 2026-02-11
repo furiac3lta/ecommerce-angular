@@ -7,20 +7,37 @@
       >Crear Categoría</a
     >
   </div>
+  <p class="ux-helper mb-4">Usá categorías para ordenar el catálogo y mejorar la navegación.</p>
 
-  <div class="space-y-4 md:hidden">
-    <div *ngFor="let c of categories" class="rounded-2xl border border-divider bg-surface p-4 shadow-sm">
+  <div *ngIf="isLoading" class="ux-skeleton-grid">
+    <div class="skeleton-card">
+      <div class="skeleton-block skeleton-line"></div>
+      <div class="skeleton-block skeleton-line"></div>
+    </div>
+    <div class="skeleton-card">
+      <div class="skeleton-block skeleton-line"></div>
+      <div class="skeleton-block skeleton-line"></div>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading && categories.length === 0" class="ux-empty">
+    No hay categorías creadas. Agregá una para organizar los productos.
+  </div>
+
+  <div class="space-y-4 md:hidden" *ngIf="!isLoading && categories.length > 0">
+    <div *ngFor="let c of categories" class="ds-card">
       <p class="text-xs uppercase tracking-widest text-secondary">Categoría</p>
       <h3 class="text-lg font-semibold text-main mt-1">{{ c.name }}</h3>
+      <p class="text-sm text-secondary mt-2">Precio: {{ c.price | currency: 'ARS' : 'symbol-narrow' }}</p>
       <div class="mt-4 flex gap-2">
         <button
-          class="flex-1 rounded-full border border-divider py-2 text-sm font-semibold text-main"
+          class="button-item button-item--outline button-item--sm flex-1"
           [routerLink]="['/admin/category/update', c.id]"
         >
           Editar
         </button>
         <button
-          class="flex-1 rounded-full border border-red-500/40 py-2 text-sm font-semibold text-red-600"
+          class="button-item button-item--danger button-item--sm flex-1"
           (click)="deleteCategoryById(c.id)"
         >
           Eliminar
@@ -29,11 +46,12 @@
     </div>
   </div>
 
-  <div class="hidden md:block overflow-x-auto">
-    <table class="table-shell">
+  <div class="hidden md:block overflow-x-auto" *ngIf="!isLoading && categories.length > 0">
+    <table class="table-shell admin-table">
       <thead>
         <tr>
           <th>Nombre</th>
+          <th>Precio</th>
           <th>Editar</th>
           <th>Eliminar</th>
         </tr>
@@ -42,7 +60,8 @@
         <tr
           *ngFor="let c of categories"
         >
-          <td>{{ c.name }}</td>
+          <td class="table-cell">{{ c.name }}</td>
+          <td class="table-cell">{{ c.price | currency: 'ARS' : 'symbol-narrow' }}</td>
           <td>
             <button
               class="button-item button-item--outline button-item--sm"

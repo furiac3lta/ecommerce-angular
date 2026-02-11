@@ -8,12 +8,23 @@
     <p class="text-xs text-secondary">Cuando el envío esté cargado vas a ver el número de guía y el estado.</p>
   </div>
 
-  <div class="orders-list">
+  <div *ngIf="isLoading" class="ux-skeleton-grid">
+    <div class="skeleton-card">
+      <div class="skeleton-block skeleton-line"></div>
+      <div class="skeleton-block skeleton-line"></div>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading && orders.length === 0" class="ux-empty">
+    Todavía no tenés pedidos. Cuando compres, vas a ver el historial acá.
+  </div>
+
+  <div class="orders-list" *ngIf="!isLoading && orders.length > 0">
     <div *ngFor="let order of orders" class="order-card">
       <div class="order-header">
         <div>
           <p class="text-xs uppercase tracking-[0.2em] text-secondary">Orden</p>
-          <h3>#{{ order.id }}</h3>
+          <h3>{{ order.orderNumber || ('#' + order.id) }}</h3>
           <p class="text-sm text-secondary">{{ order.dateCreated | date:'short' }}</p>
         </div>
         <span class="status-pill" [ngClass]="'badge-' + order.orderState">{{ order.orderState }}</span>
@@ -22,6 +33,13 @@
       <div class="order-total">
         Total: {{ order.total || order.totalOrderPrice || 0 | currency }}
       </div>
+      <div class="text-xs text-secondary" *ngIf="order.balanceDue || order.balanceCredit">
+        <span *ngIf="order.balanceDue">Saldo a cobrar: {{ order.balanceDue | currency }}</span>
+        <span *ngIf="order.balanceCredit">Saldo a favor: {{ order.balanceCredit | currency }}</span>
+      </div>
+      <p *ngIf="getDeliveryMessage(order)" class="mt-2 text-sm text-amber-700">
+        {{ getDeliveryMessage(order) }}
+      </p>
 
       <div class="shipment-box" *ngIf="order.id && shipments[order.id] as shipment; else noShipment">
         <p class="section-title">Datos de envío</p>
@@ -38,6 +56,39 @@
       <ng-template #noShipment>
         <p class="text-sm text-secondary">Aún no hay datos de envío cargados.</p>
       </ng-template>
+
+      <div class="mt-4" *ngIf="order.id && hasAdjustments(order.id)">
+        <p class="section-title">Devoluciones / cambios</p>
+        <div class="space-y-2">
+          <div class="text-xs text-secondary" *ngFor="let movement of movementsByOrder[order.id]">
+            <ng-container *ngIf="movement.reason === 'RETURN' || movement.reason === 'EXCHANGE_IN' || movement.reason === 'EXCHANGE_OUT'">
+              <span class="font-semibold text-gray-800">{{ getAdjustmentLabel(movement.reason) }}</span>
+              · Var#{{ movement.variantId }} · x{{ movement.qty }}
+              <span *ngIf="movement.note">· {{ movement.note }}</span>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <button class="button-item button-item--outline button-item--sm" (click)="toggleTimeline(order.id!)">
+          {{ openTimelines[order.id!] ? 'Ocultar timeline' : 'Ver timeline' }}
+        </button>
+        <div class="timeline" *ngIf="order.id && openTimelines[order.id]">
+          <p class="text-xs uppercase tracking-[0.2em] text-secondary mb-2">Timeline</p>
+          <div *ngIf="!timelineByOrder[order.id]" class="text-xs text-secondary">Cargando...</div>
+          <div *ngIf="timelineByOrder[order.id] && timelineByOrder[order.id].length === 0" class="text-xs text-secondary">
+            Sin eventos registrados.
+          </div>
+          <div *ngFor="let event of timelineByOrder[order.id]" class="timeline-item">
+            <span class="timeline-dot"></span>
+            <div>
+              <p class="text-sm font-semibold text-gray-800">{{ event.label }}</p>
+              <p class="text-xs text-secondary">{{ event.timestamp | date:'short' }} · {{ event.actor || 'sistema' }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>

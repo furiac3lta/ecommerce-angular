@@ -24,8 +24,8 @@
     />
   </div>
 
-  <div class="stock-cards md:hidden">
-    <div *ngFor="let variant of filteredVariants" class="stock-card">
+  <div class="stock-cards md:hidden" *ngIf="!isLoading && filteredVariants.length > 0">
+    <div *ngFor="let variant of filteredVariants" class="stock-card ds-card">
       <div class="stock-card-header">
         <div>
           <p class="text-xs uppercase tracking-[0.2em] text-secondary">Producto</p>
@@ -64,7 +64,7 @@
     </div>
   </div>
 
-  <div class="hidden md:block">
+  <div class="hidden md:block" *ngIf="!isLoading && filteredVariants.length > 0">
     <div class="overflow-x-auto">
       <table class="table-shell">
         <thead>
@@ -99,6 +99,18 @@
         </tbody>
       </table>
     </div>
+  </div>
+
+  <div *ngIf="isLoading" class="ux-skeleton-grid">
+    <div class="skeleton-card">
+      <div class="skeleton-block skeleton-line"></div>
+      <div class="skeleton-block skeleton-line"></div>
+      <div class="skeleton-block skeleton-line"></div>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading && filteredVariants.length === 0" class="ux-empty">
+    No hay variantes para mostrar. Probá quitar filtros o cargá productos activos.
   </div>
 </section>
 
@@ -158,7 +170,14 @@
     <div *ngFor="let movement of movements" class="movement-card">
       <div>
         <p class="movement-title">{{ movement.type }} · {{ movement.reason }}</p>
-        <p class="movement-meta">{{ movement.createdAt ? (movement.createdAt | date:'short') : '—' }} · {{ movement.createdBy || '—' }}</p>
+        <p class="movement-meta">
+          {{ movement.createdAt ? (movement.createdAt | date:'short') : '—' }} · {{ movement.createdBy || '—' }}
+          <ng-container *ngIf="movement.saleChannel"> · {{ movement.saleChannel }}</ng-container>
+          <ng-container *ngIf="movement.orderId"> · Orden #{{ movement.orderId }}</ng-container>
+        </p>
+        <p class="movement-meta" *ngIf="movement.unitPrice !== undefined && movement.unitPrice !== null">
+          Precio unitario: {{ movement.unitPrice | currency }}
+        </p>
       </div>
       <div class="movement-qty">x{{ movement.qty }}</div>
       <p class="movement-note">{{ movement.note }}</p>

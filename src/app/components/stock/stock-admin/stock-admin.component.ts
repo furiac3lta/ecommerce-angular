@@ -3,7 +3,8 @@ import { StockAdminService } from 'src/app/services/stock-admin.service';
 import { StockVariant } from 'src/app/common/stock-variant';
 import { StockMovement, StockMovementReason, StockMovementRequest, StockMovementType } from 'src/app/common/stock-movement';
 import { SessionStorageService } from 'src/app/services/session-storage.service';
-import { ToastrService } from 'ngx-toastr';
+import { AlertService } from 'src/app/services/alert.service';
+import { MICROCOPY } from 'src/app/constants/microcopy';
 
 @Component({
   selector: 'app-stock-admin',
@@ -17,6 +18,7 @@ export class StockAdminComponent implements OnInit {
   selectedVariant: StockVariant | null = null;
   movements: StockMovement[] = [];
   movementsLoading = false;
+  isLoading = false;
 
   showInModal = false;
   showOutModal = false;
@@ -49,7 +51,7 @@ export class StockAdminComponent implements OnInit {
   constructor(
     private stockAdminService: StockAdminService,
     private sessionStorage: SessionStorageService,
-    private toastr: ToastrService
+    private alertService: AlertService
   ) {}
 
   ngOnInit(): void {
@@ -57,13 +59,16 @@ export class StockAdminComponent implements OnInit {
   }
 
   loadVariants(): void {
+    this.isLoading = true;
     this.stockAdminService.getVariants().subscribe({
       next: (variants) => {
         this.variants = variants || [];
         this.applyFilter();
+        this.isLoading = false;
       },
       error: () => {
-        this.toastr.error('No se pudieron cargar las variantes', 'Stock');
+        this.alertService.errorAlert(MICROCOPY.general.genericError);
+        this.isLoading = false;
       },
     });
   }
@@ -121,11 +126,11 @@ export class StockAdminComponent implements OnInit {
       return;
     }
     if (!this.inQty || this.inQty <= 0) {
-      this.toastr.error('Ingresá una cantidad válida', 'Stock');
+      this.alertService.errorAlert('Ingresá una cantidad válida.');
       return;
     }
     if (!this.inNote.trim()) {
-      this.toastr.error('La nota es obligatoria', 'Stock');
+      this.alertService.errorAlert('La nota es obligatoria.');
       return;
     }
     const request: StockMovementRequest = {
@@ -136,15 +141,23 @@ export class StockAdminComponent implements OnInit {
       note: this.inNote.trim(),
       createdBy: this.getCreatedBy(),
     };
-    this.stockAdminService.createMovement(request).subscribe({
-      next: () => {
-        this.toastr.success('Ingreso registrado', 'Stock');
-        this.showInModal = false;
-        this.loadVariants();
-      },
-      error: (error) => {
-        this.toastr.error(error?.error?.message || 'No se pudo registrar el ingreso', 'Stock');
-      },
+    this.alertService.confirmAction({
+      title: 'Confirmar acción',
+      text: MICROCOPY.admin.stockInInfo,
+      confirmText: 'Confirmar',
+      cancelText: 'Cancelar'
+    }).then((confirmed) => {
+      if (!confirmed) return;
+      this.stockAdminService.createMovement(request).subscribe({
+        next: () => {
+          this.alertService.successAlert(MICROCOPY.admin.stockSuccess);
+          this.showInModal = false;
+          this.loadVariants();
+        },
+        error: (error) => {
+          this.alertService.errorAlert(error?.error?.message || MICROCOPY.general.genericError);
+        },
+      });
     });
   }
 
@@ -153,11 +166,11 @@ export class StockAdminComponent implements OnInit {
       return;
     }
     if (!this.outQty || this.outQty <= 0) {
-      this.toastr.error('Ingresá una cantidad válida', 'Stock');
+      this.alertService.errorAlert('Ingresá una cantidad válida.');
       return;
     }
     if (!this.outNote.trim()) {
-      this.toastr.error('La nota es obligatoria', 'Stock');
+      this.alertService.errorAlert('La nota es obligatoria.');
       return;
     }
     const request: StockMovementRequest = {
@@ -168,15 +181,23 @@ export class StockAdminComponent implements OnInit {
       note: this.outNote.trim(),
       createdBy: this.getCreatedBy(),
     };
-    this.stockAdminService.createMovement(request).subscribe({
-      next: () => {
-        this.toastr.success('Egreso registrado', 'Stock');
-        this.showOutModal = false;
-        this.loadVariants();
-      },
-      error: (error) => {
-        this.toastr.error(error?.error?.message || 'No se pudo registrar el egreso', 'Stock');
-      },
+    this.alertService.confirmAction({
+      title: 'Confirmar acción',
+      text: MICROCOPY.admin.stockOutInfo,
+      confirmText: 'Confirmar',
+      cancelText: 'Cancelar'
+    }).then((confirmed) => {
+      if (!confirmed) return;
+      this.stockAdminService.createMovement(request).subscribe({
+        next: () => {
+          this.alertService.successAlert(MICROCOPY.admin.stockSuccess);
+          this.showOutModal = false;
+          this.loadVariants();
+        },
+        error: (error) => {
+          this.alertService.errorAlert(error?.error?.message || MICROCOPY.general.genericError);
+        },
+      });
     });
   }
 
@@ -194,7 +215,7 @@ export class StockAdminComponent implements OnInit {
       },
       error: () => {
         this.movementsLoading = false;
-        this.toastr.error('No se pudo cargar el historial', 'Stock');
+        this.alertService.errorAlert(MICROCOPY.general.genericError);
       },
     });
   }

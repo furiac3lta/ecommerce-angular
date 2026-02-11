@@ -1,18 +1,23 @@
 <div class="flex items-center justify-center min-h-screen">
   <div *ngIf="status === 'success'" class="max-w-md w-full bg-green-100 border border-green-400 text-green-700 p-6 rounded-lg text-center">
     <h1 class="text-2xl font-bold mb-2">¡Pago Exitoso!</h1>
-    <p>Gracias por tu compra. Hemos recibido tu pago y estamos procesando tu pedido.</p>
+    <p>Gracias por tu compra. Ya recibimos el pago y estamos preparando tu pedido.</p>
+    <p *ngIf="hasDelayedItems" class="mt-3 text-sm text-green-800">
+      Este pedido incluye productos con entrega estimada
+      <span *ngIf="delayedDateLabel">para: {{ delayedDateLabel }}.</span>
+      <span *ngIf="!delayedDateLabel">con demora.</span>
+    </p>
   </div>
   <div *ngIf="status === 'failure'" class="max-w-md w-full bg-red-100 border border-red-400 text-red-700 p-6 rounded-lg text-center">
     <h1 class="text-2xl font-bold mb-2">Pago Fallido</h1>
-    <p>Lamentablemente, tu pago no fue procesado. Por favor, intenta nuevamente.</p>
+    <p>No pudimos procesar el pago. Probá de nuevo o elegí otro medio.</p>
   </div>
   <div *ngIf="status === 'pending'" class="max-w-md w-full bg-yellow-100 border border-yellow-400 text-yellow-700 p-6 rounded-lg text-center">
     <h1 class="text-2xl font-bold mb-2">Pago Pendiente</h1>
-    <p>Tu pago está pendiente de confirmación. Te notificaremos una vez que esté confirmado.</p>
+    <p>Tu pago está pendiente de confirmación. Te avisamos apenas quede acreditado.</p>
   </div>
   <div *ngIf="status === 'unknown'" class="max-w-md w-full bg-gray-100 border border-gray-400 text-gray-700 p-6 rounded-lg text-center">
     <h1 class="text-2xl font-bold mb-2">Estado Desconocido</h1>
-    <p>No se pudo determinar el estado del pago.</p>
+    <p>No pudimos determinar el estado del pago. Si querés, escribinos.</p>
   </div>
 </div>

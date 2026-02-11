@@ -1,12 +1,20 @@
 <app-navbar></app-navbar>
-<div class="max-w-[1200px] mx-auto px-4 py-6">
-  <div class="bg-white rounded-2xl border border-black/10 p-6 mb-6">
+<div class="max-w-[1400px] mx-auto px-4 py-6">
+  <div class="ds-card mb-6">
     <h2 class="text-xl font-semibold text-gray-800 mb-4">Herramientas Admin</h2>
     <p class="text-sm text-gray-500 mb-4">Usá los reportes para auditar ventas y stock. Los rangos de fechas son obligatorios.</p>
+    <div class="mb-4">
+      <label class="text-xs uppercase tracking-[0.2em] text-gray-500">Buscar orden</label>
+      <input type="text" class="input-item" [(ngModel)]="searchTerm" (input)="applyFilter()" placeholder="Orden, cliente, email o estado" />
+    </div>
     <div class="grid gap-4 md:grid-cols-3">
       <div class="space-y-3">
         <p class="text-sm font-semibold text-gray-700">Importación Excel</p>
-        <input type="file" (change)="onFileSelected($event)" class="text-sm" />
+        <div class="flex flex-wrap items-center gap-2">
+          <label for="excelFile" class="button-item button-item--outline button-item--sm cursor-pointer">Seleccionar archivo</label>
+          <span class="text-xs text-gray-500">{{ importFileName }}</span>
+          <input id="excelFile" type="file" (change)="onFileSelected($event)" class="sr-only" />
+        </div>
         <div class="flex gap-2">
           <button class="button-item button-item--sm" (click)="uploadExcel()">Importar</button>
           <button class="button-item button-item--outline button-item--sm" (click)="downloadTemplate()">Plantilla</button>
@@ -22,9 +30,15 @@
           <input type="datetime-local" [(ngModel)]="reportFrom" class="input-item" />
           <label class="text-xs uppercase tracking-[0.2em] text-gray-500">Hasta</label>
           <input type="datetime-local" [(ngModel)]="reportTo" class="input-item" />
+          <label class="text-xs uppercase tracking-[0.2em] text-gray-500">Canal (opcional)</label>
+          <select class="input-item" [(ngModel)]="salesChannelFilter">
+            <option value="">Todos</option>
+            <option *ngFor="let channel of saleChannels" [value]="channel.value">{{ channel.label }}</option>
+          </select>
         </div>
         <p class="text-xs text-gray-500">Tip: podés filtrar por rango de 30 días para evitar PDFs muy pesados.</p>
         <button class="button-item button-item--sm" (click)="downloadSalesReport()">Descargar PDF</button>
+        <button class="button-item button-item--outline button-item--sm" (click)="downloadDeliveriesReport()">Reporte de entregas</button>
       </div>
       <div class="space-y-3">
         <p class="text-sm font-semibold text-gray-700">Reporte de stock</p>
@@ -43,8 +57,13 @@
           <select class="input-item" [(ngModel)]="stockReason">
             <option value="">Todos</option>
             <option value="SALE">SALE</option>
-            <option value="RESTOCK">RESTOCK</option>
+            <option value="SALE_ONLINE">SALE_ONLINE</option>
+            <option value="SALE_WHOLESALE">SALE_WHOLESALE</option>
+            <option value="SALE_OFFLINE">SALE_OFFLINE</option>
             <option value="RETURN">RETURN</option>
+            <option value="EXCHANGE_IN">EXCHANGE_IN</option>
+            <option value="EXCHANGE_OUT">EXCHANGE_OUT</option>
+            <option value="RESTOCK">RESTOCK</option>
             <option value="MANUAL_ADJUST">MANUAL_ADJUST</option>
             <option value="CORRECTION">CORRECTION</option>
             <option value="OTHER">OTHER</option>
@@ -60,15 +79,32 @@
           <p class="text-sm font-semibold text-gray-700">Reporte Órdenes + Envíos</p>
           <button class="button-item button-item--sm" (click)="downloadOrdersShipmentsReport()">Descargar PDF</button>
         </div>
+        <div class="pt-3 space-y-2">
+          <p class="text-sm font-semibold text-gray-700">Manuales</p>
+          <div class="flex flex-wrap gap-2">
+            <button class="button-item button-item--sm" (click)="downloadManualAdmin()">Manual Admin</button>
+            <button class="button-item button-item--outline button-item--sm" (click)="downloadManualUsuario()">Manual Usuario</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </div>
-<div *ngIf="orders && orders.length > 0; else noOrders">
+<div *ngIf="isLoading" class="max-w-[1200px] mx-auto px-4 pb-10">
+  <div class="ux-skeleton-grid">
+    <div class="skeleton-card">
+      <div class="skeleton-block skeleton-line"></div>
+      <div class="skeleton-block skeleton-line"></div>
+      <div class="skeleton-block skeleton-line"></div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="!isLoading && filteredOrders && filteredOrders.length > 0; else noOrders">
   <div class="orders-container md:hidden">
-    <div *ngFor="let order of orders" class="order-card">
+    <div *ngFor="let order of pagedOrders" class="order-card">
       <div class="order-header">
-        <span>Orden ID: {{ order.id }}</span>
+        <span>Orden: {{ order.orderNumber || ('#' + order.id) }}</span>
         <span class="badge" [ngClass]="getStatusClass(order.orderState)">
           {{ order.orderState }}
         </span>
@@ -76,6 +112,8 @@
 
       <div class="order-body">
         <p><strong>Fecha de Creación:</strong> {{ order.dateCreated | date : "short" }}</p>
+        <p><strong>Canal:</strong> {{ getSaleChannelLabel(order.saleChannel) }}</p>
+        <p><strong>Entrega:</strong> {{ getDeliveryLabel(order) }}</p>
         <p><strong>Nombre:</strong> {{ order.userName || "No disponible" }}</p>
         <p><strong>Email:</strong> {{ order.userEmail || "No disponible" }}</p>
 
@@ -94,6 +132,10 @@
 
         <div class="total-container">
           Total Pedido: {{ order.total || order.totalOrderPrice || 0 | currency }}
+        </div>
+        <div class="text-xs text-secondary" *ngIf="order.balanceDue || order.balanceCredit">
+          <span *ngIf="order.balanceDue">Saldo a cobrar: {{ order.balanceDue | currency }}</span>
+          <span *ngIf="order.balanceCredit">Saldo a favor: {{ order.balanceCredit | currency }}</span>
         </div>
         <div class="mt-4 flex gap-3" *ngIf="order.orderState === 'PENDING'">
           <button class="button-item button-item--sm" (click)="confirmOrder(order.id!)">
@@ -117,6 +159,26 @@
               Cargar envío
             </button>
           </ng-template>
+          <button class="button-item button-item--outline button-item--sm" (click)="openReturnModal(order)">
+            Gestionar devolución / cambio
+          </button>
+          <button class="button-item button-item--outline button-item--sm" (click)="toggleTimeline(order.id!)">
+            {{ openTimelines[order.id!] ? 'Ocultar timeline' : 'Ver timeline' }}
+          </button>
+        </div>
+        <div class="timeline" *ngIf="order.id && openTimelines[order.id]">
+          <p class="text-xs uppercase tracking-[0.2em] text-secondary mb-2">Timeline</p>
+          <div *ngIf="!timelineByOrder[order.id]" class="text-xs text-secondary">Cargando...</div>
+          <div *ngIf="timelineByOrder[order.id] && timelineByOrder[order.id].length === 0" class="text-xs text-secondary">
+            Sin eventos registrados.
+          </div>
+          <div *ngFor="let event of timelineByOrder[order.id]" class="timeline-item">
+            <span class="timeline-dot"></span>
+            <div>
+              <p class="text-sm font-semibold text-gray-800">{{ event.label }}</p>
+              <p class="text-xs text-secondary">{{ event.timestamp | date:'short' }} · {{ event.actor || 'sistema' }}</p>
+            </div>
+          </div>
         </div>
         <div class="mt-3" *ngIf="order.id && shipmentsByOrder[order.id] as shipment">
           <p class="text-xs text-secondary">Envío: {{ shipment.status }} · {{ shipment.trackingNumber }}</p>
@@ -125,14 +187,16 @@
     </div>
   </div>
 
-  <div class="hidden md:block max-w-[1200px] mx-auto px-4 pb-10">
+  <div class="hidden md:block max-w-[1400px] mx-auto px-4 pb-10">
     <div class="overflow-x-auto">
       <p class="text-sm text-gray-500 mb-3">Confirmá pagos para descontar stock. Los envíos solo se cargan en órdenes COMPLETED.</p>
-      <table class="table-shell">
+      <table class="table-shell orders-table">
         <thead>
           <tr>
             <th>Orden</th>
             <th>Fecha</th>
+            <th>Canal</th>
+            <th>Entrega</th>
             <th>Cliente</th>
             <th>Email</th>
             <th>Estado</th>
@@ -142,19 +206,21 @@
           </tr>
         </thead>
         <tbody>
-          <ng-container *ngFor="let order of orders">
+          <ng-container *ngFor="let order of pagedOrders">
             <tr>
-              <td>#{{ order.id }}</td>
-              <td>{{ order.dateCreated | date : 'short' }}</td>
-              <td>{{ order.userName || '—' }}</td>
-              <td>{{ order.userEmail || '—' }}</td>
+              <td class="cell-order">{{ order.orderNumber || ('#' + order.id) }}</td>
+              <td class="cell-date">{{ order.dateCreated | date : 'short' }}</td>
+              <td>{{ getSaleChannelLabel(order.saleChannel) }}</td>
+              <td>{{ getDeliveryLabel(order) }}</td>
+              <td class="cell-client">{{ order.userName || '—' }}</td>
+              <td class="cell-email">{{ order.userEmail || '—' }}</td>
               <td>
                 <span class="status-pill" [ngClass]="getStatusClass(order.orderState)">
                   {{ order.orderState }}
                 </span>
               </td>
               <td>{{ order.total || order.totalOrderPrice || 0 | currency }}</td>
-              <td>
+              <td class="cell-shipment">
                 <ng-container *ngIf="order.id && shipmentsByOrder[order.id] as shipment; else noShipment">
                   <div class="text-xs">
                     <div>{{ shipment.status || 'CREATED' }}</div>
@@ -164,27 +230,55 @@
                 <ng-template #noShipment>—</ng-template>
               </td>
               <td>
-                <div class="flex gap-2" *ngIf="order.orderState === 'PENDING'">
-                  <button class="button-item button-item--sm" (click)="confirmOrder(order.id!)">Confirmar</button>
-                  <button class="button-item button-item--danger button-item--sm" (click)="cancelOrder(order.id!)">Cancelar</button>
+                <div class="table-actions" *ngIf="order.orderState === 'PENDING'">
+                  <button class="button-item button-item--sm action-btn" (click)="confirmOrder(order.id!)">Confirmar</button>
+                  <button class="button-item button-item--danger button-item--sm action-btn" (click)="cancelOrder(order.id!)">Cancelar</button>
                 </div>
-                <div class="flex gap-2" *ngIf="order.orderState === 'COMPLETED'">
+                <div class="table-actions" *ngIf="order.orderState === 'COMPLETED'">
                   <ng-container *ngIf="order.id && shipmentsByOrder[order.id] as shipment; else createShipmentTable">
-                    <button class="button-item button-item--outline button-item--sm" (click)="openShipmentModal(order, 'edit')">Editar envío</button>
-                    <button class="button-item button-item--outline button-item--sm" (click)="openShipmentModal(order, 'view')">Ver envío</button>
+                    <button
+                      class="button-item button-item--outline button-item--sm action-btn"
+                      *ngIf="shipment.status !== 'DELIVERED'"
+                      (click)="openShipmentModal(order, 'edit')"
+                    >
+                      Editar envío
+                    </button>
+                    <button class="button-item button-item--outline button-item--sm action-btn" (click)="openShipmentModal(order, 'view')">Ver envío</button>
                   </ng-container>
                   <ng-template #createShipmentTable>
-                    <button class="button-item button-item--outline button-item--sm" (click)="openShipmentModal(order, 'edit')">Cargar envío</button>
+                    <button class="button-item button-item--outline button-item--sm action-btn" (click)="openShipmentModal(order, 'edit')">Cargar envío</button>
                   </ng-template>
+                  <button class="button-item button-item--outline button-item--sm action-btn" (click)="openReturnModal(order)">Devolución</button>
+                  <button class="button-item button-item--outline button-item--sm action-btn" (click)="toggleTimeline(order.id!)">
+                    {{ openTimelines[order.id!] ? 'Ocultar timeline' : 'Ver timeline' }}
+                  </button>
                 </div>
               </td>
             </tr>
             <tr class="order-products-row">
-              <td colspan="8">
+              <td colspan="10">
                 <div class="order-products">
                   <span *ngFor="let product of order.orderProducts" class="order-product-chip">
                     {{ product.productName || 'Desconocido' }} · {{ product.size }} · {{ product.color }} · x{{ product.quantity }}
                   </span>
+                </div>
+                <div class="text-xs text-secondary mt-2" *ngIf="order.balanceDue || order.balanceCredit">
+                  <span *ngIf="order.balanceDue">Saldo a cobrar: {{ order.balanceDue | currency }}</span>
+                  <span *ngIf="order.balanceCredit">Saldo a favor: {{ order.balanceCredit | currency }}</span>
+                </div>
+                <div class="timeline" *ngIf="order.id && openTimelines[order.id]">
+                  <p class="text-xs uppercase tracking-[0.2em] text-secondary mb-2">Timeline</p>
+                  <div *ngIf="!timelineByOrder[order.id]" class="text-xs text-secondary">Cargando...</div>
+                  <div *ngIf="timelineByOrder[order.id] && timelineByOrder[order.id].length === 0" class="text-xs text-secondary">
+                    Sin eventos registrados.
+                  </div>
+                  <div *ngFor="let event of timelineByOrder[order.id]" class="timeline-item">
+                    <span class="timeline-dot"></span>
+                    <div>
+                      <p class="text-sm font-semibold text-gray-800">{{ event.label }}</p>
+                      <p class="text-xs text-secondary">{{ event.timestamp | date:'short' }} · {{ event.actor || 'sistema' }}</p>
+                    </div>
+                  </div>
                 </div>
               </td>
             </tr>
@@ -195,8 +289,22 @@
   </div>
 </div>
 
+<div *ngIf="!isLoading && filteredOrders && filteredOrders.length > 0" class="max-w-[900px] mx-auto px-4 pb-8">
+  <div class="flex items-center justify-between gap-3">
+    <button class="button-item button-item--outline button-item--sm" (click)="goToPage(page - 1)" [disabled]="page <= 1">
+      Anterior
+    </button>
+    <span class="text-sm text-secondary">Página {{ page }} de {{ totalPages }}</span>
+    <button class="button-item button-item--outline button-item--sm" (click)="goToPage(page + 1)" [disabled]="page >= totalPages">
+      Siguiente
+    </button>
+  </div>
+</div>
+
 <ng-template #noOrders>
-  <p class="text-center text-muted">No hay órdenes disponibles.</p>
+  <div class="max-w-[900px] mx-auto px-4">
+    <div class="ux-empty">No hay órdenes disponibles todavía.</div>
+  </div>
 </ng-template>
 
 <div class="modal-backdrop" *ngIf="showShipmentModal" (click)="closeShipmentModal()"></div>
@@ -235,6 +343,69 @@
   <div class="modal-actions">
     <button class="button-item button-item--outline" (click)="closeShipmentModal()">Cancelar</button>
     <button class="button-item" *ngIf="shipmentModalMode === 'edit'" (click)="saveShipment()">Guardar envío</button>
+  </div>
+</div>
+
+<div class="modal-backdrop" *ngIf="showReturnModal" (click)="closeReturnModal()"></div>
+<div class="modal-card modal-wide" *ngIf="showReturnModal">
+  <h3>Gestionar devolución / cambio</h3>
+  <p class="text-sm text-secondary">Esta acción modificará el stock y quedará registrada.</p>
+
+  <div class="space-y-4" *ngIf="returnOrder">
+    <div>
+      <p class="text-sm font-semibold text-gray-700 mb-2">Productos a devolver</p>
+      <div class="grid gap-3">
+        <div *ngFor="let line of returnLines" class="grid gap-2 md:grid-cols-[2fr,1fr,1fr]">
+          <div class="text-sm">
+            <p class="font-semibold text-gray-800">{{ line.productName }}</p>
+            <p class="text-xs text-secondary">Var#{{ line.variantId }} · Comprados: {{ line.orderedQty }}</p>
+          </div>
+          <input class="input-item" type="number" min="0" [max]="line.orderedQty" [(ngModel)]="line.qty" placeholder="Cantidad" />
+          <select class="input-item" [(ngModel)]="line.reason">
+            <option value="">Motivo</option>
+            <option *ngFor="let reason of returnReasons" [value]="reason.value">{{ reason.label }}</option>
+          </select>
+          <textarea class="input-item md:col-span-3" rows="2" [(ngModel)]="line.note" placeholder="Nota obligatoria"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <p class="text-sm font-semibold text-gray-700 mb-2">Nuevo producto (cambio)</p>
+      <div class="space-y-3">
+        <div *ngFor="let line of exchangeLines; let i = index" class="grid gap-2 md:grid-cols-[1fr,1fr,1fr,auto]">
+          <input class="input-item" type="number" min="1" [(ngModel)]="line.variantId" placeholder="Variant ID" />
+          <input class="input-item" type="number" min="1" [(ngModel)]="line.qty" placeholder="Cantidad" />
+          <input class="input-item" type="number" min="0" [(ngModel)]="line.unitPrice" placeholder="Precio (opcional)" />
+          <button class="button-item button-item--outline button-item--sm" (click)="removeExchangeLine(i)">Quitar</button>
+          <textarea class="input-item md:col-span-4" rows="2" [(ngModel)]="line.note" placeholder="Nota obligatoria"></textarea>
+        </div>
+        <button class="button-item button-item--outline button-item--sm" (click)="addExchangeLine()">Agregar producto para cambio</button>
+      </div>
+    </div>
+
+    <div *ngIf="returnOrder?.id">
+      <p class="text-sm font-semibold text-gray-700 mb-2">Movimientos registrados</p>
+      <div class="text-xs text-secondary" *ngIf="getAdjustmentMovements(returnOrder.id).length === 0">
+        Sin movimientos todavía.
+      </div>
+      <div class="space-y-2" *ngIf="getAdjustmentMovements(returnOrder.id).length > 0">
+        <div *ngFor="let movement of getAdjustmentMovements(returnOrder.id)" class="text-xs text-secondary">
+          {{ movement.reason }} · Var#{{ movement.variantId }} · x{{ movement.qty }}
+          <span *ngIf="movement.unitPrice">· {{ movement.unitPrice | currency }}</span>
+          <span *ngIf="movement.note">· {{ movement.note }}</span>
+        </div>
+      </div>
+      <p class="text-sm text-gray-700 mt-2" *ngIf="getAdjustmentTotal(returnOrder.id) !== 0">
+        Ajuste total: {{ getAdjustmentTotal(returnOrder.id) | currency }}
+      </p>
+    </div>
+  </div>
+
+  <div class="modal-actions">
+    <button class="button-item button-item--outline" (click)="closeReturnModal()">Cancelar</button>
+    <button class="button-item button-item--outline" (click)="submitReturn()">Registrar devolución</button>
+    <button class="button-item" (click)="submitExchange()">Registrar cambio</button>
   </div>
 </div>
 

@@ -1,84 +1,140 @@
 <app-navbar></app-navbar>
 
 <div class="max-w-[1100px] mx-auto px-4 py-10">
-  <div class="grid gap-8 md:grid-cols-2">
-    <div class="product-image-card">
-      <img class="product-image" src="{{ urlImage }}" alt="{{ name }}" />
+  <ng-container *ngIf="!isLoading; else detailLoading">
+    <div class="detail-card">
+    <div class="detail-shell">
+      <div class="detail-panel">
+        <div class="product-media">
+          <div class="product-main">
+            <img class="product-image" [src]="currentImage" [alt]="name" />
+          </div>
+          <div class="product-thumbs" *ngIf="images.length > 1">
+            <button
+              *ngFor="let image of images; let i = index"
+              type="button"
+              class="product-thumb"
+              [class.is-active]="i === currentImageIndex"
+              (click)="selectImage(i)"
+              [attr.aria-label]="'Ver imagen ' + (i + 1)"
+            >
+              <img [src]="image" [alt]="name + ' ' + (i + 1)" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-panel">
+        <div class="space-y-6">
+        <div>
+          <p class="text-xs uppercase tracking-[0.3em] text-gray-500">Producto</p>
+          <h2 class="text-3xl">{{ name }}</h2>
+          <p class="text-gray-600 mt-2">{{ description }}</p>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <span class="text-3xl font-semibold text-main">{{ price | currency: 'ARS' : 'symbol-narrow' }}</span>
+          <span *ngIf="selectedVariant?.gsm" class="text-xs uppercase tracking-[0.25em] text-secondary">GSM {{ selectedVariant?.gsm }}</span>
+        </div>
+
+        <div *ngIf="deliveryMessage" class="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+          {{ deliveryMessage }}
+        </div>
+
+        <div class="grid gap-4">
+          <label class="text-sm text-secondary">Talle y color</label>
+          <select
+            class="input-item"
+            [(ngModel)]="selectedVariantId"
+          >
+            <option *ngFor="let variant of variants" [ngValue]="variant.id">
+              {{ variant.size }} · {{ variant.color }} · {{ variant.gsm || 0 }} GSM
+            </option>
+          </select>
+          <p *ngIf="variants.length === 0" class="text-xs text-red-600">
+            No hay variantes disponibles. Escribinos por WhatsApp.
+          </p>
+        </div>
+
+        <div class="grid gap-3 text-sm text-secondary">
+          <div class="flex justify-between border-b border-divider pb-2">
+            <span>Talle</span><span>{{ selectedVariant?.size || '-' }}</span>
+          </div>
+          <div class="flex justify-between border-b border-divider pb-2">
+            <span>Color</span><span>{{ selectedVariant?.color || '-' }}</span>
+          </div>
+          <div class="flex justify-between border-b border-divider pb-2">
+            <span>Uso</span><span>{{ selectedVariant?.usage || '-' }}</span>
+          </div>
+          <div class="flex justify-between border-b border-divider pb-2">
+            <span>Material</span><span>{{ selectedVariant?.material || '-' }}</span>
+          </div>
+          <div class="flex justify-between border-b border-divider pb-2">
+            <span>SKU</span><span>{{ selectedVariant?.sku || '-' }}</span>
+          </div>
+        </div>
+        </div>
+      </div>
+
+      <div class="detail-panel">
+        <div class="grid gap-4">
+          <div>
+            <p class="text-xs uppercase tracking-[0.2em] text-secondary">Compra rápida</p>
+            <h3 class="text-xl font-semibold">Confirmá tu cantidad</h3>
+          </div>
+
+          <div class="grid gap-2">
+            <label class="text-sm text-secondary">Cantidad</label>
+            <input
+              type="number"
+              [(ngModel)]="quantity"
+              id="quantity"
+              name="quantity"
+              class="input-item w-28"
+              min="1"
+              max="5"
+              value="1"
+              autocomplete="off"
+            />
+            <p class="text-xs text-gray-500">Máximo 5 unidades por compra.</p>
+          </div>
+
+          <div *ngIf="selectedVariant?.availableStock !== undefined" class="text-sm text-secondary">
+            Stock disponible: {{ selectedVariant?.availableStock }}
+          </div>
+          <div *ngIf="selectedVariant && selectedVariant.availableStock !== undefined && selectedVariant.availableStock <= 2" class="text-xs text-red-600">
+            Últimas unidades disponibles.
+          </div>
+
+          <button
+            (click)="addCart(id)"
+            class="button-item w-full detail-cta"
+          >
+            Agregar al carrito
+          </button>
+        </div>
+      </div>
     </div>
+    </div>
+  </ng-container>
+</div>
 
-    <div class="space-y-6">
-      <div>
-        <p class="text-xs uppercase tracking-[0.3em] text-gray-500">Producto</p>
-        <h2 class="text-3xl">{{ name }}</h2>
-        <p class="text-gray-600 mt-2">{{ description }}</p>
+<ng-template #detailLoading>
+  <div class="max-w-[1100px] mx-auto px-4 py-10">
+    <div class="grid gap-8 md:grid-cols-2">
+      <div class="ds-card">
+        <div class="skeleton-block h-64"></div>
       </div>
-
-      <div class="flex items-center gap-4">
-        <span class="text-3xl font-semibold text-main">{{ price | currency: 'ARS' : 'symbol-narrow' }}</span>
-        <span *ngIf="selectedVariant?.gsm" class="text-xs uppercase tracking-[0.25em] text-secondary">GSM {{ selectedVariant?.gsm }}</span>
-      </div>
-
-      <div class="grid gap-4">
-        <label class="text-sm text-secondary">Talle y color</label>
-        <select
-          class="input-item"
-          [(ngModel)]="selectedVariantId"
-        >
-          <option *ngFor="let variant of variants" [ngValue]="variant.id">
-            {{ variant.size }} · {{ variant.color }} · {{ variant.gsm || 0 }} GSM
-          </option>
-        </select>
-        <p *ngIf="variants.length === 0" class="text-xs text-red-600">
-          No hay variantes disponibles. Consultar por WhatsApp.
-        </p>
-        <p *ngIf="selectedVariant?.availableStock !== undefined" class="text-xs text-secondary">
-          Disponible: {{ selectedVariant?.availableStock }}
-        </p>
-        <p *ngIf="selectedVariant && selectedVariant.availableStock !== undefined && selectedVariant.availableStock <= 2" class="text-xs text-red-600">
-          Últimas unidades disponibles.
-        </p>
-      </div>
-
-      <div class="grid gap-4">
-        <label class="text-sm text-secondary">Cantidad</label>
-        <input
-          type="number"
-          [(ngModel)]="quantity"
-          id="quantity"
-          name="quantity"
-          class="input-item w-24"
-          min="1"
-          max="5"
-          value="1"
-          autocomplete="off"
-        />
-      </div>
-
-      <button
-        (click)="addCart(id)"
-        class="w-full bg-black text-white font-semibold py-4 rounded-full hover:bg-red-700 transition duration-300"
-      >
-        Añadir al carrito
-      </button>
-
-      <div class="grid gap-3 text-sm text-secondary">
-        <div class="flex justify-between border-b border-divider pb-2">
-          <span>Talle</span><span>{{ selectedVariant?.size || '-' }}</span>
-        </div>
-        <div class="flex justify-between border-b border-divider pb-2">
-          <span>Color</span><span>{{ selectedVariant?.color || '-' }}</span>
-        </div>
-        <div class="flex justify-between border-b border-divider pb-2">
-          <span>Uso</span><span>{{ selectedVariant?.usage || '-' }}</span>
-        </div>
-        <div class="flex justify-between border-b border-divider pb-2">
-          <span>Material</span><span>{{ selectedVariant?.material || '-' }}</span>
-        </div>
-        <div class="flex justify-between border-b border-divider pb-2">
-          <span>SKU</span><span>{{ selectedVariant?.sku || '-' }}</span>
-        </div>
+      <div class="space-y-6">
+        <div class="skeleton-line w-24"></div>
+        <div class="skeleton-line w-2/3"></div>
+        <div class="skeleton-line w-full"></div>
+        <div class="skeleton-line w-40"></div>
+        <div class="skeleton-line w-full"></div>
+        <div class="skeleton-line w-24"></div>
+        <div class="skeleton-line w-full"></div>
       </div>
     </div>
   </div>
-</div>
+</ng-template>
 <app-footer></app-footer>

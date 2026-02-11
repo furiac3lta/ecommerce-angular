@@ -42,6 +42,8 @@ import { AsideProductsComponent } from './layout/aside-products/aside-products.c
 import { OrderListComponent } from './components/orders/order-list/order-list.component';
 import { StockAdminComponent } from './components/stock/stock-admin/stock-admin.component';
 import { UserOrdersComponent } from './components/user/user-orders/user-orders.component';
+import { DeliveriesAdminComponent } from './components/deliveries/deliveries-admin/deliveries-admin.component';
+import { OrdersKanbanComponent } from './components/orders/orders-kanban/orders-kanban.component';
 
 
 const routes: Routes = [
@@ -62,7 +64,9 @@ const routes: Routes = [
   { path: 'admin/category/update/:id', component: CategoryAddComponent ,  canActivate: [authGuard],},
   { path: 'cart/summary',component: SumaryOrderComponent },
   { path: 'admin/orders', component: OrderListComponent, canActivate:[authGuard],},
+  { path: 'admin/orders-kanban', component: OrdersKanbanComponent, canActivate:[authGuard],},
   { path: 'admin/stock', component: StockAdminComponent, canActivate:[authGuard],},
+  { path: 'admin/deliveries', component: DeliveriesAdminComponent, canActivate:[authGuard],},
   { path: 'profile', component: UserOrdersComponent, canActivate:[authGuard],},
 ];
 
@@ -87,8 +91,10 @@ const routes: Routes = [
     ContactFormComponent,
     ProductHomeComponent,
     OrderListComponent,  
+    OrdersKanbanComponent,
     StockAdminComponent,
     UserOrdersComponent,
+    DeliveriesAdminComponent,
   ],
   imports: [
     BrowserModule,

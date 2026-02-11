@@ -1,0 +1,109 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='1400' height='2000' viewBox='0 0 1400 2000'>
+  <style>
+    .title { font: 700 20px Arial; fill: #111; }
+    .subtitle { font: 600 14px Arial; fill: #111; }
+    .box { fill: #fff; stroke: #333; stroke-width: 1.5; }
+    .boxh { fill: #f6f6f6; stroke: #333; stroke-width: 1.5; }
+    .text { font: 12px Arial; fill: #111; }
+    .muted { font: 11px Arial; fill: #666; }
+    .arrow { stroke: #333; stroke-width: 1.2; fill: none; }
+    .arrow-head { fill: #333; }
+  </style>
+  <defs></defs>
+
+  <text x='80' y='60' class='title'>Flujo de compra completo (Usuario + Admin + variantes)</text>
+
+  <text x='80' y='110' class='subtitle'>Usuario</text>
+  <rect x='80' y='130' width='360' height='60' class='box'/>
+  <text x='95' y='165' class='text'>Selecciona producto + variante</text>
+
+  <rect x='80' y='220' width='360' height='60' class='box'/>
+  <text x='95' y='255' class='text'>Agregar al carrito</text>
+
+  <rect x='80' y='310' width='360' height='60' class='box'/>
+  <text x='95' y='345' class='text'>Checkout</text>
+
+  <rect x='80' y='400' width='360' height='70' class='box'/>
+  <text x='95' y='430' class='text'>Orden creada (PENDING)</text>
+  <text x='95' y='450' class='muted'>Reserva stock si aplica</text>
+
+  <rect x='80' y='500' width='360' height='60' class='box'/>
+  <text x='95' y='535' class='text'>Pago confirmado (COMPLETED)</text>
+
+  <rect x='80' y='590' width='360' height='70' class='box'/>
+  <text x='95' y='620' class='text'>Confirmación + entrega estimada</text>
+  <text x='95' y='640' class='muted'>Si demora, se informa fecha</text>
+
+  <rect x='80' y='690' width='360' height='60' class='box'/>
+  <text x='95' y='725' class='text'>Seguimiento de envío</text>
+
+  <rect x='80' y='780' width='360' height='60' class='box'/>
+  <text x='95' y='815' class='text'>Entrega al cliente</text>
+
+  <path d='M260 190 L260 220' class='arrow'/><polygon class='arrow-head' points='255,220 265,220 260,230'/>
+  <path d='M260 280 L260 310' class='arrow'/><polygon class='arrow-head' points='255,310 265,310 260,320'/>
+  <path d='M260 370 L260 400' class='arrow'/><polygon class='arrow-head' points='255,400 265,400 260,410'/>
+  <path d='M260 470 L260 500' class='arrow'/><polygon class='arrow-head' points='255,500 265,500 260,510'/>
+  <path d='M260 560 L260 590' class='arrow'/><polygon class='arrow-head' points='255,590 265,590 260,600'/>
+  <path d='M260 660 L260 690' class='arrow'/><polygon class='arrow-head' points='255,690 265,690 260,700'/>
+  <path d='M260 750 L260 780' class='arrow'/><polygon class='arrow-head' points='255,780 265,780 260,790'/>
+
+  <text x='540' y='110' class='subtitle'>Admin</text>
+  <rect x='540' y='130' width='360' height='60' class='box'/>
+  <text x='555' y='165' class='text'>Recibe orden nueva</text>
+
+  <rect x='540' y='220' width='360' height='60' class='box'/>
+  <text x='555' y='255' class='text'>Estado PENDING / COMPLETED</text>
+
+  <rect x='540' y='310' width='360' height='60' class='box'/>
+  <text x='555' y='345' class='text'>Verificar stock</text>
+
+  <rect x='540' y='400' width='360' height='70' class='box'/>
+  <text x='555' y='430' class='text'>Preparar pedido</text>
+  <text x='555' y='450' class='muted'>Pick &amp; pack</text>
+
+  <rect x='540' y='500' width='360' height='60' class='box'/>
+  <text x='555' y='535' class='text'>Cargar envío (guía, medio)</text>
+
+  <rect x='540' y='590' width='360' height='60' class='box'/>
+  <text x='555' y='625' class='text'>Marcar enviado</text>
+
+  <rect x='540' y='680' width='360' height='60' class='box'/>
+  <text x='555' y='715' class='text'>Marcar entregado</text>
+
+  <path d='M720 190 L720 220' class='arrow'/><polygon class='arrow-head' points='715,220 725,220 720,230'/>
+  <path d='M720 280 L720 310' class='arrow'/><polygon class='arrow-head' points='715,310 725,310 720,320'/>
+  <path d='M720 370 L720 400' class='arrow'/><polygon class='arrow-head' points='715,400 725,400 720,410'/>
+  <path d='M720 470 L720 500' class='arrow'/><polygon class='arrow-head' points='715,500 725,500 720,510'/>
+  <path d='M720 560 L720 590' class='arrow'/><polygon class='arrow-head' points='715,590 725,590 720,600'/>
+  <path d='M720 650 L720 680' class='arrow'/><polygon class='arrow-head' points='715,680 725,680 720,690'/>
+
+  <text x='960' y='110' class='subtitle'>Variantes y reglas</text>
+  <rect x='960' y='130' width='360' height='70' class='boxh'/>
+  <text x='975' y='160' class='text'>Canal de venta</text>
+  <text x='975' y='180' class='muted'>ONLINE / WHOLESALE / OFFLINE</text>
+
+  <rect x='960' y='220' width='360' height='70' class='boxh'/>
+  <text x='975' y='250' class='text'>Mayorista</text>
+  <text x='975' y='270' class='muted'>Precio wholesale + numeración MAY-</text>
+
+  <rect x='960' y='310' width='360' height='70' class='boxh'/>
+  <text x='975' y='340' class='text'>Offline</text>
+  <text x='975' y='360' class='muted'>Producto no web + numeración OFF-</text>
+
+  <rect x='960' y='400' width='360' height='70' class='boxh'/>
+  <text x='975' y='430' class='text'>Sin stock</text>
+  <text x='975' y='450' class='muted'>Bloquea entrega / reponer</text>
+
+  <rect x='960' y='490' width='360' height='70' class='boxh'/>
+  <text x='975' y='520' class='text'>Delivery DELAYED</text>
+  <text x='975' y='540' class='muted'>Fecha estimada prioridad</text>
+
+  <rect x='960' y='580' width='360' height='70' class='boxh'/>
+  <text x='975' y='610' class='text'>Devolución / Cambio</text>
+  <text x='975' y='630' class='muted'>IN + OUT + ajuste venta</text>
+
+  <rect x='960' y='670' width='360' height='70' class='boxh'/>
+  <text x='975' y='700' class='text'>Auditoría</text>
+  <text x='975' y='720' class='muted'>Kardex + reportes</text>
+</svg>

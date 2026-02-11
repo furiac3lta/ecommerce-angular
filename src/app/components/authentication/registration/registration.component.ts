@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
+import { AlertService } from 'src/app/services/alert.service';
 import { User } from 'src/app/common/user';
 import { UserType } from 'src/app/common/user-type';
 import { AuthenticationService } from 'src/app/services/authentication.service';
@@ -24,7 +24,7 @@ export class RegistrationComponent implements OnInit {
   constructor(
     private authentication: AuthenticationService,
     private router: Router,
-    private toastr: ToastrService
+    private alertService: AlertService
   ) {}
   register() {
     this.username = this.email;
@@ -40,9 +40,14 @@ export class RegistrationComponent implements OnInit {
       this.password,
       this.userType
     );
-    this.authentication.register(user).subscribe((res) => {
-      this.toastr.success('Usuario registrado', 'Usuario');
-      console.log(res);
+    this.authentication.register(user).subscribe({
+      next: (res) => {
+        this.alertService.successAlert('Usuario registrado.');
+        console.log(res);
+      },
+      error: () => {
+        this.alertService.errorAlert('No se pudo registrar.');
+      }
     });
     console.log(user);
     this.router.navigate(['user/login'])

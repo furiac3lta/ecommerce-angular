@@ -6,7 +6,10 @@ export class OrderProduct {
         public price: number,
         public productName?: string,
         public size?: string,
-        public color?: string
+        public color?: string,
+        public deliveryType?: 'IMMEDIATE' | 'DELAYED',
+        public estimatedDeliveryDate?: string,
+        public deliveryNote?: string
     ) {}
 
     get totalItem(): number {

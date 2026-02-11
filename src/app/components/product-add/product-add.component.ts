@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductService } from 'src/app/services/product.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
+import { AlertService } from 'src/app/services/alert.service';
 import { Category } from 'src/app/common/category';
 import { CategoryService } from 'src/app/services/category.service';
 import { SessionStorageService } from 'src/app/services/session-storage.service';
@@ -20,10 +20,17 @@ export class ProductAddComponent implements OnInit{
   name: string ='';
   description: string='';
   price: number =0;
+  priceOverride: boolean = false;
+  sellOnline: boolean = true;
+  deliveryType: 'IMMEDIATE' | 'DELAYED' = 'IMMEDIATE';
+  estimatedDeliveryDays: number | null = null;
+  estimatedDeliveryDate: string = '';
+  deliveryNote: string = '';
   urlImage: string = '';
   userId: string = '1';
   categoryId: string ='6';
-  selectFile! : File;
+  selectFiles: File[] = [];
+  selectedImagesLabel: string = 'Ninguna imagen seleccionada';
   user: number = 0;
   categories : Category [] = [];
   variants: ProductVariant[] = [];
@@ -33,7 +40,7 @@ export class ProductAddComponent implements OnInit{
     private productService: ProductService,
     private router:Router, 
     private activatedRoute:ActivatedRoute,
-    private toastr: ToastrService,
+    private alertService: AlertService,
     private categoryService:CategoryService,
     private sessionStorage:SessionStorageService,
     private productVariantService: ProductVariantService
@@ -54,28 +61,47 @@ export class ProductAddComponent implements OnInit{
     if (!this.validateSkus()) {
       return;
     }
+    this.syncPriceWithCategory();
     const formData = new FormData();
     formData.append('id',this.id.toString());
     formData.append('code',this.code);
     formData.append('name',this.name);
     formData.append('description',this.description);
     formData.append('price',this.price.toString());
-    formData.append('image', this.selectFile);
+    formData.append('priceOverride', this.priceOverride.toString());
+    formData.append('sellOnline', this.sellOnline.toString());
+    formData.append('deliveryType', this.deliveryType);
+    if (this.estimatedDeliveryDays !== null && this.estimatedDeliveryDays !== undefined) {
+      formData.append('estimatedDeliveryDays', this.estimatedDeliveryDays.toString());
+    }
+    if (this.estimatedDeliveryDate) {
+      formData.append('estimatedDeliveryDate', this.estimatedDeliveryDate);
+    }
+    if (this.deliveryNote) {
+      formData.append('deliveryNote', this.deliveryNote);
+    }
+    if (this.selectFiles.length) {
+      this.selectFiles.forEach((file) => formData.append('images', file));
+      formData.append('image', this.selectFiles[0]);
+    }
     formData.append('urlImage', this.urlImage);
     formData.append('userId',this.userId);
     formData.append('categoryId',this.categoryId); 
     console.log(formData);
 
-    this.productService.createProduct(formData).subscribe(
-      data => {
+    this.productService.createProduct(formData).subscribe({
+      next: (data) => {
         if(this.id==0){
-          this.toastr.success('Producto registrado correctamante', 'Productos');
+          this.alertService.successAlert('Producto registrado correctamente.');
         }else{
-          this.toastr.success('Producto actualizado correctamante', 'Productos');
+          this.alertService.successAlert('Producto actualizado correctamente.');
         }
         this.saveVariants(data.id);
+      },
+      error: () => {
+        this.alertService.errorAlert('No se pudo guardar el producto.');
       }
-    );
+    });
     
   }
   getProductById(){
@@ -91,9 +117,19 @@ export class ProductAddComponent implements OnInit{
               this.name = data.name;
               this.description = data.description;
               this.price = data.price;
+              this.priceOverride = data.priceOverride ?? false;
+              this.sellOnline = data.sellOnline ?? true;
+              this.deliveryType = data.deliveryType ?? 'IMMEDIATE';
+              this.estimatedDeliveryDays = data.estimatedDeliveryDays ?? null;
+              this.estimatedDeliveryDate = data.estimatedDeliveryDate ?? '';
+              this.deliveryNote = data.deliveryNote ?? '';
               this.urlImage = data.urlImage;
+              if (data.images?.length) {
+                this.selectedImagesLabel = `${data.images.length} imagen${data.images.length === 1 ? '' : 'es'} cargada${data.images.length === 1 ? '' : 's'}`;
+              }
               this.userId = data.userId;
               this.categoryId = data.categoryId;
+              this.syncPriceWithCategory();
               this.loadVariants(data.id);
             }
           )
@@ -102,7 +138,15 @@ export class ProductAddComponent implements OnInit{
     )
   }
   onFileSelected(event: any){
-    this.selectFile = event.target.files[0];
+    const files = Array.from(event.target.files ?? []) as File[];
+    this.selectFiles = files;
+    if (!files.length) {
+      this.selectedImagesLabel = 'Ninguna imagen seleccionada';
+      return;
+    }
+    this.selectedImagesLabel = files.length === 1
+      ? files[0].name
+      : `${files.length} imágenes seleccionadas`;
   }
 
   getCategories(){
@@ -110,12 +154,28 @@ export class ProductAddComponent implements OnInit{
       data => {
         this.categories = data;
         this.refreshAllSkus();
+        this.syncPriceWithCategory();
       }
     )
   }
 
+  handleCategoryChange() {
+    this.refreshAllSkus();
+    this.syncPriceWithCategory();
+  }
+
+  handlePriceOverrideChange() {
+    if (!this.priceOverride) {
+      this.syncPriceWithCategory();
+      return;
+    }
+    if (!this.price) {
+      this.syncPriceWithCategory();
+    }
+  }
+
   isKimonoSelected(): boolean {
-    const category = this.categories.find(cat => cat.id?.toString() === this.categoryId);
+    const category = this.getSelectedCategory();
     if (!category || !category.name) {
       return false;
     }
@@ -133,7 +193,14 @@ export class ProductAddComponent implements OnInit{
       sku: '',
       stockCurrent: 0,
       stockMinimum: 0,
-      active: true
+      active: true,
+      sellOnline: true,
+      priceRetail: 0,
+      priceWholesale: 0,
+      deliveryType: 'IMMEDIATE',
+      estimatedDeliveryDays: 0,
+      estimatedDeliveryDate: '',
+      deliveryNote: ''
     });
     this.skuManualFlags.push(false);
     this.updateSku(this.variants.length - 1);
@@ -181,7 +248,7 @@ export class ProductAddComponent implements OnInit{
           }
         },
         error: () => {
-          this.toastr.error('No se pudo guardar una variante', 'Variantes');
+          this.alertService.errorAlert('No se pudo guardar una variante.');
           pending -= 1;
           if (pending === 0) {
             this.router.navigate(['admin/product']);
@@ -213,6 +280,21 @@ export class ProductAddComponent implements OnInit{
     }
     variant.sku = this.makeUniqueSku(baseSku, index);
     this.skuManualFlags[index] = false;
+  }
+
+  private getSelectedCategory(): Category | undefined {
+    return this.categories.find(cat => cat.id?.toString() === this.categoryId);
+  }
+
+  private syncPriceWithCategory() {
+    if (this.priceOverride) {
+      return;
+    }
+    const category = this.getSelectedCategory();
+    if (!category) {
+      return;
+    }
+    this.price = Number(category.price ?? 0);
   }
 
   private buildSkuBase(variant: ProductVariant): string {
@@ -260,7 +342,7 @@ export class ProductAddComponent implements OnInit{
     const skus = this.variants.map(variant => (variant.sku || '').trim());
     const emptyIndex = skus.findIndex(sku => !sku);
     if (emptyIndex !== -1) {
-      this.toastr.error(`Completa el SKU de la variante ${emptyIndex + 1}`, 'Variantes');
+      this.alertService.errorAlert(`Completa el SKU de la variante ${emptyIndex + 1}.`);
       return false;
     }
     const normalized = skus.map(sku => sku.toUpperCase());
@@ -274,7 +356,7 @@ export class ProductAddComponent implements OnInit{
     });
     if (duplicates.length) {
       const unique = Array.from(new Set(duplicates)).join(', ');
-      this.toastr.error(`SKU duplicado: ${unique}`, 'Variantes');
+      this.alertService.errorAlert(`SKU duplicado: ${unique}.`);
       return false;
     }
     return true;

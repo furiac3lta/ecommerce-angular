@@ -1,0 +1,244 @@
+<app-navbar></app-navbar>
+
+<section class="max-w-[1400px] mx-auto px-4 py-8">
+  <div class="deliveries-header">
+    <div>
+      <p class="text-xs uppercase tracking-[0.3em] text-secondary">Admin</p>
+      <h2 class="text-3xl">Entregas y prioridad</h2>
+      <p class="text-sm text-secondary">Este reporte te muestra qué pedidos preparar y enviar primero.</p>
+    </div>
+    <div class="deliveries-help">
+      <p>Las entregas demoradas se ordenan por fecha estimada.</p>
+      <p>Inmediatas y COMPLETED tienen prioridad.</p>
+    </div>
+  </div>
+
+  <div class="deliveries-alerts" *ngIf="alerts">
+    <div class="alert-card alert-card--today">
+      <p class="text-xs uppercase tracking-[0.2em] text-secondary">Entregas hoy</p>
+      <h3 class="text-2xl font-semibold">{{ alerts.todayCount }}</h3>
+      <p class="text-xs text-secondary">Órdenes COMPLETED con fecha estimada para hoy.</p>
+    </div>
+    <div class="alert-card alert-card--overdue">
+      <p class="text-xs uppercase tracking-[0.2em] text-secondary">Entregas vencidas</p>
+      <h3 class="text-2xl font-semibold">{{ alerts.overdueCount }}</h3>
+      <p class="text-xs text-secondary">Órdenes sin entregar con fecha pasada.</p>
+    </div>
+  </div>
+
+  <div class="kpi-grid" *ngIf="kpis">
+    <div class="kpi-card">
+      <p class="text-xs uppercase tracking-[0.2em] text-secondary">Entregadas</p>
+      <h3 class="text-2xl font-semibold">{{ kpis.totalDelivered }}</h3>
+    </div>
+    <div class="kpi-card">
+      <p class="text-xs uppercase tracking-[0.2em] text-secondary">Promedio estimado</p>
+      <h3 class="text-2xl font-semibold">{{ kpis.avgEstimatedDays | number:'1.0-1' }} días</h3>
+    </div>
+    <div class="kpi-card">
+      <p class="text-xs uppercase tracking-[0.2em] text-secondary">Promedio real</p>
+      <h3 class="text-2xl font-semibold">{{ kpis.avgActualDays | number:'1.0-1' }} días</h3>
+    </div>
+    <div class="kpi-card">
+      <p class="text-xs uppercase tracking-[0.2em] text-secondary">Diferencia promedio</p>
+      <h3 class="text-2xl font-semibold">{{ kpis.avgDiffDays | number:'1.0-1' }} días</h3>
+    </div>
+    <div class="kpi-card">
+      <p class="text-xs uppercase tracking-[0.2em] text-secondary">% a tiempo</p>
+      <h3 class="text-2xl font-semibold">{{ kpis.onTimePct | number:'1.0-0' }}%</h3>
+    </div>
+    <div class="kpi-card">
+      <p class="text-xs uppercase tracking-[0.2em] text-secondary">% vencidas</p>
+      <h3 class="text-2xl font-semibold">{{ kpis.overduePct | number:'1.0-0' }}%</h3>
+    </div>
+  </div>
+
+  <div class="deliveries-toolbar">
+    <div class="grid gap-3 md:grid-cols-5">
+      <div>
+        <label class="text-xs uppercase tracking-[0.2em] text-gray-500">Desde</label>
+        <input type="datetime-local" [(ngModel)]="reportFrom" class="input-item" (change)="applyFilters()" />
+      </div>
+      <div>
+        <label class="text-xs uppercase tracking-[0.2em] text-gray-500">Hasta</label>
+        <input type="datetime-local" [(ngModel)]="reportTo" class="input-item" (change)="applyFilters()" />
+      </div>
+      <div>
+        <label class="text-xs uppercase tracking-[0.2em] text-gray-500">Entrega</label>
+        <select class="input-item" [(ngModel)]="filterDeliveryType" (change)="applyFilters()">
+          <option value="">Todas</option>
+          <option value="IMMEDIATE">Inmediata</option>
+          <option value="DELAYED">Demorada</option>
+        </select>
+      </div>
+      <div>
+        <label class="text-xs uppercase tracking-[0.2em] text-gray-500">Estado envío</label>
+        <select class="input-item" [(ngModel)]="filterShipmentStatus" (change)="applyFilters()">
+          <option value="">Todos</option>
+          <option value="CREATED">Pendiente</option>
+          <option value="SHIPPED">Enviado</option>
+          <option value="DELIVERED">Entregado</option>
+        </select>
+      </div>
+      <div>
+        <label class="text-xs uppercase tracking-[0.2em] text-gray-500">Canal</label>
+        <select class="input-item" [(ngModel)]="filterSaleChannel" (change)="applyFilters()">
+          <option value="">Todos</option>
+          <option value="ONLINE">Online</option>
+          <option value="WHOLESALE">Mayorista</option>
+          <option value="OFFLINE">Offline</option>
+        </select>
+      </div>
+    </div>
+    <div class="mt-4 flex flex-wrap gap-2">
+      <button class="button-item button-item--sm" (click)="downloadDeliveriesReport()">Reporte de entregas</button>
+      <button class="button-item button-item--outline button-item--sm" (click)="downloadDeliveredOrdersReport()">Órdenes entregadas (PDF)</button>
+      <button class="button-item button-item--outline button-item--sm" (click)="applyFilters()">Actualizar lista</button>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="ux-skeleton-grid">
+    <div class="skeleton-card">
+      <div class="skeleton-block skeleton-line"></div>
+      <div class="skeleton-block skeleton-line"></div>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading && filteredOrders.length === 0" class="ux-empty">
+    No hay órdenes para mostrar con estos filtros.
+  </div>
+
+  <div class="deliveries-cards md:hidden" *ngIf="!isLoading && filteredOrders.length > 0">
+    <div *ngFor="let order of filteredOrders" class="delivery-card ds-card">
+      <div class="delivery-card-head">
+        <div>
+          <p class="text-xs uppercase tracking-[0.2em] text-secondary">Orden</p>
+          <h3 class="text-xl font-semibold">{{ order.orderNumber || ('#' + order.id) }}</h3>
+          <p class="text-sm text-secondary">{{ order.dateCreated | date:'short' }}</p>
+        </div>
+        <span class="priority-pill" [ngClass]="getPriorityClass(order)">{{ getPriorityLabel(order) }}</span>
+      </div>
+      <div class="delivery-card-body">
+        <p><strong>Cliente:</strong> {{ order.userName || '—' }}</p>
+        <p><strong>Teléfono:</strong> {{ order.userPhone || '—' }}</p>
+        <p><strong>Canal:</strong> {{ order.saleChannel || 'ONLINE' }}</p>
+        <p><strong>Estado:</strong> {{ order.orderState }}</p>
+        <p><strong>Entrega:</strong> {{ getDeliveryLabel(order) }}</p>
+        <p><strong>Fecha estimada:</strong> {{ order.estimatedDeliveryDate || '—' }}</p>
+        <p><strong>Envío:</strong> {{ shipmentsByOrder[order.id!]?.status || 'Pendiente' }}</p>
+        <p><strong>Guía:</strong> {{ shipmentsByOrder[order.id!]?.trackingNumber || '—' }}</p>
+      </div>
+      <div class="delivery-card-actions">
+        <button
+          class="button-item button-item--outline button-item--sm shipment-btn"
+          *ngIf="isShipmentEditable(order.id)"
+          (click)="openShipmentModal(order, 'edit')"
+        >
+          Cargar envío
+        </button>
+        <button
+          class="button-item button-item--outline button-item--sm shipment-btn"
+          *ngIf="!isShipmentEditable(order.id)"
+          (click)="openShipmentModal(order, 'view')"
+        >
+          Ver envío
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="hidden md:block" *ngIf="!isLoading && filteredOrders.length > 0">
+    <div class="overflow-x-auto">
+      <table class="table-shell">
+        <thead>
+          <tr>
+            <th>Orden</th>
+            <th>Fecha</th>
+            <th>Cliente</th>
+            <th>Teléfono</th>
+            <th>Canal</th>
+            <th>Estado</th>
+            <th>Entrega</th>
+            <th>Fecha estimada</th>
+            <th>Envío</th>
+            <th>Guía</th>
+            <th>Prioridad</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let order of filteredOrders">
+            <td>{{ order.orderNumber || ('#' + order.id) }}</td>
+            <td>{{ order.dateCreated | date:'short' }}</td>
+            <td>{{ order.userName || '—' }}</td>
+            <td>{{ order.userPhone || '—' }}</td>
+            <td>{{ order.saleChannel || 'ONLINE' }}</td>
+            <td>{{ order.orderState }}</td>
+            <td>{{ getDeliveryLabel(order) }}</td>
+            <td>{{ order.estimatedDeliveryDate || '—' }}</td>
+            <td>{{ shipmentsByOrder[order.id!]?.status || 'Pendiente' }}</td>
+            <td>{{ shipmentsByOrder[order.id!]?.trackingNumber || '—' }}</td>
+            <td><span class="priority-pill" [ngClass]="getPriorityClass(order)">{{ getPriorityLabel(order) }}</span></td>
+            <td>
+              <button
+                class="button-item button-item--outline button-item--sm shipment-btn"
+                *ngIf="isShipmentEditable(order.id)"
+                (click)="openShipmentModal(order, 'edit')"
+              >
+                Cargar envío
+              </button>
+              <button
+                class="button-item button-item--outline button-item--sm shipment-btn"
+                *ngIf="!isShipmentEditable(order.id)"
+                (click)="openShipmentModal(order, 'view')"
+              >
+                Ver envío
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="modal-backdrop" *ngIf="showShipmentModal" (click)="closeShipmentModal()"></div>
+<div class="modal-card" *ngIf="showShipmentModal">
+  <h3>Cargar envío</h3>
+  <p class="text-sm text-secondary">Cargá los datos del transporte para que el cliente pueda hacer seguimiento.</p>
+  <div class="modal-grid" *ngIf="shipmentForm">
+    <label>Empresa de transporte</label>
+    <input class="input-item" type="text" [(ngModel)]="shipmentForm.carrier" [disabled]="shipmentModalMode === 'view'" />
+    <label>Medio de envío</label>
+    <select class="input-item" [(ngModel)]="shipmentForm.shippingMethod" [disabled]="shipmentModalMode === 'view'">
+      <option value="Correo">Correo</option>
+      <option value="Expreso">Expreso</option>
+      <option value="Moto">Moto</option>
+      <option value="Retiro">Retiro en local</option>
+    </select>
+    <label>Número de guía / tracking</label>
+    <input class="input-item" type="text" [(ngModel)]="shipmentForm.trackingNumber" [disabled]="shipmentModalMode === 'view'" />
+    <label>Nombre del destinatario</label>
+    <input class="input-item" type="text" [(ngModel)]="shipmentForm.recipientName" [disabled]="shipmentModalMode === 'view'" />
+    <label>Teléfono del destinatario</label>
+    <input class="input-item" type="text" [(ngModel)]="shipmentForm.recipientPhone" [disabled]="shipmentModalMode === 'view'" />
+    <label>Dirección</label>
+    <textarea class="input-item" rows="2" [(ngModel)]="shipmentForm.recipientAddress" [disabled]="shipmentModalMode === 'view'"></textarea>
+    <label>Estado</label>
+    <select class="input-item" [(ngModel)]="shipmentForm.status" [disabled]="shipmentModalMode === 'view'">
+      <option *ngFor="let status of shipmentStatusOptions" [value]="status">{{ status }}</option>
+    </select>
+    <label>Nota interna</label>
+    <textarea class="input-item" rows="2" [(ngModel)]="shipmentForm.notes" [disabled]="shipmentModalMode === 'view'"></textarea>
+    <div *ngIf="shipmentForm.createdAt || shipmentForm.updatedAt" class="text-xs text-secondary">
+      <p *ngIf="shipmentForm.createdAt">Creado: {{ shipmentForm.createdAt | date:'short' }} · {{ shipmentForm.createdBy || '—' }}</p>
+      <p *ngIf="shipmentForm.updatedAt">Editado: {{ shipmentForm.updatedAt | date:'short' }} · {{ shipmentForm.updatedBy || '—' }}</p>
+    </div>
+  </div>
+  <div class="modal-actions">
+    <button class="button-item button-item--outline" (click)="closeShipmentModal()">Cancelar</button>
+    <button class="button-item" *ngIf="shipmentModalMode === 'edit'" (click)="saveShipment()">Guardar envío</button>
+  </div>
+</div>
+
+<app-footer></app-footer>

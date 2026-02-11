@@ -7,7 +7,10 @@ export class User {
         public address:string,
         public cellphone:string,
         public password:string,
-        public userType:string
+        public userType:string,
+        public isWholesale: boolean = false,
+        public wholesaleDiscount?: number,
+        public wholesalePriceList?: string
     ){
 
     }

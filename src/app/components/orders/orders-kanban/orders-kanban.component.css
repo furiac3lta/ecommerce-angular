@@ -1,0 +1,147 @@
+.kanban-board {
+  display: grid;
+  gap: 20px;
+}
+
+.kanban-column {
+  background: var(--bg-surface);
+  border-radius: 20px;
+  border: 1px solid var(--border-divider);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 320px;
+}
+
+.kanban-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.kanban-header h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.kanban-count {
+  background: var(--bg-main);
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  border: 1px solid var(--border-divider);
+}
+
+.kanban-cards {
+  display: grid;
+  gap: 12px;
+}
+
+.kanban-card {
+  background: var(--bg-main);
+  border-radius: 16px;
+  padding: 14px;
+  border: 1px solid var(--border-divider);
+  display: grid;
+  gap: 8px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+}
+
+.kanban-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.order-number {
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.order-client {
+  font-weight: 600;
+  margin: 0;
+}
+
+.kanban-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.stock-pill {
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+}
+
+.stock-pill--ok {
+  background: rgba(76, 175, 80, 0.15);
+  color: #1b5e20;
+  border-color: rgba(76, 175, 80, 0.4);
+}
+
+.stock-pill--bad {
+  background: rgba(244, 67, 54, 0.15);
+  color: #b71c1c;
+  border-color: rgba(244, 67, 54, 0.4);
+}
+
+.kanban-actions {
+  display: grid;
+  gap: 8px;
+}
+
+.status-pill {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.badge-ready {
+  background: rgba(76, 175, 80, 0.2);
+  color: #1b5e20;
+}
+
+.badge-delayed {
+  background: rgba(255, 193, 7, 0.2);
+  color: #b26a00;
+}
+
+.badge-blocked {
+  background: rgba(244, 67, 54, 0.2);
+  color: #b71c1c;
+}
+
+.badge-pending {
+  background: rgba(96, 125, 139, 0.2);
+  color: #37474f;
+}
+
+@media (min-width: 1024px) {
+  .kanban-board {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1023px) {
+  .kanban-board {
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(280px, 1fr);
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+
+  .kanban-column {
+    min-width: 280px;
+  }
+}

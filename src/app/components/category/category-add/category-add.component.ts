@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
 import { Category } from 'src/app/common/category';
 import { CategoryService } from 'src/app/services/category.service';
+import { AlertService } from 'src/app/services/alert.service';
 
 @Component({
   selector: 'app-category-add',
@@ -12,10 +12,11 @@ import { CategoryService } from 'src/app/services/category.service';
 export class CategoryAddComponent implements OnInit{
   id:number =0;
   name:string ='';
+  price:number = 0;
 
   constructor(
     private categoryService:CategoryService,
-    private toastr:ToastrService,
+    private alertService: AlertService,
     private router:Router,
     private activatedRoute:ActivatedRoute,
   ){}
@@ -24,13 +25,16 @@ export class CategoryAddComponent implements OnInit{
     this.getCategoryById();
   }
   addCategory(){
-    let category = new Category(this.id, this.name);
-    this.categoryService.createCategory(category).subscribe(
-      res=>{
-        this.toastr.success('categoria registrada correctamente', 'Categoria');
+    let category = new Category(this.id, this.name, this.price);
+    this.categoryService.createCategory(category).subscribe({
+      next: () => {
+        this.alertService.successAlert('Categoría registrada correctamente.');
         this.router.navigate(['admin/category']);
+      },
+      error: () => {
+        this.alertService.errorAlert('No se pudo guardar la categoría.');
       }
-    );
+    });
   }
   getCategoryById(){
     this.activatedRoute.params.subscribe(
@@ -42,6 +46,7 @@ export class CategoryAddComponent implements OnInit{
             data =>{
               this.id = data.id;
               this.name = data.name;
+              this.price = data.price ?? 0;
             }
           )
         }

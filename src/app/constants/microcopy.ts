@@ -1,0 +1,32 @@
+export const MICROCOPY = {
+  cart: {
+    addSuccess: 'Agregado al carrito',
+    selectVariant: 'Seleccioná talle y color para continuar',
+    lowStock: 'Últimas unidades disponibles',
+    insufficientStock: 'No hay stock suficiente para esa cantidad.',
+    reserveStock: 'Reservamos tu stock por 30 minutos mientras realizás el pago.',
+    orderPending: 'Pedido creado. Falta confirmar el pago.',
+    orderConfirmed: 'Pago confirmado. Estamos preparando tu pedido.',
+    deliveryDelayed: (label: string) => `Entrega estimada: ${label}`,
+  },
+  admin: {
+    confirmActionTitle: 'Confirmar acción',
+    confirmActionText: 'Esta acción modificará el stock y quedará registrada. ¿Deseás continuar?',
+    confirmPaymentText: 'Al confirmar el pago se descontará stock y quedará registrado en el kardex.',
+    cancelOrderText: 'Esta orden se cancelará y quedará registrada.',
+    stockInInfo: 'Este ingreso quedará registrado en el kardex.',
+    stockOutInfo: 'Este ajuste modificará el stock disponible.',
+    stockSuccess: 'Stock actualizado correctamente.',
+    stockError: 'No hay stock suficiente para esta acción.',
+    returnConfirm: 'Esta devolución impactará el stock y las ventas. ¿Deseás continuar?',
+    returnSuccess: 'Devolución registrada correctamente.',
+    exchangeConfirm: 'Se registrará una devolución y una nueva salida de stock. ¿Deseás continuar?',
+    exchangeSuccess: 'Cambio registrado correctamente.',
+    shipmentInfo: 'El cliente podrá ver esta información desde su cuenta.',
+    shipmentSaved: 'Datos de envío guardados.',
+  },
+  general: {
+    actionNotAllowed: 'Acción no permitida.',
+    genericError: 'Ocurrió un error. Intentá nuevamente.',
+  },
+};

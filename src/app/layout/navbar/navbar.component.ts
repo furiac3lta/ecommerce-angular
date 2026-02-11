@@ -9,6 +9,7 @@ import { CartService } from 'src/app/services/cart.service';
 import { Subscription } from 'rxjs';
 import { ThemeService } from 'src/app/services/theme.service';
 import { UserService } from 'src/app/services/user.service';
+import { AdminToolsService } from 'src/app/services/admin-tools.service';
 
 @Component({
   selector: 'app-navbar',
@@ -24,6 +25,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   cartItemsQty: number = 0;
   isDarkMode: boolean = false;
   userLabel: string = '';
+  deliveryAlerts: { todayCount: number; overdueCount: number } | null = null;
   private cartSubscription!: Subscription;
 
   constructor(
@@ -31,13 +33,24 @@ export class NavbarComponent implements OnInit, OnDestroy {
     private router: Router,
     private cartService: CartService,
     private themeService: ThemeService,
-    private userService: UserService
+    private userService: UserService,
+    private adminToolsService: AdminToolsService
   ) {}
 
   ngOnInit(): void {
     const token = this.sessionStorage.getItem('token');
     this.isAdmin = token && token.type === 'ADMIN';
     this.isLoggedIn = !!token;
+    if (this.isAdmin) {
+      this.adminToolsService.getDeliveryAlerts().subscribe({
+        next: (alerts) => {
+          this.deliveryAlerts = alerts;
+        },
+        error: () => {
+          this.deliveryAlerts = null;
+        }
+      });
+    }
     if (token?.id) {
       this.userService.getUserById(token.id).subscribe({
         next: (user) => {
@@ -107,8 +120,14 @@ export class NavbarComponent implements OnInit, OnDestroy {
   gotoOrders(){
     this.router.navigate(['/admin/orders'])
   }
+  gotoOrdersKanban() {
+    this.router.navigate(['/admin/orders-kanban']);
+  }
   gotoStock() {
     this.router.navigate(['/admin/stock']);
+  }
+  gotoDeliveries() {
+    this.router.navigate(['/admin/deliveries']);
   }
 
   toggleTheme(): void {

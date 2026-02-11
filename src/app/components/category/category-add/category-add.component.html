@@ -7,22 +7,31 @@
 
    
 
-    <h2 class="text-xl font-semibold mb-4 mt-8">Crear Categoría</h2>
+    <div class="ds-card mt-8">
+      <h2 class="text-xl font-semibold mb-2">Crear categoría</h2>
+      <p class="text-sm text-secondary mb-6">Usá nombres claros para que los clientes encuentren fácil tus productos.</p>
 
-    <form class="space-y-4">
+      <form class="space-y-4">
         <input type="hidden" [(ngModel)]="id" name="id">
         
         <div class="flex flex-col space-y-2">
-            <label for="nombre" class="text-gray-700">Nombre:</label>
-            <input [(ngModel)]="name" class="input-item w-1/2" id="name" name="name"
-                placeholder="Ingrese el nombre de la categoría" autocomplete="off" minlength="5">
+            <label for="nombre" class="text-gray-700">Nombre</label>
+            <input [(ngModel)]="name" class="input-item w-full md:w-1/2" id="name" name="name"
+                placeholder="Ingresá el nombre de la categoría" autocomplete="off" minlength="5">
+        </div>
+
+        <div class="flex flex-col space-y-2">
+            <label for="precio" class="text-gray-700">Precio (por categoría)</label>
+            <input [(ngModel)]="price" class="input-item w-full md:w-1/2" id="precio" name="precio"
+                type="number" step="any" placeholder="0.00" autocomplete="off" min="0" required>
         </div>
 
         <div class="flex">
-            <button class="button-item w-32 text-center py-2 px-4 rounded flex items-center" (click)="addCategory()">
-                <span class="material-icons">save</span> Guardar
+            <button class="button-item button-item--sm" (click)="addCategory()">
+                Guardar
             </button>
         </div>
-    </form>
+      </form>
+    </div>
 </div>
 <app-footer></app-footer>

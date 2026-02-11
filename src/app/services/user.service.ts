@@ -2,7 +2,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { User } from '../common/user';
-import { HeaderService } from './header.service';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +9,7 @@ import { HeaderService } from './header.service';
 export class UserService {
   private apiUrl: string = 'https://ecommerce-back-0cc9b90e39e5.herokuapp.com/api/v1/users';
 
-  constructor(private httpClient: HttpClient, private headerService: HeaderService) {}
+  constructor(private httpClient: HttpClient) {}
 
   getUserById(id: number): Observable<User> {
     const headers = this.headerService.headers;
@@ -48,13 +47,7 @@ export class UserService {
       return throwError(() => new Error('El ID del usuario es inválido.'));
     }
 
-    const headers = this.headerService.headers;
-    if (!headers.has('Authorization') || headers.get('Authorization') === '') {
-      console.error('⚠️ El encabezado Authorization no está configurado o es inválido.');
-    }
-
-
-    return this.httpClient.get<User>(`${this.apiUrl}/${id}`, { headers }).pipe(
+    return this.httpClient.get<User>(`${this.apiUrl}/${id}`).pipe(
       catchError(error => {
         console.error(`❌ Error obteniendo usuario con ID ${id}:`, error);
         return throwError(() => new Error('Error obteniendo el usuario'));

@@ -13,6 +13,8 @@ import { Order } from 'src/app/common/order';
 export class ConfirmationComponent implements OnInit {
   status: string = '';
   order: Order | null = null;
+  hasDelayedItems = false;
+  delayedDateLabel = '';
   router: any;
 
   constructor(
@@ -30,6 +32,7 @@ export class ConfirmationComponent implements OnInit {
     const orderData = localStorage.getItem('currentOrder');
     if (orderData) {
       this.order = JSON.parse(orderData);
+      this.refreshDelayedInfo();
     }
 
     // Verificar si order tiene un valor id válido
@@ -47,6 +50,13 @@ export class ConfirmationComponent implements OnInit {
           this.sessionStorage.removeItem('token');
           console.log('LogoutComponent eliminado: ' + this.sessionStorage.getItem('token'));
           localStorage.removeItem('currentOrder');
+          this.orderService.getOrderById(orderId).subscribe({
+            next: (fresh) => {
+              this.order = fresh;
+              this.refreshDelayedInfo();
+            },
+            error: () => {}
+          });
            // Redirigir al inicio después de un breve retardo
            setTimeout(() => {
             this.router.navigate(['/']);
@@ -56,6 +66,26 @@ export class ConfirmationComponent implements OnInit {
           console.error('Error al actualizar la orden:', error);
         }
       );
+    }
+  }
+
+  private refreshDelayedInfo(): void {
+    if (!this.order) {
+      this.hasDelayedItems = false;
+      this.delayedDateLabel = '';
+      return;
+    }
+    const deliveryType = this.order.deliveryType;
+    if (deliveryType === 'DELAYED') {
+      this.hasDelayedItems = true;
+      if (this.order.estimatedDeliveryDate) {
+        this.delayedDateLabel = new Date(this.order.estimatedDeliveryDate).toLocaleDateString();
+      } else {
+        this.delayedDateLabel = '';
+      }
+    } else {
+      this.hasDelayedItems = false;
+      this.delayedDateLabel = '';
     }
   }
 }

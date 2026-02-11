@@ -103,6 +103,17 @@ export class CartService {
     }
   }
 
+  updateItemPrice(productVariantId: number, price: number): void {
+    if (this.items.has(productVariantId)) {
+      const item = this.items.get(productVariantId);
+      if (item) {
+        item.price = price;
+        this.items.set(productVariantId, item);
+        this.updateCartState();
+      }
+    }
+  }
+
   getCart(): Observable<ItemCart[]> {
     return this.cart$;
   }

@@ -30,6 +30,12 @@
           <li class="nav-item"><a (click)="gotoCat()">ABM Cat</a></li>
           <li class="nav-item"><a (click)="gotoStock()">Stock</a></li>
           <li class="nav-item"><a (click)="gotoOrders()">Órdenes</a></li>
+          <li class="nav-item"><a (click)="gotoOrdersKanban()">Kanban</a></li>
+          <li class="nav-item nav-alerts">
+            <a (click)="gotoDeliveries()">Entregas</a>
+            <span *ngIf="deliveryAlerts?.todayCount" class="alert-badge alert-badge--today">🔔 {{ deliveryAlerts?.todayCount }}</span>
+            <span *ngIf="deliveryAlerts?.overdueCount" class="alert-badge alert-badge--overdue">🚨 {{ deliveryAlerts?.overdueCount }}</span>
+          </li>
         </ng-container>
 
         <ng-template #guestLinks>

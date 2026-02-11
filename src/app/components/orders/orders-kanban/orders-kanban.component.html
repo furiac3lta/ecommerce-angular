@@ -1,0 +1,131 @@
+<app-navbar></app-navbar>
+<div class="max-w-[1400px] mx-auto px-4 py-6">
+  <div class="ds-card mb-6">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+      <div>
+        <p class="text-xs uppercase tracking-[0.2em] text-secondary">Admin</p>
+        <h2 class="text-2xl font-semibold text-main">Órdenes · Kanban de entrega</h2>
+        <p class="text-sm text-secondary">Vista operativa para priorizar envíos y detectar bloqueos.</p>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <button class="button-item button-item--outline" (click)="downloadKanbanReport()">Exportar Kanban (PDF)</button>
+        <button class="button-item button-item--outline" (click)="loadKanban()">Actualizar</button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="ux-empty">Cargando tablero...</div>
+
+  <div *ngIf="!isLoading" class="kanban-board">
+    <div class="kanban-column">
+      <div class="kanban-header">
+        <h3>Listas para entregar</h3>
+        <span class="kanban-count">{{ columns.ready.length }}</span>
+      </div>
+      <div class="kanban-cards">
+        <div *ngFor="let item of columns.ready" class="kanban-card">
+          <div class="kanban-card__top">
+            <span class="order-number">{{ item.order.orderNumber || ('#' + item.order.id) }}</span>
+            <span class="status-pill badge-ready">Lista</span>
+          </div>
+          <p class="order-client">{{ item.order.userName || 'Cliente' }}</p>
+          <p class="text-xs text-secondary">{{ item.order.dateCreated | date:'short' }}</p>
+          <div class="kanban-meta">
+            <span>{{ getSaleChannelLabel(item.order.saleChannel) }}</span>
+            <span class="stock-pill" [class.stock-pill--ok]="item.stockOk" [class.stock-pill--bad]="!item.stockOk">{{ item.stockLabel }}</span>
+          </div>
+          <div class="kanban-meta">
+            <span>Envío: {{ getShipmentStatus(item.order.id) }}</span>
+            <span>{{ item.deliveryType === 'DELAYED' ? 'Demorada' : 'Inmediata' }}</span>
+          </div>
+          <div class="kanban-actions">
+            <button class="button-item button-item--sm" routerLink="/admin/orders">Ver orden</button>
+            <button class="button-item button-item--outline button-item--sm" routerLink="/admin/deliveries">Cargar envío</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="kanban-column">
+      <div class="kanban-header">
+        <h3>Con demora</h3>
+        <span class="kanban-count">{{ columns.delayed.length }}</span>
+      </div>
+      <div class="kanban-cards">
+        <div *ngFor="let item of columns.delayed" class="kanban-card">
+          <div class="kanban-card__top">
+            <span class="order-number">{{ item.order.orderNumber || ('#' + item.order.id) }}</span>
+            <span class="status-pill badge-delayed">Demorada</span>
+          </div>
+          <p class="order-client">{{ item.order.userName || 'Cliente' }}</p>
+          <p class="text-xs text-secondary">{{ item.order.dateCreated | date:'short' }}</p>
+          <div class="kanban-meta">
+            <span>{{ getSaleChannelLabel(item.order.saleChannel) }}</span>
+            <span class="stock-pill" [class.stock-pill--ok]="item.stockOk" [class.stock-pill--bad]="!item.stockOk">{{ item.stockLabel }}</span>
+          </div>
+          <div class="kanban-meta">
+            <span>Entrega: {{ item.estimatedDate || 'Sin fecha' }}</span>
+            <span>Envío: {{ getShipmentStatus(item.order.id) }}</span>
+          </div>
+          <div class="kanban-actions">
+            <button class="button-item button-item--sm" routerLink="/admin/orders">Ver orden</button>
+            <button class="button-item button-item--outline button-item--sm" routerLink="/admin/deliveries">Cargar envío</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="kanban-column">
+      <div class="kanban-header">
+        <h3>Bloqueadas por stock</h3>
+        <span class="kanban-count">{{ columns.blocked.length }}</span>
+      </div>
+      <div class="kanban-cards">
+        <div *ngFor="let item of columns.blocked" class="kanban-card">
+          <div class="kanban-card__top">
+            <span class="order-number">{{ item.order.orderNumber || ('#' + item.order.id) }}</span>
+            <span class="status-pill badge-blocked">Sin stock</span>
+          </div>
+          <p class="order-client">{{ item.order.userName || 'Cliente' }}</p>
+          <p class="text-xs text-secondary">{{ item.order.dateCreated | date:'short' }}</p>
+          <div class="kanban-meta">
+            <span>{{ getSaleChannelLabel(item.order.saleChannel) }}</span>
+            <span class="stock-pill stock-pill--bad">{{ item.stockLabel }}</span>
+          </div>
+          <div class="kanban-meta">
+            <span>Entrega: {{ item.deliveryType === 'DELAYED' ? 'Demorada' : 'Inmediata' }}</span>
+            <span>Envío: {{ getShipmentStatus(item.order.id) }}</span>
+          </div>
+          <div class="kanban-actions">
+            <button class="button-item button-item--sm" routerLink="/admin/orders">Ver orden</button>
+            <button class="button-item button-item--outline button-item--sm" routerLink="/admin/stock">Ver stock</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="kanban-column">
+      <div class="kanban-header">
+        <h3>Pendientes de pago</h3>
+        <span class="kanban-count">{{ columns.pending.length }}</span>
+      </div>
+      <div class="kanban-cards">
+        <div *ngFor="let item of columns.pending" class="kanban-card">
+          <div class="kanban-card__top">
+            <span class="order-number">{{ item.order.orderNumber || ('#' + item.order.id) }}</span>
+            <span class="status-pill badge-pending">Pendiente</span>
+          </div>
+          <p class="order-client">{{ item.order.userName || 'Cliente' }}</p>
+          <p class="text-xs text-secondary">{{ item.order.dateCreated | date:'short' }}</p>
+          <div class="kanban-meta">
+            <span>{{ getSaleChannelLabel(item.order.saleChannel) }}</span>
+            <span>Pago pendiente</span>
+          </div>
+          <div class="kanban-actions">
+            <button class="button-item button-item--sm" routerLink="/admin/orders">Ver orden</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

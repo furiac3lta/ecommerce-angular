@@ -8,7 +8,7 @@
         <h2>Crear producto</h2>
         <p>Configurá la ficha, subí la imagen y agregá variantes con su stock en un flujo claro.</p>
       </div>
-      <div class="hero-card">
+      <div class="hero-card ds-card">
         <span class="hero-kicker">Checklist</span>
         <ul>
           <li>Datos básicos</li>
@@ -32,7 +32,7 @@
           <div class="field-block">
             <label for="category">Elija una categoría</label>
             <mat-form-field appearance="outline" class="w-full modern-field">
-              <mat-select [(ngModel)]="categoryId" name="category" id="category" (selectionChange)="refreshAllSkus()" required>
+              <mat-select [(ngModel)]="categoryId" name="category" id="category" (selectionChange)="handleCategoryChange()" required>
                 <mat-option *ngFor="let categoria of categories" [value]="categoria.id">
                   {{ categoria.name }}
                 </mat-option>
@@ -55,9 +55,17 @@
           </div>
 
           <div class="field-block">
+            <label for="priceOverride">Precio personalizado</label>
+            <div class="flex items-center gap-3">
+              <input type="checkbox" id="priceOverride" name="priceOverride" [(ngModel)]="priceOverride" (change)="handlePriceOverrideChange()">
+              <span class="text-sm text-secondary">Si está desactivado, se usa el precio de la categoría.</span>
+            </div>
+          </div>
+
+          <div class="field-block">
             <label for="precio">Precio</label>
             <mat-form-field appearance="outline" class="w-full modern-field">
-              <input matInput [(ngModel)]="price" type="number" step="any" id="precio" name="precio" placeholder="0.00" autocomplete="off" required>
+              <input matInput [(ngModel)]="price" type="number" step="any" id="precio" name="precio" placeholder="0.00" autocomplete="off" [readonly]="!priceOverride">
             </mat-form-field>
           </div>
 
@@ -67,6 +75,45 @@
               <input matInput [(ngModel)]="code" (input)="refreshAllSkus()" type="text" step="any" id="code" name="code" placeholder="Cantidad de cuotas" autocomplete="off" required>
             </mat-form-field>
           </div>
+
+          <div class="field-block">
+            <label for="sellOnline">Disponible en tienda online</label>
+            <div class="flex items-center gap-3">
+              <input type="checkbox" id="sellOnline" name="sellOnline" [(ngModel)]="sellOnline">
+              <span class="text-sm text-secondary">Si lo desactivás, solo se vende en admin.</span>
+            </div>
+          </div>
+
+          <div class="field-block">
+            <label for="deliveryType">Tipo de entrega</label>
+            <mat-form-field appearance="outline" class="w-full modern-field">
+              <mat-select [(ngModel)]="deliveryType" id="deliveryType" name="deliveryType">
+                <mat-option value="IMMEDIATE">Inmediata</mat-option>
+                <mat-option value="DELAYED">Demorada</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="field-block">
+            <label for="estimatedDeliveryDays">Demora (días)</label>
+            <mat-form-field appearance="outline" class="w-full modern-field">
+              <input matInput [(ngModel)]="estimatedDeliveryDays" id="estimatedDeliveryDays" name="estimatedDeliveryDays" type="number" min="0" placeholder="0">
+            </mat-form-field>
+          </div>
+
+          <div class="field-block">
+            <label for="estimatedDeliveryDate">Fecha estimada</label>
+            <mat-form-field appearance="outline" class="w-full modern-field">
+              <input matInput [(ngModel)]="estimatedDeliveryDate" id="estimatedDeliveryDate" name="estimatedDeliveryDate" type="date">
+            </mat-form-field>
+          </div>
+
+          <div class="field-block span-2">
+            <label for="deliveryNote">Nota de entrega</label>
+            <mat-form-field appearance="outline" class="w-full modern-field">
+              <input matInput [(ngModel)]="deliveryNote" id="deliveryNote" name="deliveryNote" placeholder="Ej: fabricación a pedido">
+            </mat-form-field>
+          </div>
         </div>
       </section>
 
@@ -74,18 +121,21 @@
         <div class="section-head">
           <div>
             <h3>Imagen principal</h3>
-            <p>Subí una imagen clara; será la portada en el catálogo.</p>
+            <p>Podés subir varias imágenes. La primera será la portada.</p>
           </div>
           <span class="section-chip">Paso 2</span>
         </div>
 
         <div class="upload-box">
           <div>
-            <h4>Arrastrá tu archivo o hacé click</h4>
+            <h4>Arrastrá tus archivos o hacé click</h4>
             <p>Formatos recomendados: JPG o PNG · 1200×1200 px.</p>
           </div>
-          <label class="upload-action" for="img">Seleccionar imagen</label>
-          <input type="file" id="img" (change)="onFileSelected($event)">
+          <div class="flex items-center gap-3">
+            <label class="upload-action" for="img">Seleccionar imágenes</label>
+            <span class="text-xs text-gray-500">{{ selectedImagesLabel }}</span>
+          </div>
+          <input type="file" id="img" (change)="onFileSelected($event)" multiple>
         </div>
       </section>
 
@@ -95,7 +145,7 @@
             <h3>Variantes</h3>
             <p>Personalizá talla, color, material y stock para cada combinación.</p>
           </div>
-          <button type="button" class="ghost-btn" (click)="addVariant()">Agregar variante</button>
+          <button type="button" class="button-item button-item--outline button-item--sm" (click)="addVariant()">Agregar variante</button>
         </div>
 
         <div class="variants-list">
@@ -105,7 +155,7 @@
                 <span class="variant-index">Variante {{ i + 1 }}</span>
                 <p>Completá los datos clave para inventario y ventas.</p>
               </div>
-              <button type="button" class="danger-link" (click)="removeVariant(i)" *ngIf="variants.length > 1">Eliminar</button>
+              <button type="button" class="button-item button-item--danger button-item--sm" (click)="removeVariant(i)" *ngIf="variants.length > 1">Eliminar</button>
             </div>
 
             <div class="variant-grid">
@@ -164,6 +214,51 @@
                   <input matInput [(ngModel)]="variant.stockMinimum" id="stockMinimum-{{i}}" name="stockMinimum-{{i}}" type="number" min="0">
                 </mat-form-field>
               </div>
+
+              <div class="field-stack">
+                <label class="field-label" for="priceRetail-{{i}}">Precio minorista</label>
+                <mat-form-field appearance="outline" class="w-full modern-field">
+                  <input matInput [(ngModel)]="variant.priceRetail" id="priceRetail-{{i}}" name="priceRetail-{{i}}" type="number" min="0" step="any">
+                </mat-form-field>
+              </div>
+
+              <div class="field-stack">
+                <label class="field-label" for="priceWholesale-{{i}}">Precio mayorista</label>
+                <mat-form-field appearance="outline" class="w-full modern-field">
+                  <input matInput [(ngModel)]="variant.priceWholesale" id="priceWholesale-{{i}}" name="priceWholesale-{{i}}" type="number" min="0" step="any">
+                </mat-form-field>
+              </div>
+
+              <div class="field-stack">
+                <label class="field-label" for="deliveryTypeVariant-{{i}}">Entrega</label>
+                <mat-form-field appearance="outline" class="w-full modern-field">
+                  <mat-select [(ngModel)]="variant.deliveryType" id="deliveryTypeVariant-{{i}}" name="deliveryTypeVariant-{{i}}">
+                    <mat-option value="IMMEDIATE">Inmediata</mat-option>
+                    <mat-option value="DELAYED">Demorada</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <div class="field-stack">
+                <label class="field-label" for="estimatedDaysVariant-{{i}}">Demora (días)</label>
+                <mat-form-field appearance="outline" class="w-full modern-field">
+                  <input matInput [(ngModel)]="variant.estimatedDeliveryDays" id="estimatedDaysVariant-{{i}}" name="estimatedDaysVariant-{{i}}" type="number" min="0">
+                </mat-form-field>
+              </div>
+
+              <div class="field-stack">
+                <label class="field-label" for="estimatedDateVariant-{{i}}">Fecha estimada</label>
+                <mat-form-field appearance="outline" class="w-full modern-field">
+                  <input matInput [(ngModel)]="variant.estimatedDeliveryDate" id="estimatedDateVariant-{{i}}" name="estimatedDateVariant-{{i}}" type="date">
+                </mat-form-field>
+              </div>
+
+              <div class="field-stack span-2">
+                <label class="field-label" for="deliveryNoteVariant-{{i}}">Nota de entrega</label>
+                <mat-form-field appearance="outline" class="w-full modern-field">
+                  <input matInput [(ngModel)]="variant.deliveryNote" id="deliveryNoteVariant-{{i}}" name="deliveryNoteVariant-{{i}}" placeholder="Detalle de demora">
+                </mat-form-field>
+              </div>
             </div>
 
             <div class="variant-footer">
@@ -171,6 +266,15 @@
                 <label class="field-label" for="active-{{i}}">Activo</label>
                 <mat-form-field appearance="outline" class="w-40 modern-field">
                   <mat-select [(ngModel)]="variant.active" id="active-{{i}}" name="active-{{i}}">
+                    <mat-option [value]="true">Sí</mat-option>
+                    <mat-option [value]="false">No</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="field-stack compact">
+                <label class="field-label" for="sellOnlineVariant-{{i}}">Vender online</label>
+                <mat-form-field appearance="outline" class="w-40 modern-field">
+                  <mat-select [(ngModel)]="variant.sellOnline" id="sellOnlineVariant-{{i}}" name="sellOnlineVariant-{{i}}">
                     <mat-option [value]="true">Sí</mat-option>
                     <mat-option [value]="false">No</mat-option>
                   </mat-select>

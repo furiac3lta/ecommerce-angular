@@ -16,11 +16,21 @@
   </app-aside-products>
 
   <div class="catalog-content">
-    <p *ngIf="productsFiltered.length === 0" class="text-center text-gray-600 text-lg w-full font-bold">
-      No hay productos
-    </p>
+    <div *ngIf="isLoading" class="ux-skeleton-grid">
+      <div class="skeleton-card">
+        <div class="skeleton-block skeleton-line"></div>
+        <div class="skeleton-block skeleton-line"></div>
+      </div>
+      <div class="skeleton-card">
+        <div class="skeleton-block skeleton-line"></div>
+        <div class="skeleton-block skeleton-line"></div>
+      </div>
+    </div>
+    <div *ngIf="!isLoading && productsFiltered.length === 0" class="ux-empty">
+      No hay productos para esta categoría. Probá con otra o volvé a ver todos.
+    </div>
 
-    <div class="catalog-grid">
+    <div class="catalog-grid" *ngIf="!isLoading && productsFiltered.length > 0">
       <app-product-card
         *ngFor="let p of productsFiltered"
         [product]="p"
