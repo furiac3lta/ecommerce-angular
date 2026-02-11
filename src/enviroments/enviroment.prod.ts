@@ -1,7 +1,7 @@
 // src/environments/environment.prod.ts
 export const environment = {
     production: true,
-    apiBaseUrl: 'ecommerce-backend-production-3fca.up.railway.app',
+    apiBaseUrl: 'https://ecommerce-backend-production-3fca.up.railway.app',
     transferAlias: 'LIONS.BRAND',
     transferCbu: '0000000000000000000000',
     transferBank: 'Banco',
