@@ -22,7 +22,7 @@ export class CategoryListComponent implements OnInit {
   }
   listCategories(){
     this.isLoading = true;
-    this.categoryService.getCategoryList().subscribe({
+    this.categoryService.getAdminCategoryList().subscribe({
       next: (data) => {
         this.categories = data;
         this.isLoading = false;

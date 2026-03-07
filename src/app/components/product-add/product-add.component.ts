@@ -150,7 +150,7 @@ export class ProductAddComponent implements OnInit{
   }
 
   getCategories(){
-    return this.categoryService.getCategoryList().subscribe(
+    return this.categoryService.getAdminCategoryList().subscribe(
       data => {
         this.categories = data;
         this.refreshAllSkus();
