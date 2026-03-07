@@ -7,7 +7,7 @@ import { CartService } from 'src/app/services/cart.service';
 import { HomeService } from 'src/app/services/home.service';
 import { forkJoin } from 'rxjs';
 import { OrderService } from 'src/app/services/order.service';
-import { environment } from 'src/enviroments/enviroment';
+import { environment } from 'src/environments/environment';
 import { SessionStorageService } from 'src/app/services/session-storage.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { Userdto } from 'src/app/common/userdto';

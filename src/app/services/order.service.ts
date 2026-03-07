@@ -6,7 +6,7 @@ import { StockMovement } from '../common/stock-movement';
 import { TimelineEvent } from '../common/timeline-event';
 import { Observable } from 'rxjs';
 import { HeaderService } from './header.service';
-import { environment } from 'src/enviroments/enviroment';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
