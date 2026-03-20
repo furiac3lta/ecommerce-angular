@@ -1,27 +1,71 @@
 # Frontend
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.1.
+Proyecto Angular del ecommerce.
 
-## Development server
+## Docker
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+Quedo una sola forma de correr el proyecto con Docker para frontend, backend y base.
 
-## Code scaffolding
+Estructura:
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+- `frontend`: Angular compilado y servido con Nginx
+- `backend`: Spring Boot empaquetado como `.jar`
+- `db`: PostgreSQL
 
-## Build
+El `docker-compose.yml` asume que `ecommerce-angular` y `ecommerce-backend` viven como carpetas hermanas.
+El `Dockerfile` del backend esta en `../ecommerce-backend/Dockerfile`.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Variables
 
-## Running unit tests
+Crea un archivo `.env` opcional en la raiz con valores como estos:
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+```env
+POSTGRES_DB=ecommerce
+POSTGRES_USER=ecommerce
+POSTGRES_PASSWORD=ecommerce
+POSTGRES_PORT=5432
+BACKEND_PORT=8080
+FRONTEND_PORT=4200
+JWT_SECRET=local-dev-jwt-secret
+MERCADOPAGO_ACCESS_TOKEN=123123123123
+```
 
-## Running end-to-end tests
+Si queres usar exactamente el mismo secreto que hoy tiene el backend:
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+```env
+JWT_SECRET=fS2UAxl7vRy0XTLfb89RxPEZAjWa6LG2sfKhp_hSz9sAxr9WYsaV4jJ0QL-NUcCT1m1JfL8
+```
 
-## Further help
+## Levantar
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+```bash
+docker compose up -d --build
+```
+
+Servicios por defecto:
+
+- Frontend: `http://localhost:4200`
+- Backend: `http://localhost:8080`
+- PostgreSQL: `localhost:5432`
+
+## Apagar
+
+```bash
+docker compose down
+```
+
+Para borrar tambien la data de Postgres:
+
+```bash
+docker compose down -v
+```
+
+## Angular
+
+- `src/environments/environment.ts`: produccion y Docker/Nginx usando rutas relativas
+- `src/environments/environment.development.ts`: desarrollo local con `localhost:8080`
+
+## Nota
+
+- Mercado Pago en el backend todavia tiene URLs de retorno hardcodeadas a `https://www.lcosmeticadigital.com.ar/confirmacion-pago`. Si cambias el dominio final, hay que ajustar eso en el backend.
+- El JWT del backend hoy sigue usando una constante hardcodeada en `../ecommerce-backend/src/main/java/com/colors/ecommerce/backend/infrastucture/jwt/Constants.java`. Aunque existe `JWT_SECRET` en Docker, ese valor no controla realmente la firma hasta que se refactorice esa parte del backend.
