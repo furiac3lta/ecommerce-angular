@@ -15,11 +15,15 @@ export class ProductVariantService {
   constructor(private httpClient: HttpClient, private headerService: HeaderService) {}
 
   getByProduct(productId: number): Observable<ProductVariant[]> {
-    return this.httpClient.get<ProductVariant[]>(`${this.apiUrl}/by-product/${productId}`);
+    return this.httpClient.get<ProductVariant[]>(`${this.apiUrl}/by-product/${productId}?ts=${Date.now()}`, {
+      headers: this.headerService.headers.set('Cache-Control', 'no-cache')
+    });
   }
 
   getById(id: number): Observable<ProductVariant> {
-    return this.httpClient.get<ProductVariant>(`${this.apiUrl}/${id}`);
+    return this.httpClient.get<ProductVariant>(`${this.apiUrl}/${id}?ts=${Date.now()}`, {
+      headers: this.headerService.headers.set('Cache-Control', 'no-cache')
+    });
   }
 
   save(variant: ProductVariant): Observable<ProductVariant> {

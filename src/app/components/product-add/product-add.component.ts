@@ -267,6 +267,7 @@ export class ProductAddComponent implements OnInit{
         this.variants = [];
         this.skuManualFlags = [];
         this.addVariant();
+        this.alertService.errorAlert('No se pudieron cargar las variantes del producto.');
       }
     });
   }
