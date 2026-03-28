@@ -78,6 +78,14 @@
           </div>
 
           <div class="field-block">
+            <label for="active">Activo</label>
+            <div class="flex items-center gap-3">
+              <input type="checkbox" id="active" name="active" [(ngModel)]="active">
+              <span class="text-sm text-secondary">Si lo desactivás, no se muestra como producto activo.</span>
+            </div>
+          </div>
+
+          <div class="field-block">
             <label for="sellOnline">Disponible en tienda online</label>
             <div class="flex items-center gap-3">
               <input type="checkbox" id="sellOnline" name="sellOnline" [(ngModel)]="sellOnline">

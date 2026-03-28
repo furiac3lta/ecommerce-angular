@@ -21,6 +21,7 @@ export class ProductAddComponent implements OnInit{
   description: string='';
   price: number =0;
   priceOverride: boolean = false;
+  active: boolean = true;
   sellOnline: boolean = true;
   deliveryType: 'IMMEDIATE' | 'DELAYED' = 'IMMEDIATE';
   estimatedDeliveryDays: number | null = null;
@@ -72,6 +73,7 @@ export class ProductAddComponent implements OnInit{
     formData.append('description',this.description);
     formData.append('price',this.price.toString());
     formData.append('priceOverride', this.priceOverride.toString());
+    formData.append('active', this.active.toString());
     formData.append('sellOnline', this.sellOnline.toString());
     formData.append('deliveryType', this.deliveryType);
     const normalizedEstimatedDeliveryDays = this.normalizeOptionalInteger(this.estimatedDeliveryDays);
@@ -122,6 +124,7 @@ export class ProductAddComponent implements OnInit{
               this.description = data.description;
               this.price = data.price;
               this.priceOverride = data.priceOverride ?? false;
+              this.active = data.active ?? true;
               this.sellOnline = data.sellOnline ?? true;
               this.deliveryType = data.deliveryType ?? 'IMMEDIATE';
               this.estimatedDeliveryDays = this.parseOptionalInteger(data.estimatedDeliveryDays);
@@ -257,7 +260,24 @@ export class ProductAddComponent implements OnInit{
   private loadVariants(productId: number) {
     this.productVariantService.getByProduct(productId).subscribe({
       next: (variants) => {
-        this.variants = variants.length ? variants : [];
+        this.variants = variants.length ? variants.map((variant) => ({
+          ...variant,
+          sku: variant.sku ?? '',
+          size: variant.size ?? '',
+          color: variant.color ?? '',
+          material: variant.material ?? '',
+          usage: variant.usage ?? '',
+          deliveryType: variant.deliveryType ?? 'IMMEDIATE',
+          estimatedDeliveryDays: variant.estimatedDeliveryDays ?? 0,
+          estimatedDeliveryDate: variant.estimatedDeliveryDate ?? '',
+          deliveryNote: variant.deliveryNote ?? '',
+          stockCurrent: variant.stockCurrent ?? 0,
+          stockMinimum: variant.stockMinimum ?? 0,
+          priceRetail: variant.priceRetail ?? 0,
+          priceWholesale: variant.priceWholesale ?? 0,
+          active: variant.active ?? true,
+          sellOnline: variant.sellOnline ?? true
+        })) : [];
         this.skuManualFlags = this.variants.map((variant) => !!variant.sku);
         if (this.variants.length === 0) {
           this.addVariant();
