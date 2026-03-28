@@ -10,6 +10,14 @@
   white-space: nowrap;
 }
 
+.admin-table .table-cell--description {
+  white-space: normal;
+  min-width: 280px;
+  max-width: 420px;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
 .admin-table .mat-mdc-cell,
 .admin-table .mat-mdc-header-cell {
   vertical-align: top;

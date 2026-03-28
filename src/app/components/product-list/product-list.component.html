@@ -82,7 +82,7 @@
           <tr *ngFor="let product of products">
             <td class="table-cell">{{ product.id }}</td>
             <td class="table-cell">{{ product.name }}</td>
-            <td class="table-cell">{{ product.description }}</td>
+            <td class="table-cell table-cell--description">{{ product.description }}</td>
             <td class="table-cell">{{ product.price | currency }}</td>
             <td class="table-cell">{{ product.priceOverride ? 'Personalizado' : 'Categoría' }}</td>
             <td class="table-cell">{{ product.code }}</td>

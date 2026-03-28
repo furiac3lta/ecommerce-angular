@@ -121,6 +121,17 @@
   color: #475569;
 }
 
+.required-legend {
+  margin: 0 0 18px;
+  font-size: 0.92rem;
+  color: #64748b;
+}
+
+.required-mark {
+  color: #b91c1c;
+  font-weight: 700;
+}
+
 .form-grid {
   display: grid;
   gap: 18px;

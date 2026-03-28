@@ -27,10 +27,11 @@
           </div>
           <span class="section-chip">Paso 1</span>
         </div>
+        <p class="required-legend">Los campos con <span class="required-mark">*</span> son obligatorios.</p>
 
         <div class="form-grid">
           <div class="field-block">
-            <label for="category">Elija una categoría</label>
+            <label for="category">Elija una categoría <span class="required-mark">*</span></label>
             <mat-form-field appearance="outline" class="w-full modern-field">
               <mat-select [(ngModel)]="categoryId" name="category" id="category" (selectionChange)="handleCategoryChange()" required>
                 <mat-option *ngFor="let categoria of categories" [value]="categoria.id">
@@ -41,14 +42,14 @@
           </div>
 
           <div class="field-block">
-            <label for="nombre">Nombre</label>
+            <label for="nombre">Nombre <span class="required-mark">*</span></label>
             <mat-form-field appearance="outline" class="w-full modern-field">
               <input matInput [(ngModel)]="name" type="text" id="nombre" name="nombre" placeholder="Nombre del producto" autocomplete="off" required>
             </mat-form-field>
           </div>
 
           <div class="field-block span-2">
-            <label for="descripcion">Descripción</label>
+            <label for="descripcion">Descripción <span class="required-mark">*</span></label>
             <mat-form-field appearance="outline" class="w-full modern-field">
               <textarea matInput [(ngModel)]="description" id="descripcion" name="descripcion" placeholder="Breve descripción y detalles" required></textarea>
             </mat-form-field>
@@ -70,7 +71,7 @@
           </div>
 
           <div class="field-block">
-            <label for="code">Cuotas</label>
+            <label for="code">Cuotas <span class="required-mark">*</span></label>
             <mat-form-field appearance="outline" class="w-full modern-field">
               <input matInput [(ngModel)]="code" (input)="refreshAllSkus()" type="text" step="any" id="code" name="code" placeholder="Cantidad de cuotas" autocomplete="off" required>
             </mat-form-field>
@@ -147,6 +148,7 @@
           </div>
           <button type="button" class="button-item button-item--outline button-item--sm" (click)="addVariant()">Agregar variante</button>
         </div>
+        <p class="required-legend">Cada variante requiere talle, color y SKU.</p>
 
         <div class="variants-list">
           <div *ngFor="let variant of variants; let i = index" class="variant-card">
@@ -160,14 +162,14 @@
 
             <div class="variant-grid">
               <div class="field-stack">
-                <label class="field-label" for="size-{{i}}">Talle</label>
+                <label class="field-label" for="size-{{i}}">Talle <span class="required-mark">*</span></label>
                 <mat-form-field appearance="outline" class="w-full modern-field">
                   <input matInput [(ngModel)]="variant.size" (input)="updateSku(i)" id="size-{{i}}" name="size-{{i}}" placeholder="A1, A2..." required>
                 </mat-form-field>
               </div>
 
               <div class="field-stack">
-                <label class="field-label" for="color-{{i}}">Color</label>
+                <label class="field-label" for="color-{{i}}">Color <span class="required-mark">*</span></label>
                 <mat-form-field appearance="outline" class="w-full modern-field">
                   <input matInput [(ngModel)]="variant.color" (input)="updateSku(i)" id="color-{{i}}" name="color-{{i}}" placeholder="blanco / azul / negro" required>
                 </mat-form-field>
@@ -195,7 +197,7 @@
               </div>
 
               <div class="field-stack">
-                <label class="field-label" for="sku-{{i}}">SKU</label>
+                <label class="field-label" for="sku-{{i}}">SKU <span class="required-mark">*</span></label>
                 <mat-form-field appearance="outline" class="w-full modern-field">
                   <input matInput [(ngModel)]="variant.sku" (input)="markSkuManual(i)" id="sku-{{i}}" name="sku-{{i}}" placeholder="LB-CL-A2-BLK" required>
                 </mat-form-field>
