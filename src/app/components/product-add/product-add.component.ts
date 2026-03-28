@@ -90,7 +90,7 @@ export class ProductAddComponent implements OnInit{
       this.selectFiles.forEach((file) => formData.append('images', file));
       formData.append('image', this.selectFiles[0]);
     }
-    formData.append('urlImage', this.urlImage);
+    formData.append('urlImage', this.normalizeOptionalText(this.urlImage));
     formData.append('userId', this.normalizeRequiredInteger(this.userId, 'userId'));
     formData.append('categoryId', this.normalizeRequiredInteger(this.categoryId, 'categoryId')); 
     console.log(formData);
@@ -130,10 +130,8 @@ export class ProductAddComponent implements OnInit{
               this.estimatedDeliveryDays = this.parseOptionalInteger(data.estimatedDeliveryDays);
               this.estimatedDeliveryDate = data.estimatedDeliveryDate ?? '';
               this.deliveryNote = data.deliveryNote ?? '';
-              this.urlImage = data.urlImage;
-              if (data.images?.length) {
-                this.selectedImagesLabel = `${data.images.length} imagen${data.images.length === 1 ? '' : 'es'} cargada${data.images.length === 1 ? '' : 's'}`;
-              }
+              this.urlImage = this.normalizeOptionalText(data.urlImage);
+              this.selectedImagesLabel = this.buildStoredImagesLabel(data.images, this.urlImage);
               this.userId = this.normalizeOptionalInteger(data.userId) ?? this.user.toString();
               this.categoryId = this.normalizeOptionalInteger(data.categoryId) ?? this.categoryId;
               this.syncPriceWithCategory();
@@ -165,6 +163,27 @@ export class ProductAddComponent implements OnInit{
       return '';
     }
     return normalized;
+  }
+
+  private normalizeOptionalText(value: unknown): string {
+    if (value === null || value === undefined) {
+      return '';
+    }
+    const normalized = String(value).trim();
+    if (!normalized || normalized.toLowerCase() === 'null' || normalized.toLowerCase() === 'undefined') {
+      return '';
+    }
+    return normalized;
+  }
+
+  private buildStoredImagesLabel(images: string[] | undefined, urlImage: string): string {
+    if (images?.length) {
+      return `${images.length} imagen${images.length === 1 ? '' : 'es'} cargada${images.length === 1 ? '' : 's'}`;
+    }
+    if (urlImage) {
+      return 'Imagen cargada';
+    }
+    return 'Ninguna imagen seleccionada';
   }
 
   private normalizeOptionalInteger(value: unknown): string | null {
