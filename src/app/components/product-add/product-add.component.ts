@@ -134,8 +134,8 @@ export class ProductAddComponent implements OnInit{
               if (data.images?.length) {
                 this.selectedImagesLabel = `${data.images.length} imagen${data.images.length === 1 ? '' : 'es'} cargada${data.images.length === 1 ? '' : 's'}`;
               }
-              this.userId = this.normalizeRequiredInteger(data.userId, 'userId');
-              this.categoryId = this.normalizeRequiredInteger(data.categoryId, 'categoryId');
+              this.userId = this.normalizeOptionalInteger(data.userId) ?? this.user.toString();
+              this.categoryId = this.normalizeOptionalInteger(data.categoryId) ?? this.categoryId;
               this.syncPriceWithCategory();
               this.loadVariants(data.id);
             }
