@@ -63,7 +63,10 @@ export class ProductAddComponent implements OnInit{
     }
     this.syncPriceWithCategory();
     const formData = new FormData();
-    formData.append('id',this.id.toString());
+    const normalizedId = this.normalizeOptionalInteger(this.id);
+    if (normalizedId !== null) {
+      formData.append('id', normalizedId);
+    }
     formData.append('code', this.normalizeCode(this.code));
     formData.append('name',this.name);
     formData.append('description',this.description);
@@ -71,8 +74,9 @@ export class ProductAddComponent implements OnInit{
     formData.append('priceOverride', this.priceOverride.toString());
     formData.append('sellOnline', this.sellOnline.toString());
     formData.append('deliveryType', this.deliveryType);
-    if (this.estimatedDeliveryDays !== null && this.estimatedDeliveryDays !== undefined) {
-      formData.append('estimatedDeliveryDays', this.estimatedDeliveryDays.toString());
+    const normalizedEstimatedDeliveryDays = this.normalizeOptionalInteger(this.estimatedDeliveryDays);
+    if (normalizedEstimatedDeliveryDays !== null) {
+      formData.append('estimatedDeliveryDays', normalizedEstimatedDeliveryDays);
     }
     if (this.estimatedDeliveryDate) {
       formData.append('estimatedDeliveryDate', this.estimatedDeliveryDate);
@@ -85,8 +89,8 @@ export class ProductAddComponent implements OnInit{
       formData.append('image', this.selectFiles[0]);
     }
     formData.append('urlImage', this.urlImage);
-    formData.append('userId',this.userId);
-    formData.append('categoryId',this.categoryId); 
+    formData.append('userId', this.normalizeRequiredInteger(this.userId, 'userId'));
+    formData.append('categoryId', this.normalizeRequiredInteger(this.categoryId, 'categoryId')); 
     console.log(formData);
 
     this.productService.createProduct(formData).subscribe({
@@ -120,15 +124,15 @@ export class ProductAddComponent implements OnInit{
               this.priceOverride = data.priceOverride ?? false;
               this.sellOnline = data.sellOnline ?? true;
               this.deliveryType = data.deliveryType ?? 'IMMEDIATE';
-              this.estimatedDeliveryDays = data.estimatedDeliveryDays ?? null;
+              this.estimatedDeliveryDays = this.parseOptionalInteger(data.estimatedDeliveryDays);
               this.estimatedDeliveryDate = data.estimatedDeliveryDate ?? '';
               this.deliveryNote = data.deliveryNote ?? '';
               this.urlImage = data.urlImage;
               if (data.images?.length) {
                 this.selectedImagesLabel = `${data.images.length} imagen${data.images.length === 1 ? '' : 'es'} cargada${data.images.length === 1 ? '' : 's'}`;
               }
-              this.userId = data.userId;
-              this.categoryId = data.categoryId;
+              this.userId = this.normalizeRequiredInteger(data.userId, 'userId');
+              this.categoryId = this.normalizeRequiredInteger(data.categoryId, 'categoryId');
               this.syncPriceWithCategory();
               this.loadVariants(data.id);
             }
@@ -158,6 +162,34 @@ export class ProductAddComponent implements OnInit{
       return '';
     }
     return normalized;
+  }
+
+  private normalizeOptionalInteger(value: unknown): string | null {
+    if (value === null || value === undefined) {
+      return null;
+    }
+    const normalized = String(value).trim();
+    if (!normalized || normalized.toLowerCase() === 'null' || normalized.toLowerCase() === 'undefined') {
+      return null;
+    }
+    return normalized;
+  }
+
+  private normalizeRequiredInteger(value: unknown, fieldName: string): string {
+    const normalized = this.normalizeOptionalInteger(value);
+    if (normalized === null) {
+      throw new Error(`Missing required integer field: ${fieldName}`);
+    }
+    return normalized;
+  }
+
+  private parseOptionalInteger(value: unknown): number | null {
+    const normalized = this.normalizeOptionalInteger(value);
+    if (normalized === null) {
+      return null;
+    }
+    const parsed = Number(normalized);
+    return Number.isFinite(parsed) ? parsed : null;
   }
 
   getCategories(){
