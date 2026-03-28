@@ -98,8 +98,8 @@ export class ProductAddComponent implements OnInit{
         }
         this.saveVariants(data.id);
       },
-      error: () => {
-        this.alertService.errorAlert('No se pudo guardar el producto.');
+      error: (error) => {
+        this.alertService.errorAlert(error?.error?.message || 'No se pudo guardar el producto.');
       }
     });
     

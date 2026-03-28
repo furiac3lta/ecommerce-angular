@@ -15,6 +15,7 @@ export class Product {
         public estimatedDeliveryDays?: number,
         public estimatedDeliveryDate?: string,
         public deliveryNote?: string,
-        public images?: string[]
+        public images?: string[],
+        public active?: boolean
     ){}
 }

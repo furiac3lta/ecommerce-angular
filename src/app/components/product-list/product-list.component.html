@@ -70,6 +70,7 @@
           <tr>
             <th>Código</th>
             <th>Nombre</th>
+            <th>Estado</th>
             <th>Descripción</th>
             <th>Precio</th>
             <th>Tipo de precio</th>
@@ -79,9 +80,14 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let product of products">
+          <tr *ngFor="let product of products" [class.table-row--inactive]="product.active === false">
             <td class="table-cell">{{ product.id }}</td>
             <td class="table-cell">{{ product.name }}</td>
+            <td class="table-cell">
+              <span class="status-pill" [class.status-pill--inactive]="product.active === false">
+                {{ product.active === false ? 'Inactivo' : 'Activo' }}
+              </span>
+            </td>
             <td class="table-cell table-cell--description">{{ product.description }}</td>
             <td class="table-cell">{{ product.price | currency }}</td>
             <td class="table-cell">{{ product.priceOverride ? 'Personalizado' : 'Categoría' }}</td>
