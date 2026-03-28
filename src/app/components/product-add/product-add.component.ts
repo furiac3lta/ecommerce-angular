@@ -64,7 +64,7 @@ export class ProductAddComponent implements OnInit{
     this.syncPriceWithCategory();
     const formData = new FormData();
     formData.append('id',this.id.toString());
-    formData.append('code',this.code);
+    formData.append('code', this.normalizeCode(this.code));
     formData.append('name',this.name);
     formData.append('description',this.description);
     formData.append('price',this.price.toString());
@@ -113,7 +113,7 @@ export class ProductAddComponent implements OnInit{
           this.productService.getProductById(id).subscribe(
             data => {
               this.id = data.id;
-              this.code = data.code;
+              this.code = this.normalizeCode(data.code);
               this.name = data.name;
               this.description = data.description;
               this.price = data.price;
@@ -147,6 +147,17 @@ export class ProductAddComponent implements OnInit{
     this.selectedImagesLabel = files.length === 1
       ? files[0].name
       : `${files.length} imágenes seleccionadas`;
+  }
+
+  private normalizeCode(code: unknown): string {
+    if (code === null || code === undefined) {
+      return '';
+    }
+    const normalized = String(code).trim();
+    if (!normalized || normalized.toLowerCase() === 'null' || normalized.toLowerCase() === 'undefined') {
+      return '';
+    }
+    return normalized;
   }
 
   getCategories(){
