@@ -45,7 +45,8 @@ docker compose up -d --build
 Servicios por defecto:
 
 - Frontend: `http://localhost:4200`
-- Backend: `http://localhost:8080`
+- Backend: `http://localhost:8085` en desarrollo local con `ng serve`
+- Backend: `http://localhost:8080` cuando corre dentro de Docker Compose
 - PostgreSQL: `localhost:5432`
 
 ## Apagar
@@ -63,7 +64,18 @@ docker compose down -v
 ## Angular
 
 - `src/environments/environment.ts`: produccion y Docker/Nginx usando rutas relativas
-- `src/environments/environment.development.ts`: desarrollo local con `localhost:8080`
+- `src/environments/environment.development.ts`: desarrollo local con `localhost:8085`
+
+## Produccion en VPS
+
+Para correr en el VPS con Docker Compose no hace falta apuntar el frontend a un dominio ni a `localhost`.
+La configuracion actual de produccion ya esta preparada asi:
+
+- `src/environments/environment.ts` usa `apiBaseUrl: ''`
+- `docker/nginx.conf` reenvia `/api/` e `/images/` al servicio `backend`
+- el navegador habla con el `frontend` y Nginx resuelve internamente la conexion al backend
+
+Eso significa que en server la app funciona detras del mismo host, sin CORS ni URLs locales hardcodeadas del frontend.
 
 ## Nota
 

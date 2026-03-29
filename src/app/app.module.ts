@@ -44,6 +44,8 @@ import { StockAdminComponent } from './components/stock/stock-admin/stock-admin.
 import { UserOrdersComponent } from './components/user/user-orders/user-orders.component';
 import { DeliveriesAdminComponent } from './components/deliveries/deliveries-admin/deliveries-admin.component';
 import { OrdersKanbanComponent } from './components/orders/orders-kanban/orders-kanban.component';
+import { HeroCarouselComponent } from './components/home/hero-carousel/hero-carousel.component';
+import { CategoryGridComponent } from './components/home/category-grid/category-grid.component';
 
 
 const routes: Routes = [
@@ -107,6 +109,8 @@ const routes: Routes = [
     NavbarComponent,
     FooterComponent,
     HeroComponent,
+    HeroCarouselComponent,
+    CategoryGridComponent,
     MatTableModule,
     MatIconModule,
     MatButtonModule,

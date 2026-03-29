@@ -1,3 +1,32 @@
+.navbar-logo {
+  width: 58px;
+  height: 58px;
+}
+
+.navbar-actions {
+  min-height: 48px;
+}
+
+.navbar-actions button[mat-icon-button] {
+  width: 44px;
+  height: 44px;
+  line-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+.navbar-actions button[mat-icon-button] .mat-icon {
+  width: 1em;
+  height: 1em;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
 .cart-button {
   position: relative;
 }
@@ -17,6 +46,31 @@
 
 .icon-button {
   color: var(--text-main);
+}
+
+.nav-item {
+  padding: 0;
+  color: var(--text-main);
+}
+
+.nav-item:hover,
+.nav-item:focus-within {
+  color: var(--text-main);
+}
+
+.nav-item a {
+  color: var(--text-main);
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 0.24em;
+  transition: text-decoration-color 0.2s ease;
+}
+
+.nav-item a:hover,
+.nav-item a:focus-visible {
+  color: var(--text-main);
+  text-decoration-color: currentColor;
 }
 
 .nav-alerts {

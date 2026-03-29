@@ -1,5 +1,16 @@
 .footer-shell {
-  background: var(--footer-bg);
+  background: var(--bg-main);
+  color: var(--footer-text);
+  border-top: 1px solid var(--border-divider);
+}
+
+.footer-shell .text-secondary {
+  color: color-mix(in srgb, var(--footer-text) 78%, transparent) !important;
+}
+
+.footer-shell h3,
+.footer-shell .footer-link,
+.footer-shell .text-xs {
   color: var(--footer-text);
 }
 
@@ -10,4 +21,12 @@
 
 .footer-link:hover {
   color: var(--accent-gold);
+}
+
+[data-theme='dark'] .footer-shell {
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+[data-theme='dark'] .footer-shell .text-secondary {
+  color: rgba(255, 255, 255, 0.88) !important;
 }

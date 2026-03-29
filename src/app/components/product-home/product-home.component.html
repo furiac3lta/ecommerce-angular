@@ -1,42 +1,78 @@
 <app-navbar></app-navbar>
-<section class="max-w-[1400px] mx-auto px-4 pt-10">
-  <div class="flex items-end justify-between flex-wrap gap-4">
-    <div>
-      <p class="text-xs uppercase tracking-[0.3em] text-gray-500">Catálogo</p>
-      <h2 class="text-3xl">Kimonos BJJ</h2>
-      <p class="text-sm text-gray-600">Filtra por categoría y encuentra tu ajuste ideal.</p>
-    </div>
-  </div>
-</section>
 
-<div class="catalog-shell max-w-[1400px] mx-auto my-10 px-4">
-  <app-aside-products
-    class="catalog-aside"
-    (categorySelected)="filterByCategory($event)">
-  </app-aside-products>
-
-  <div class="catalog-content">
-    <div *ngIf="isLoading" class="ux-skeleton-grid">
-      <div class="skeleton-card">
-        <div class="skeleton-block skeleton-line"></div>
-        <div class="skeleton-block skeleton-line"></div>
+<main class="catalog-page">
+  <section class="brand-strip">
+    <div class="brand-strip__inner">
+      <div class="brand-strip__logo">
+        <img src="assets/bjj/logo.png" alt="Lions Brand" loading="eager" />
       </div>
-      <div class="skeleton-card">
-        <div class="skeleton-block skeleton-line"></div>
-        <div class="skeleton-block skeleton-line"></div>
+      <div class="brand-strip__copy">
+        <p class="section-kicker">Catalogo</p>
+        <h2>Todos los productos en una vista mas limpia y directa.</h2>
+        <p>
+          La misma linea visual del home, pero enfocada en explorar, filtrar y entrar rapido al
+          detalle de cada producto.
+        </p>
       </div>
+      <button type="button" class="ghost-button" (click)="showAllProducts()">Ver todo</button>
     </div>
-    <div *ngIf="!isLoading && productsFiltered.length === 0" class="ux-empty">
-      No hay productos para esta categoría. Probá con otra o volvé a ver todos.
+  </section>
+
+  <section class="home-section">
+    <div class="section-heading">
+      <div>
+        <p class="section-kicker">Tienda</p>
+        <h2>Filtra por categoria y encontra tu equipo ideal</h2>
+      </div>
+      <p class="section-summary">
+        Navegacion simple, foco en imagen y una grilla editorial alineada con el resto del sitio.
+      </p>
     </div>
 
-    <div class="catalog-grid" *ngIf="!isLoading && productsFiltered.length > 0">
-      <app-product-card
-        *ngFor="let p of productsFiltered"
-        [product]="p"
-      ></app-product-card>
+    <div class="catalog-shell">
+      <app-aside-products
+        class="catalog-aside"
+        (categorySelected)="filterByCategory($event)">
+      </app-aside-products>
+
+      <div class="catalog-content">
+        <div *ngIf="isLoading" class="catalog-feedback catalog-feedback--loading">
+          <div class="ux-skeleton-grid">
+            <div class="skeleton-card">
+              <div class="skeleton-block skeleton-line"></div>
+              <div class="skeleton-block skeleton-line"></div>
+            </div>
+            <div class="skeleton-card">
+              <div class="skeleton-block skeleton-line"></div>
+              <div class="skeleton-block skeleton-line"></div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="!isLoading && productsFiltered.length === 0" class="catalog-feedback">
+          No hay productos para esta categoria. Proba con otro filtro o volve a ver todo.
+        </div>
+
+        <div class="catalog-grid" *ngIf="!isLoading && productsFiltered.length > 0">
+          <app-product-card
+            *ngFor="let p of productsFiltered"
+            [product]="p"
+          ></app-product-card>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
+  </section>
+
+  <section class="home-section home-section--statement">
+    <div class="statement-panel">
+      <p class="section-kicker">Lions Brand BJJ</p>
+      <h2>Menos ruido. Mejor lectura. Producto al frente.</h2>
+      <p>
+        Esta vista conserva la exploracion por categorias pero ahora comparte el mismo tono visual
+        del home para que la navegacion se sienta consistente.
+      </p>
+    </div>
+  </section>
+</main>
 
 <app-footer></app-footer>

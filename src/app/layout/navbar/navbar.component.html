@@ -1,14 +1,14 @@
 <header class="navbar-shell w-full sticky top-0 z-20">
   <div class="flex justify-between items-center max-w-[1400px] mx-auto px-4 py-3 w-full">
     <div class="flex items-center gap-3">
-      <img class="h-12 w-12 object-contain" src="assets/bjj/logo.png" alt="Lions Brand logo" />
+      <img class="navbar-logo object-contain" src="assets/bjj/logo.png" alt="Lions Brand logo" />
       <div class="leading-tight">
         <h1 class="text-xl md:text-2xl !m-0">Lions Brand</h1>
       </div>
     </div>
 
     <button
-      class="block lg:hidden rounded-lg border border-divider px-3 py-2"
+      class="block lg:hidden border border-divider px-3 py-2"
       (click)="menuOpen = !menuOpen"
       aria-label="Abrir menú"
     >
@@ -46,7 +46,7 @@
       </ul>
     </nav>
 
-    <div class="flex items-center gap-2">
+    <div class="navbar-actions flex items-center gap-2">
       <span *ngIf="isLoggedIn && userLabel" class="text-sm text-secondary hidden md:inline">{{ userLabel }}</span>
       <button mat-icon-button class="icon-button" (click)="toggleTheme()">
         <mat-icon class="text-2xl">{{ isDarkMode ? 'light_mode' : 'dark_mode' }}</mat-icon>

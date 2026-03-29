@@ -8,6 +8,9 @@
 :root {
   --bg-main: #ffffff;
   --bg-surface: #f6f6f6;
+  --page-shell-bg: #f5f1ea;
+  --panel-bg: #ffffff;
+  --panel-soft-bg: #efede8;
   --text-main: #111111;
   --text-secondary: #555555;
   --brand-black: #0f0f0f;
@@ -21,13 +24,16 @@
   --btn-primary-hover: #c9a24d;
   --btn-secondary-border: #e0e0e0;
   --btn-secondary-text: #111111;
-  --footer-bg: #0f0f0f;
-  --footer-text: #ffffff;
+  --footer-bg: #f0eadf;
+  --footer-text: #111111;
 }
 
 [data-theme='dark'] {
   --bg-main: #0e0e0e;
   --bg-surface: #161616;
+  --page-shell-bg: #0e0e0e;
+  --panel-bg: #161616;
+  --panel-soft-bg: #1d1d1d;
   --text-main: #ffffff;
   --text-secondary: #b0b0b0;
   --brand-black: #0e0e0e;
@@ -75,6 +81,13 @@ html, body {
   line-height: 1.6;
   color: var(--text-main);
   background: var(--bg-main);
+}
+
+app-root {
+  display: block;
+  min-height: 100%;
+  background: var(--bg-main);
+  color: var(--text-main);
 }
 
 html, body {
@@ -258,6 +271,13 @@ h1, h2, h3, h4, h5, h6 {
     animation: none !important;
     transition: none !important;
   }
+}
+
+/* Global hard reset: no rounded corners anywhere in the app. */
+*,
+*::before,
+*::after {
+  border-radius: 0 !important;
 }
 
 .table-shell {

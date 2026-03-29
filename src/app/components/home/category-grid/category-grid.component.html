@@ -1,0 +1,20 @@
+<div class="category-grid">
+  <article
+    *ngFor="let category of tiles; trackBy: trackByCategory"
+    class="category-tile"
+    (click)="openCategory(category.id)"
+  >
+    <img
+      class="category-image"
+      [src]="category.image"
+      [alt]="category.name"
+      loading="lazy"
+    />
+    <div class="category-overlay"></div>
+    <div class="category-copy">
+      <p class="category-kicker">Colección</p>
+      <h3 class="category-name">{{ category.name }}</h3>
+      <p class="category-caption">{{ category.caption }}</p>
+    </div>
+  </article>
+</div>

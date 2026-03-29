@@ -40,6 +40,14 @@ export class HomeService {
     if (!url) {
       return '';
     }
+    const isLocalUrl =
+      url.startsWith('http://localhost') ||
+      url.startsWith('http://127.0.0.1');
+
+    if (isLocalUrl) {
+      return url;
+    }
+
     return url.startsWith('http://') ? `https://${url.slice(7)}` : url;
   }
 }

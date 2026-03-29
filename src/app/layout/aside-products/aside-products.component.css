@@ -3,7 +3,7 @@
 }
 
 .categories-card {
-  border-radius: 20px !important;
+  border-radius: 0 !important;
   border: 1px solid var(--border-divider);
   box-shadow: 0 16px 30px rgba(15, 15, 15, 0.08);
   background: var(--bg-main);
@@ -35,7 +35,7 @@
 
 .category-chip {
   width: 100%;
-  border-radius: 999px !important;
+  border-radius: 0 !important;
   border: 1px solid var(--border-divider) !important;
   padding: 10px 14px !important;
   font-size: 0.85rem !important;
@@ -53,6 +53,16 @@
 
 .category-chip.is-reset {
   border-style: dashed !important;
+}
+
+::ng-deep .categories-card.mat-expansion-panel,
+::ng-deep .categories-card .mat-expansion-panel-header,
+::ng-deep .categories-card .mat-expansion-panel-content,
+::ng-deep .categories-card .mat-expansion-panel-body,
+::ng-deep .categories-card .mdc-button,
+::ng-deep .categories-card .mdc-notched-outline,
+::ng-deep .categories-card .mat-mdc-outlined-button {
+  border-radius: 0 !important;
 }
 
 @media (min-width: 1024px) {

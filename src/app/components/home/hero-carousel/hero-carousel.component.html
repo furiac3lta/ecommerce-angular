@@ -1,0 +1,54 @@
+<section
+  class="hero-carousel"
+  (mouseenter)="pause()"
+  (mouseleave)="resume()"
+  aria-label="Destacados de la tienda"
+>
+  <div
+    class="hero-track"
+    [style.transform]="'translateX(-' + (currentIndex() * 100) + '%)'"
+  >
+    <article
+      *ngFor="let slide of slides; let i = index; trackBy: trackByImage"
+      class="hero-slide"
+      [class.hero-slide--center]="slide.align === 'center'"
+    >
+      <img
+        class="hero-image"
+        [src]="slide.image"
+        [alt]="slide.title"
+        [attr.loading]="i === 0 ? 'eager' : 'lazy'"
+        [attr.fetchpriority]="i === 0 ? 'high' : 'auto'"
+      />
+
+      <div class="hero-overlay"></div>
+
+      <div class="hero-content">
+        <p class="hero-eyebrow" *ngIf="slide.eyebrow">{{ slide.eyebrow }}</p>
+        <h1 class="hero-title">{{ slide.title }}</h1>
+        <p class="hero-subtitle" *ngIf="slide.subtitle">{{ slide.subtitle }}</p>
+        <button type="button" class="hero-cta" (click)="goToCollection(slide.ctaLink)">
+          {{ slide.ctaText }}
+        </button>
+      </div>
+    </article>
+  </div>
+
+  <button type="button" class="hero-nav hero-nav--prev" (click)="prev()" aria-label="Slide anterior">
+    <span>‹</span>
+  </button>
+  <button type="button" class="hero-nav hero-nav--next" (click)="next()" aria-label="Slide siguiente">
+    <span>›</span>
+  </button>
+
+  <div class="hero-dots" *ngIf="slides.length > 1">
+    <button
+      *ngFor="let slide of slides; let i = index; trackBy: trackByImage"
+      type="button"
+      class="hero-dot"
+      [class.hero-dot--active]="i === currentIndex()"
+      [attr.aria-label]="'Ir al slide ' + (i + 1)"
+      (click)="goTo(i)"
+    ></button>
+  </div>
+</section>
