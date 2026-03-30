@@ -170,10 +170,11 @@
 .hero-carousel--statement {
   background: transparent;
   border-top: 1px solid rgba(17, 17, 17, 0.12);
+  min-height: calc(100vh - 96px);
 }
 
 .hero-carousel--statement .hero-slide {
-  min-height: auto;
+  min-height: calc(100vh - 96px);
   align-items: stretch;
   background: transparent;
 }
@@ -193,9 +194,12 @@
 }
 
 .hero-carousel--statement .hero-content {
-  width: 100%;
-  padding: 54px 72px 68px 0;
+  width: min(100%, 1440px);
+  min-height: calc(100vh - 96px);
+  padding: 72px 64px 104px;
   color: var(--text-main);
+  display: grid;
+  align-content: center;
 }
 
 .hero-carousel--statement .hero-eyebrow {
@@ -224,7 +228,7 @@
 
 .hero-carousel--statement .hero-nav {
   top: auto;
-  bottom: 24px;
+  bottom: 40px;
   transform: none;
   background: transparent;
   color: var(--text-main);
@@ -245,8 +249,8 @@
 }
 
 .hero-carousel--statement .hero-dots {
-  left: 0;
-  bottom: 20px;
+  left: 64px;
+  bottom: 44px;
   transform: none;
 }
 
@@ -287,7 +291,9 @@
   }
 
   .hero-carousel--statement .hero-content {
-    padding: 40px 0 72px;
+    width: 100%;
+    min-height: calc(100vh - 88px);
+    padding: 40px 20px 92px;
   }
 
   .hero-carousel--statement .hero-image {
@@ -302,5 +308,10 @@
 
   .hero-carousel--statement .hero-nav--prev {
     right: 48px;
+  }
+
+  .hero-carousel--statement .hero-dots {
+    left: 20px;
+    bottom: 28px;
   }
 }

@@ -184,6 +184,13 @@
   border-top: 1px solid rgba(17, 17, 17, 0.12);
 }
 
+.home-section--statement {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
 @media (min-width: 768px) {
   .home-page {
     gap: 84px;
