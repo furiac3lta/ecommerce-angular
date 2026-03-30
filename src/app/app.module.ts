@@ -46,6 +46,7 @@ import { DeliveriesAdminComponent } from './components/deliveries/deliveries-adm
 import { OrdersKanbanComponent } from './components/orders/orders-kanban/orders-kanban.component';
 import { HeroCarouselComponent } from './components/home/hero-carousel/hero-carousel.component';
 import { CategoryGridComponent } from './components/home/category-grid/category-grid.component';
+import { AdminToolsComponent } from './components/admin-tools/admin-tools.component';
 
 
 const routes: Routes = [
@@ -66,6 +67,7 @@ const routes: Routes = [
   { path: 'admin/category/update/:id', component: CategoryAddComponent ,  canActivate: [authGuard],},
   { path: 'cart/summary',component: SumaryOrderComponent },
   { path: 'admin/orders', component: OrderListComponent, canActivate:[authGuard],},
+  { path: 'tools', component: AdminToolsComponent, canActivate:[authGuard],},
   { path: 'admin/orders-kanban', component: OrdersKanbanComponent, canActivate:[authGuard],},
   { path: 'admin/stock', component: StockAdminComponent, canActivate:[authGuard],},
   { path: 'admin/deliveries', component: DeliveriesAdminComponent, canActivate:[authGuard],},
@@ -97,6 +99,7 @@ const routes: Routes = [
     StockAdminComponent,
     UserOrdersComponent,
     DeliveriesAdminComponent,
+    AdminToolsComponent,
   ],
   imports: [
     BrowserModule,

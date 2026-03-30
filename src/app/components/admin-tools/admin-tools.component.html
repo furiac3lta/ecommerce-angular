@@ -1,0 +1,173 @@
+<app-navbar></app-navbar>
+
+<div class="max-w-[1400px] mx-auto px-4 py-6">
+  <div class="ds-card mb-6">
+    <h2 class="text-xl font-semibold text-gray-800 mb-4">Herramientas Admin</h2>
+    <p class="text-sm text-gray-500 mb-4">Usa importaciones, reportes y el gestor del carrusel desde una ruta separada.</p>
+
+    <div class="grid gap-4 md:grid-cols-3">
+      <div class="space-y-3">
+        <p class="text-sm font-semibold text-gray-700">Importacion Excel</p>
+        <div class="flex flex-wrap items-center gap-2">
+          <label for="excelFile" class="button-item button-item--outline button-item--sm cursor-pointer">Seleccionar archivo</label>
+          <span class="text-xs text-gray-500">{{ importFileName }}</span>
+          <input id="excelFile" type="file" (change)="onFileSelected($event)" class="sr-only" />
+        </div>
+        <div class="flex gap-2">
+          <button class="button-item button-item--sm" (click)="uploadExcel()">Importar</button>
+          <button class="button-item button-item--outline button-item--sm" (click)="downloadTemplate()">Plantilla</button>
+        </div>
+        <div *ngIf="importResult" class="text-xs text-gray-600">
+          Creados: {{ importResult.created }} · Actualizados: {{ importResult.updated }} · Errores: {{ importResult.errors.length }}
+        </div>
+      </div>
+
+      <div class="space-y-3">
+        <p class="text-sm font-semibold text-gray-700">Reporte de ventas</p>
+        <div class="grid gap-3">
+          <label class="text-xs uppercase tracking-[0.2em] text-gray-500">Desde</label>
+          <input type="datetime-local" [(ngModel)]="reportFrom" class="input-item" />
+          <label class="text-xs uppercase tracking-[0.2em] text-gray-500">Hasta</label>
+          <input type="datetime-local" [(ngModel)]="reportTo" class="input-item" />
+          <label class="text-xs uppercase tracking-[0.2em] text-gray-500">Canal (opcional)</label>
+          <select class="input-item" [(ngModel)]="salesChannelFilter">
+            <option value="">Todos</option>
+            <option *ngFor="let channel of saleChannels" [value]="channel.value">{{ channel.label }}</option>
+          </select>
+        </div>
+        <p class="text-xs text-gray-500">Tip: podes filtrar por rango de 30 dias para evitar PDFs muy pesados.</p>
+        <div class="flex flex-wrap gap-2">
+          <button class="button-item button-item--sm" (click)="downloadSalesReport()">Descargar PDF</button>
+          <button class="button-item button-item--outline button-item--sm" (click)="downloadDeliveriesReport()">Reporte de entregas</button>
+        </div>
+      </div>
+
+      <div class="space-y-3">
+        <p class="text-sm font-semibold text-gray-700">Reporte de stock</p>
+        <p class="text-xs text-gray-500">Si no completas filtros, se genera un reporte completo.</p>
+        <div class="grid gap-2">
+          <label class="text-xs uppercase tracking-[0.2em] text-gray-500">Variante (opcional)</label>
+          <input type="number" [(ngModel)]="stockVariantId" class="input-item" placeholder="Variant ID" />
+          <label class="text-xs uppercase tracking-[0.2em] text-gray-500">Tipo (opcional)</label>
+          <select class="input-item" [(ngModel)]="stockType">
+            <option value="">Todos</option>
+            <option value="IN">IN</option>
+            <option value="OUT">OUT</option>
+            <option value="ADJUST">ADJUST</option>
+          </select>
+          <label class="text-xs uppercase tracking-[0.2em] text-gray-500">Motivo (opcional)</label>
+          <select class="input-item" [(ngModel)]="stockReason">
+            <option value="">Todos</option>
+            <option value="SALE">SALE</option>
+            <option value="SALE_ONLINE">SALE_ONLINE</option>
+            <option value="SALE_WHOLESALE">SALE_WHOLESALE</option>
+            <option value="SALE_OFFLINE">SALE_OFFLINE</option>
+            <option value="RETURN">RETURN</option>
+            <option value="EXCHANGE_IN">EXCHANGE_IN</option>
+            <option value="EXCHANGE_OUT">EXCHANGE_OUT</option>
+            <option value="RESTOCK">RESTOCK</option>
+            <option value="MANUAL_ADJUST">MANUAL_ADJUST</option>
+            <option value="CORRECTION">CORRECTION</option>
+            <option value="OTHER">OTHER</option>
+          </select>
+        </div>
+        <button class="button-item button-item--sm" (click)="downloadStockReport()">Descargar PDF</button>
+        <div class="pt-3 space-y-2">
+          <p class="text-sm font-semibold text-gray-700">Kardex por variante</p>
+          <input type="number" [(ngModel)]="kardexVariantId" class="input-item" placeholder="Variant ID" />
+          <button class="button-item button-item--sm" (click)="downloadKardexReport()">Descargar Kardex</button>
+        </div>
+        <div class="pt-3 space-y-2">
+          <p class="text-sm font-semibold text-gray-700">Reporte Ordenes + Envios</p>
+          <button class="button-item button-item--sm" (click)="downloadOrdersShipmentsReport()">Descargar PDF</button>
+        </div>
+        <div class="pt-3 space-y-2">
+          <p class="text-sm font-semibold text-gray-700">Manuales</p>
+          <div class="flex flex-wrap gap-2">
+            <button class="button-item button-item--sm" (click)="downloadManualAdmin()">Manual Admin</button>
+            <button class="button-item button-item--outline button-item--sm" (click)="downloadManualUsuario()">Manual Usuario</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ds-card mb-6">
+    <div class="carousel-admin-header">
+      <div>
+        <h3 class="text-xl font-semibold text-gray-800 mb-2">Carrusel Home</h3>
+        <p class="text-sm text-gray-500">Edita, agrega o elimina slides del hero. Los cambios quedan persistidos en la API.</p>
+      </div>
+      <div class="carousel-admin-actions">
+        <button class="button-item button-item--outline button-item--sm" (click)="addHeroSlide()">Agregar slide</button>
+        <button class="button-item button-item--outline button-item--sm" (click)="resetHeroSlides()">Restablecer</button>
+        <button class="button-item button-item--sm" (click)="saveHeroSlides()">Guardar carrusel</button>
+      </div>
+    </div>
+
+    <div class="carousel-editor-list">
+      <div class="carousel-editor-card" *ngFor="let slide of heroSlidesForm; let i = index">
+        <div class="carousel-editor-card__header">
+          <p class="text-sm font-semibold text-gray-700">Slide {{ i + 1 }}</p>
+          <button class="button-item button-item--danger button-item--sm" (click)="removeHeroSlide(i)">Eliminar</button>
+        </div>
+
+        <div class="carousel-editor-grid">
+          <div>
+            <label class="text-xs uppercase tracking-[0.2em] text-gray-500">Eyebrow</label>
+            <input class="input-item" [(ngModel)]="slide.eyebrow" placeholder="Lions Brand BJJ" />
+          </div>
+          <div>
+            <label class="text-xs uppercase tracking-[0.2em] text-gray-500">Titulo</label>
+            <input class="input-item" [(ngModel)]="slide.title" placeholder="Titulo del slide" />
+          </div>
+          <div class="carousel-editor-grid__wide">
+            <label class="text-xs uppercase tracking-[0.2em] text-gray-500">Subtitulo</label>
+            <textarea class="input-item carousel-textarea" [(ngModel)]="slide.subtitle" placeholder="Descripcion breve del slide"></textarea>
+          </div>
+          <div>
+            <label class="text-xs uppercase tracking-[0.2em] text-gray-500">Texto CTA</label>
+            <input class="input-item" [(ngModel)]="slide.ctaText" placeholder="Comprar ahora" />
+          </div>
+          <div>
+            <label class="text-xs uppercase tracking-[0.2em] text-gray-500">Link CTA</label>
+            <input class="input-item" [(ngModel)]="slide.ctaLink" placeholder="/product" />
+          </div>
+          <div>
+            <label class="text-xs uppercase tracking-[0.2em] text-gray-500">Alineacion</label>
+            <select class="input-item" [(ngModel)]="slide.align">
+              <option value="left">Left</option>
+              <option value="center">Center</option>
+            </select>
+          </div>
+          <div class="carousel-editor-grid__wide">
+            <label class="text-xs uppercase tracking-[0.2em] text-gray-500">Imagen</label>
+            <input class="input-item" [(ngModel)]="slide.image" placeholder="assets/bjj/kimono1.jpg o URL completa" />
+            <div class="carousel-upload-row">
+              <label class="button-item button-item--outline button-item--sm cursor-pointer" [for]="'hero-slide-image-' + i">
+                Subir imagen
+              </label>
+              <span class="carousel-upload-name">{{ heroSlideUploadNames[i] || 'Ninguna imagen seleccionada' }}</span>
+            </div>
+            <input
+              class="sr-only"
+              type="file"
+              accept="image/*"
+              [id]="'hero-slide-image-' + i"
+              (change)="onHeroSlideImageSelected($event, i)"
+            />
+            <p class="carousel-upload-status" [class.is-loading]="heroSlideUploading[i]" [class.is-ready]="!heroSlideUploading[i] && slide.image">
+              {{ heroSlideUploadMessages[i] || 'Sin imagen cargada.' }}
+            </p>
+          </div>
+        </div>
+
+        <div class="carousel-preview" *ngIf="slide.image">
+          <img [src]="slide.image" [alt]="slide.title || 'preview'" />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-footer></app-footer>

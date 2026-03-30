@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Category } from 'src/app/common/category';
 import { Product } from 'src/app/core/interfaces/product.interface';
 import { CategoryService } from 'src/app/services/category.service';
+import { HeroCarouselAdminService } from 'src/app/services/hero-carousel-admin.service';
 import { HomeService } from 'src/app/services/home.service';
 import { HeroCarouselSlide } from './hero-carousel/hero-carousel.component';
 
@@ -15,44 +16,20 @@ import { HeroCarouselSlide } from './hero-carousel/hero-carousel.component';
 export class HomeComponent implements OnInit{
   products: Product [] = [];
   categories: Category[] = [];
-  readonly heroSlides: HeroCarouselSlide[] = [
-    {
-      eyebrow: 'Lions Brand BJJ',
-      title: 'Equipate para dominar el tatami',
-      subtitle: 'Drops visuales, siluetas limpias y una tienda pensada para entrar, mirar y comprar rápido.',
-      ctaText: 'Comprar ahora',
-      ctaLink: '/product',
-      image: 'assets/bjj/kimono1.jpg',
-      align: 'left'
-    },
-    {
-      eyebrow: 'Rashguards + Fightwear',
-      title: 'Diseños que pegan primero',
-      subtitle: 'Compresión, color y lectura inmediata del catálogo en una home más editorial y directa.',
-      ctaText: 'Ver colección',
-      ctaLink: '/product',
-      image: 'assets/bjj/rashguard1.png',
-      align: 'center'
-    },
-    {
-      eyebrow: 'Colección Lions',
-      title: 'Menos ruido. Más presencia.',
-      subtitle: 'Tipografía fuerte, imágenes completas y navegación simple para que el producto haga el trabajo.',
-      ctaText: 'Explorar productos',
-      ctaLink: '/product',
-      image: 'assets/bjj/kimono3.jpg',
-      align: 'left'
-    }
-  ];
+  heroSlides: HeroCarouselSlide[] = [];
 
   constructor(
     private homeService:HomeService,
     private categoryService: CategoryService,
+    private heroCarouselAdminService: HeroCarouselAdminService,
     private router:Router
   ){
 
   }
   ngOnInit(): void {
+    this.heroCarouselAdminService.getSlides().subscribe((slides) => {
+      this.heroSlides = slides;
+    });
     this.homeService.getProducts().subscribe(
       data => this.products = data.slice(0,8)
     );

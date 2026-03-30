@@ -17,8 +17,12 @@
 
 @media (max-width: 767px) {
   .product-card {
-    width: 100%;
-    max-width: none;
+    width: min(260px, calc(100vw - 64px));
+    max-width: min(260px, calc(100vw - 64px));
+  }
+
+  .product-body {
+    min-height: 176px;
   }
 }
 
@@ -37,16 +41,17 @@
 .product-slider {
   position: relative;
   width: 100%;
-  aspect-ratio: 1 / 1.12;
+  aspect-ratio: 1 / 1;
   background: var(--panel-soft-bg);
+  overflow: hidden;
 }
 
 .product-media img {
   position: absolute;
-  inset: 0;
+  inset: 12px;
   height: 100%;
   width: 100%;
-  object-fit: cover;
+  object-fit: contain;
   opacity: 0;
   transition: opacity 0.35s ease;
   background: var(--panel-soft-bg);
@@ -75,10 +80,11 @@
 
 .product-body {
   display: grid;
+  grid-template-rows: auto minmax(2.8em, auto) auto auto;
   gap: 10px;
   padding: 18px 18px 24px;
   text-align: center;
-  min-height: 158px;
+  min-height: 176px;
 }
 
 .product-title {

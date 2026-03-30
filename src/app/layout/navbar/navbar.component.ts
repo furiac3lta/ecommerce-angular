@@ -120,6 +120,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
   gotoOrders(){
     this.router.navigate(['/admin/orders'])
   }
+  gotoTools() {
+    this.router.navigate(['/tools']);
+  }
   gotoOrdersKanban() {
     this.router.navigate(['/admin/orders-kanban']);
   }

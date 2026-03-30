@@ -7,8 +7,6 @@ import { OrderProduct } from '../../../common/order-product';
 import { ChangeDetectorRef } from '@angular/core';
 import { ProductVariantService } from 'src/app/services/product-variant.service';
 import { OrderState } from '../../../common/order-state';
-import { SaleChannel } from '../../../common/sale-channel';
-import { AdminToolsService, ExcelImportResult } from 'src/app/services/admin-tools.service';
 import { Shipment, ShipmentStatus } from 'src/app/common/shipment';
 import { ShipmentService } from 'src/app/services/shipment.service';
 import { SessionStorageService } from 'src/app/services/session-storage.service';
@@ -26,26 +24,11 @@ export class OrderListComponent implements OnInit {
   orders: Order[] = [];
   filteredOrders: Order[] = [];
   isLoading = false;
-  importResult: ExcelImportResult | null = null;
-  importFile: File | null = null;
-  importFileName: string = 'Ningun archivo seleccionado';
-  reportFrom: string = '';
-  reportTo: string = '';
-  kardexVariantId: number | null = null;
-  stockVariantId: number | null = null;
-  stockType: string = '';
-  stockReason: string = '';
-  salesChannelFilter: SaleChannel | '' = '';
   showShipmentModal = false;
   shipmentForm: Shipment | null = null;
   shipmentStatusOptions: ShipmentStatus[] = ['CREATED', 'SHIPPED', 'DELIVERED'];
   shipmentsByOrder: Record<number, Shipment | null> = {};
   shipmentModalMode: 'view' | 'edit' = 'edit';
-  saleChannels: { value: SaleChannel; label: string }[] = [
-    { value: SaleChannel.ONLINE, label: 'Online' },
-    { value: SaleChannel.WHOLESALE, label: 'Mayorista' },
-    { value: SaleChannel.OFFLINE, label: 'Offline' },
-  ];
   searchTerm = '';
   page = 1;
   pageSize = 10;
@@ -68,7 +51,6 @@ export class OrderListComponent implements OnInit {
     private productService: ProductService,
     private userService: UserService,
     private productVariantService: ProductVariantService,
-    private adminToolsService: AdminToolsService,
     private shipmentService: ShipmentService,
     private sessionStorage: SessionStorageService,
     private alertService: AlertService,
@@ -77,11 +59,6 @@ export class OrderListComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadOrders();
-    const now = new Date();
-    const from = new Date();
-    from.setDate(now.getDate() - 30);
-    this.reportFrom = from.toISOString().slice(0, 16);
-    this.reportTo = now.toISOString().slice(0, 16);
   }
 
   loadOrders(): void {
@@ -485,41 +462,10 @@ export class OrderListComponent implements OnInit {
     return 'admin';
   }
 
-  onFileSelected(event: any): void {
-    const file = event.target.files?.[0];
-    this.importFile = file || null;
-    this.importFileName = this.importFile ? this.importFile.name : 'Ningun archivo seleccionado';
-  }
-
-  uploadExcel(): void {
-    if (!this.importFile) {
-      return;
-    }
-    this.adminToolsService.uploadExcel(this.importFile).subscribe((result) => {
-      this.importResult = result;
-    });
-  }
-
-  downloadTemplate(): void {
-    this.adminToolsService.downloadTemplate().subscribe((blob) => {
-      this.saveBlob(blob, 'template.xlsx');
-    });
-  }
-
-  downloadSalesReport(): void {
-    this.adminToolsService.downloadSalesReport(
-      this.reportFrom,
-      this.reportTo,
-      this.salesChannelFilter || undefined
-    ).subscribe((blob) => {
-      this.saveBlob(blob, 'sales-report.pdf');
-    });
-  }
-
-  getSaleChannelLabel(channel?: SaleChannel | string): string {
+  getSaleChannelLabel(channel?: string): string {
     if (!channel) return 'Online';
-    if (channel === SaleChannel.WHOLESALE) return 'Mayorista';
-    if (channel === SaleChannel.OFFLINE) return 'Offline';
+    if (channel === 'WHOLESALE') return 'Mayorista';
+    if (channel === 'OFFLINE') return 'Offline';
     return 'Online';
   }
 
@@ -560,60 +506,6 @@ export class OrderListComponent implements OnInit {
     return movements.filter((movement) =>
       movement.reason === 'RETURN' || movement.reason === 'EXCHANGE_IN' || movement.reason === 'EXCHANGE_OUT'
     );
-  }
-
-  downloadStockReport(): void {
-    this.adminToolsService.downloadStockReport(
-      this.reportFrom,
-      this.reportTo,
-      this.stockVariantId || undefined,
-      this.stockType || undefined,
-      this.stockReason || undefined
-    ).subscribe((blob) => {
-      this.saveBlob(blob, 'stock-report.pdf');
-    });
-  }
-
-  downloadKardexReport(): void {
-    if (!this.kardexVariantId) {
-      return;
-    }
-    this.adminToolsService.downloadKardexReport(this.kardexVariantId, this.reportFrom, this.reportTo).subscribe((blob) => {
-      this.saveBlob(blob, 'kardex.pdf');
-    });
-  }
-
-  downloadOrdersShipmentsReport(): void {
-    this.adminToolsService.downloadOrdersShipmentsReport(this.reportFrom, this.reportTo).subscribe((blob) => {
-      this.saveBlob(blob, 'orders-shipments.pdf');
-    });
-  }
-
-  downloadDeliveriesReport(): void {
-    this.adminToolsService.downloadDeliveriesReport(this.reportFrom, this.reportTo).subscribe((blob) => {
-      this.saveBlob(blob, 'deliveries-report.pdf');
-    });
-  }
-
-  downloadManualUsuario(): void {
-    this.adminToolsService.downloadManualUsuario().subscribe((blob) => {
-      this.saveBlob(blob, 'Manual_Usuario_LionsBrand.pdf');
-    });
-  }
-
-  downloadManualAdmin(): void {
-    this.adminToolsService.downloadManualAdmin().subscribe((blob) => {
-      this.saveBlob(blob, 'Manual_Admin_LionsBrand.pdf');
-    });
-  }
-
-  private saveBlob(blob: Blob, filename: string): void {
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    a.click();
-    window.URL.revokeObjectURL(url);
   }
 
   applyFilter(): void {
