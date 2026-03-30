@@ -47,6 +47,7 @@
   width: min(100%, 1280px);
   padding: 88px 24px 72px;
   margin: 0 auto;
+  box-sizing: border-box;
   color: #f4f1eb;
   text-align: left;
 }
@@ -294,7 +295,8 @@
   .hero-carousel--statement .hero-content {
     width: 100%;
     min-height: calc(100vh - 88px);
-    padding: 40px 20px 92px;
+    padding: 96px 20px 110px;
+    align-content: end;
   }
 
   .hero-carousel--statement .hero-image {
@@ -302,9 +304,27 @@
     opacity: 1;
   }
 
+  .hero-carousel--statement .hero-overlay {
+    background:
+      linear-gradient(180deg, rgba(7, 7, 8, 0.22) 0%, rgba(7, 7, 8, 0.42) 44%, rgba(7, 7, 8, 0.76) 100%);
+  }
+
   .hero-carousel--statement .hero-title {
-    max-width: 11ch;
-    font-size: clamp(2.2rem, 12vw, 3.4rem);
+    max-width: 8ch;
+    font-size: clamp(2.35rem, 13vw, 3.8rem);
+    line-height: 0.9;
+  }
+
+  .hero-carousel--statement .hero-subtitle {
+    max-width: 22rem;
+    font-size: 1rem;
+    line-height: 1.45;
+  }
+
+  .hero-carousel--statement .hero-cta {
+    width: min(100%, 320px);
+    min-width: 0;
+    padding-inline: 18px;
   }
 
   .hero-carousel--statement .hero-nav--prev {

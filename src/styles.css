@@ -81,6 +81,7 @@ html, body {
   line-height: 1.6;
   color: var(--text-main);
   background: var(--bg-main);
+  overflow-x: hidden;
 }
 
 app-root {
@@ -88,6 +89,7 @@ app-root {
   min-height: 100%;
   background: var(--bg-main);
   color: var(--text-main);
+  overflow-x: hidden;
 }
 
 html, body {
