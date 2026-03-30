@@ -92,24 +92,24 @@
     </div>
   </div>
 
-  <div class="ds-card mb-6">
+  <div class="ds-card mb-6" *ngFor="let editor of carouselEditors">
     <div class="carousel-admin-header">
       <div>
-        <h3 class="text-xl font-semibold text-gray-800 mb-2">Carrusel Home</h3>
-        <p class="text-sm text-gray-500">Edita, agrega o elimina slides del hero. Los cambios quedan persistidos en la API.</p>
+        <h3 class="text-xl font-semibold text-gray-800 mb-2">{{ editor.title }}</h3>
+        <p class="text-sm text-gray-500">{{ editor.description }}</p>
       </div>
       <div class="carousel-admin-actions">
-        <button class="button-item button-item--outline button-item--sm" (click)="addHeroSlide()">Agregar slide</button>
-        <button class="button-item button-item--outline button-item--sm" (click)="resetHeroSlides()">Restablecer</button>
-        <button class="button-item button-item--sm" (click)="saveHeroSlides()">Guardar carrusel</button>
+        <button class="button-item button-item--outline button-item--sm" (click)="addSlide(editor)">{{ editor.addLabel }}</button>
+        <button class="button-item button-item--outline button-item--sm" (click)="resetSlides(editor)">Restablecer</button>
+        <button class="button-item button-item--sm" (click)="saveSlides(editor)">Guardar carrusel</button>
       </div>
     </div>
 
     <div class="carousel-editor-list">
-      <div class="carousel-editor-card" *ngFor="let slide of heroSlidesForm; let i = index">
+      <div class="carousel-editor-card" *ngFor="let slide of editor.slides; let i = index">
         <div class="carousel-editor-card__header">
           <p class="text-sm font-semibold text-gray-700">Slide {{ i + 1 }}</p>
-          <button class="button-item button-item--danger button-item--sm" (click)="removeHeroSlide(i)">Eliminar</button>
+          <button class="button-item button-item--danger button-item--sm" (click)="removeSlide(editor, i)">Eliminar</button>
         </div>
 
         <div class="carousel-editor-grid">
@@ -144,20 +144,20 @@
             <label class="text-xs uppercase tracking-[0.2em] text-gray-500">Imagen</label>
             <input class="input-item" [(ngModel)]="slide.image" placeholder="assets/bjj/kimono1.jpg o URL completa" />
             <div class="carousel-upload-row">
-              <label class="button-item button-item--outline button-item--sm cursor-pointer" [for]="'hero-slide-image-' + i">
+              <label class="button-item button-item--outline button-item--sm cursor-pointer" [for]="editor.key + '-slide-image-' + i">
                 Subir imagen
               </label>
-              <span class="carousel-upload-name">{{ heroSlideUploadNames[i] || 'Ninguna imagen seleccionada' }}</span>
+              <span class="carousel-upload-name">{{ editor.uploadNames[i] || 'Ninguna imagen seleccionada' }}</span>
             </div>
             <input
               class="sr-only"
               type="file"
               accept="image/*"
-              [id]="'hero-slide-image-' + i"
-              (change)="onHeroSlideImageSelected($event, i)"
+              [id]="editor.key + '-slide-image-' + i"
+              (change)="onSlideImageSelected($event, editor, i)"
             />
-            <p class="carousel-upload-status" [class.is-loading]="heroSlideUploading[i]" [class.is-ready]="!heroSlideUploading[i] && slide.image">
-              {{ heroSlideUploadMessages[i] || 'Sin imagen cargada.' }}
+            <p class="carousel-upload-status" [class.is-loading]="editor.uploading[i]" [class.is-ready]="!editor.uploading[i] && slide.image">
+              {{ editor.uploadMessages[i] || 'Sin imagen cargada.' }}
             </p>
           </div>
         </div>

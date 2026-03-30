@@ -22,6 +22,7 @@ export interface HeroCarouselSlide {
 export class HeroCarouselComponent implements OnInit, OnDestroy, OnChanges {
   @Input() slides: HeroCarouselSlide[] = [];
   @Input() autoplayMs = 6000;
+  @Input() variant: 'hero' | 'statement' = 'hero';
 
   readonly currentIndex = signal(0);
   private autoplayHandle: ReturnType<typeof setInterval> | null = null;

@@ -1,5 +1,6 @@
 <section
   class="hero-carousel"
+  [class.hero-carousel--statement]="variant === 'statement'"
   (mouseenter)="pause()"
   (mouseleave)="resume()"
   aria-label="Destacados de la tienda"

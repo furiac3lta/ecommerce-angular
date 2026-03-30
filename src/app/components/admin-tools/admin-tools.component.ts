@@ -4,7 +4,20 @@ import { HeroCarouselSlide } from 'src/app/components/home/hero-carousel/hero-ca
 import { MICROCOPY } from 'src/app/constants/microcopy';
 import { AdminToolsService, ExcelImportResult } from 'src/app/services/admin-tools.service';
 import { AlertService } from 'src/app/services/alert.service';
-import { HeroCarouselAdminService } from 'src/app/services/hero-carousel-admin.service';
+import { CarouselKey, HeroCarouselAdminService } from 'src/app/services/hero-carousel-admin.service';
+
+interface CarouselEditorState {
+  key: CarouselKey;
+  title: string;
+  description: string;
+  addLabel: string;
+  successLabel: string;
+  resetLabel: string;
+  slides: HeroCarouselSlide[];
+  uploadNames: string[];
+  uploading: boolean[];
+  uploadMessages: string[];
+}
 
 @Component({
   selector: 'app-admin-tools',
@@ -22,10 +35,31 @@ export class AdminToolsComponent implements OnInit {
   stockType = '';
   stockReason = '';
   salesChannelFilter: SaleChannel | '' = '';
-  heroSlidesForm: HeroCarouselSlide[] = [];
-  heroSlideUploadNames: string[] = [];
-  heroSlideUploading: boolean[] = [];
-  heroSlideUploadMessages: string[] = [];
+  heroCarouselEditor: CarouselEditorState = {
+    key: 'home-hero',
+    title: 'Carrusel Home',
+    description: 'Edita, agrega o elimina slides del hero principal. Los cambios quedan persistidos en la API.',
+    addLabel: 'Agregar slide',
+    successLabel: 'Carrusel principal actualizado.',
+    resetLabel: 'Carrusel principal restablecido.',
+    slides: [],
+    uploadNames: [],
+    uploading: [],
+    uploadMessages: []
+  };
+  editorialCarouselEditor: CarouselEditorState = {
+    key: 'home-editorial',
+    title: 'Carrusel Editorial',
+    description: 'Gestiona la franja editorial inferior con slides propios, misma lógica y misma persistencia.',
+    addLabel: 'Agregar slide editorial',
+    successLabel: 'Carrusel editorial actualizado.',
+    resetLabel: 'Carrusel editorial restablecido.',
+    slides: [],
+    uploadNames: [],
+    uploading: [],
+    uploadMessages: []
+  };
+  carouselEditors: CarouselEditorState[] = [this.heroCarouselEditor, this.editorialCarouselEditor];
   saleChannels: { value: SaleChannel; label: string }[] = [
     { value: SaleChannel.ONLINE, label: 'Online' },
     { value: SaleChannel.WHOLESALE, label: 'Mayorista' },
@@ -44,10 +78,7 @@ export class AdminToolsComponent implements OnInit {
     from.setDate(now.getDate() - 30);
     this.reportFrom = from.toISOString().slice(0, 16);
     this.reportTo = now.toISOString().slice(0, 16);
-    this.heroCarouselAdminService.getSlides().subscribe((slides) => {
-      this.heroSlidesForm = slides.map((slide) => ({ ...slide }));
-      this.syncHeroSlideUploadState();
-    });
+    this.carouselEditors.forEach((editor) => this.loadCarousel(editor));
   }
 
   onFileSelected(event: Event): void {
@@ -137,8 +168,8 @@ export class AdminToolsComponent implements OnInit {
     });
   }
 
-  addHeroSlide(): void {
-    this.heroSlidesForm.push({
+  addSlide(editor: CarouselEditorState): void {
+    editor.slides.push({
       eyebrow: 'Nuevo slide',
       title: 'Titulo del slide',
       subtitle: 'Descripcion breve del slide.',
@@ -147,18 +178,18 @@ export class AdminToolsComponent implements OnInit {
       image: 'assets/bjj/kimono1.jpg',
       align: 'left'
     });
-    this.syncHeroSlideUploadState();
+    this.syncUploadState(editor);
   }
 
-  removeHeroSlide(index: number): void {
-    this.heroSlidesForm.splice(index, 1);
-    this.heroSlideUploadNames.splice(index, 1);
-    this.heroSlideUploading.splice(index, 1);
-    this.heroSlideUploadMessages.splice(index, 1);
+  removeSlide(editor: CarouselEditorState, index: number): void {
+    editor.slides.splice(index, 1);
+    editor.uploadNames.splice(index, 1);
+    editor.uploading.splice(index, 1);
+    editor.uploadMessages.splice(index, 1);
   }
 
-  saveHeroSlides(): void {
-    const normalized: HeroCarouselSlide[] = this.heroSlidesForm
+  saveSlides(editor: CarouselEditorState): void {
+    const normalized: HeroCarouselSlide[] = editor.slides
       .map((slide) => ({
         eyebrow: (slide.eyebrow || '').trim(),
         title: (slide.title || '').trim(),
@@ -175,11 +206,11 @@ export class AdminToolsComponent implements OnInit {
       return;
     }
 
-    this.heroCarouselAdminService.saveSlides(normalized).subscribe({
+    this.heroCarouselAdminService.saveSlides(normalized, editor.key).subscribe({
       next: (saved) => {
-        this.heroSlidesForm = saved.map((slide) => ({ ...slide }));
-        this.syncHeroSlideUploadState();
-        this.alertService.successAlert('Carrusel actualizado.');
+        editor.slides = saved.map((slide) => ({ ...slide }));
+        this.syncUploadState(editor);
+        this.alertService.successAlert(editor.successLabel);
       },
       error: (error) => {
         this.alertService.errorAlert(error?.error?.message || MICROCOPY.general.genericError);
@@ -187,12 +218,12 @@ export class AdminToolsComponent implements OnInit {
     });
   }
 
-  resetHeroSlides(): void {
-    this.heroCarouselAdminService.resetSlides().subscribe({
+  resetSlides(editor: CarouselEditorState): void {
+    this.heroCarouselAdminService.resetSlides(editor.key).subscribe({
       next: (slides) => {
-        this.heroSlidesForm = slides.map((slide) => ({ ...slide }));
-        this.syncHeroSlideUploadState();
-        this.alertService.successAlert('Carrusel restablecido a la version original.');
+        editor.slides = slides.map((slide) => ({ ...slide }));
+        this.syncUploadState(editor);
+        this.alertService.successAlert(editor.resetLabel);
       },
       error: (error) => {
         this.alertService.errorAlert(error?.error?.message || MICROCOPY.general.genericError);
@@ -200,39 +231,46 @@ export class AdminToolsComponent implements OnInit {
     });
   }
 
-  onHeroSlideImageSelected(event: Event, index: number): void {
+  onSlideImageSelected(event: Event, editor: CarouselEditorState, index: number): void {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
     if (!file) {
       return;
     }
 
-    this.heroSlideUploadNames[index] = file.name;
-    this.heroSlideUploading[index] = true;
-    this.heroSlideUploadMessages[index] = 'Subiendo imagen...';
+    editor.uploadNames[index] = file.name;
+    editor.uploading[index] = true;
+    editor.uploadMessages[index] = 'Subiendo imagen...';
 
     this.heroCarouselAdminService.uploadSlideImage(file).subscribe({
       next: (response) => {
-        this.heroSlidesForm[index].image = response.url;
-        this.heroSlideUploadNames[index] = response.fileName || file.name;
-        this.heroSlideUploadMessages[index] = 'Imagen cargada correctamente.';
-        this.heroSlideUploading[index] = false;
+        editor.slides[index].image = response.url;
+        editor.uploadNames[index] = response.fileName || file.name;
+        editor.uploadMessages[index] = 'Imagen cargada correctamente.';
+        editor.uploading[index] = false;
         input.value = '';
         this.alertService.successAlert('Imagen del carrusel cargada.');
       },
       error: (error) => {
-        this.heroSlideUploading[index] = false;
-        this.heroSlideUploadMessages[index] = 'No se pudo cargar la imagen.';
+        editor.uploading[index] = false;
+        editor.uploadMessages[index] = 'No se pudo cargar la imagen.';
         input.value = '';
         this.alertService.errorAlert(error?.error?.message || MICROCOPY.general.genericError);
       }
     });
   }
 
-  private syncHeroSlideUploadState(): void {
-    this.heroSlideUploadNames = this.heroSlidesForm.map((slide) => this.extractFileName(slide.image));
-    this.heroSlideUploading = this.heroSlidesForm.map(() => false);
-    this.heroSlideUploadMessages = this.heroSlidesForm.map((slide) =>
+  private loadCarousel(editor: CarouselEditorState): void {
+    this.heroCarouselAdminService.getSlides(editor.key).subscribe((slides) => {
+      editor.slides = slides.map((slide) => ({ ...slide }));
+      this.syncUploadState(editor);
+    });
+  }
+
+  private syncUploadState(editor: CarouselEditorState): void {
+    editor.uploadNames = editor.slides.map((slide) => this.extractFileName(slide.image));
+    editor.uploading = editor.slides.map(() => false);
+    editor.uploadMessages = editor.slides.map((slide) =>
       slide.image ? 'Imagen lista.' : 'Sin imagen cargada.'
     );
   }

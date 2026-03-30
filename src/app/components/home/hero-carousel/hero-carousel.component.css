@@ -167,6 +167,97 @@
   background: #ffffff;
 }
 
+.hero-carousel--statement {
+  background: transparent;
+  border-top: 1px solid rgba(17, 17, 17, 0.12);
+}
+
+.hero-carousel--statement .hero-slide {
+  min-height: auto;
+  align-items: stretch;
+  background: transparent;
+}
+
+.hero-carousel--statement .hero-image {
+  inset: auto 0 0 auto;
+  width: min(36vw, 360px);
+  height: 100%;
+  object-fit: contain;
+  opacity: 0.14;
+  transform: translateY(4%);
+  transform-origin: bottom right;
+}
+
+.hero-carousel--statement .hero-overlay {
+  background: none;
+}
+
+.hero-carousel--statement .hero-content {
+  width: 100%;
+  padding: 54px 72px 68px 0;
+  color: var(--text-main);
+}
+
+.hero-carousel--statement .hero-eyebrow {
+  color: rgba(17, 17, 17, 0.56);
+}
+
+.hero-carousel--statement .hero-title {
+  max-width: 12ch;
+  font-size: clamp(2.8rem, 6vw, 5rem);
+  line-height: 0.95;
+}
+
+.hero-carousel--statement .hero-subtitle {
+  max-width: 48rem;
+  color: rgba(17, 17, 17, 0.72);
+}
+
+.hero-carousel--statement .hero-cta {
+  background: #101010;
+  color: #ffffff;
+}
+
+.hero-carousel--statement .hero-cta:hover {
+  background: #101010;
+}
+
+.hero-carousel--statement .hero-nav {
+  top: auto;
+  bottom: 24px;
+  transform: none;
+  background: transparent;
+  color: var(--text-main);
+  border: 1px solid rgba(17, 17, 17, 0.14);
+}
+
+.hero-carousel--statement .hero-nav:hover {
+  background: rgba(17, 17, 17, 0.04);
+}
+
+.hero-carousel--statement .hero-nav--prev {
+  left: auto;
+  right: 56px;
+}
+
+.hero-carousel--statement .hero-nav--next {
+  right: 0;
+}
+
+.hero-carousel--statement .hero-dots {
+  left: 0;
+  bottom: 20px;
+  transform: none;
+}
+
+.hero-carousel--statement .hero-dot {
+  background: rgba(17, 17, 17, 0.18);
+}
+
+.hero-carousel--statement .hero-dot--active {
+  background: var(--text-main);
+}
+
 @media (max-width: 767px) {
   .hero-slide {
     min-height: 78vh;
@@ -193,5 +284,23 @@
 
   .hero-dot {
     width: 28px;
+  }
+
+  .hero-carousel--statement .hero-content {
+    padding: 40px 0 72px;
+  }
+
+  .hero-carousel--statement .hero-image {
+    width: min(48vw, 220px);
+    opacity: 0.1;
+  }
+
+  .hero-carousel--statement .hero-title {
+    max-width: 11ch;
+    font-size: clamp(2.2rem, 12vw, 3.4rem);
+  }
+
+  .hero-carousel--statement .hero-nav--prev {
+    right: 48px;
   }
 }

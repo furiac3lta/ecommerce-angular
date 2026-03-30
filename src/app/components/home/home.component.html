@@ -69,15 +69,7 @@
   </section>
 
   <section class="home-section home-section--statement">
-    <div class="statement-panel">
-      <p class="section-kicker">Lions Brand BJJ</p>
-      <h2>Diseño fuerte. Navegación limpia. Compra directa.</h2>
-      <p>
-        La nueva estructura deja respirar la marca: hero full-width, colecciones visuales y una
-        grilla de producto mucho más editorial.
-      </p>
-      <button type="button" class="primary-button" (click)="gotoProduct()">Comprar ahora</button>
-    </div>
+    <app-hero-carousel [slides]="editorialSlides" variant="statement" [autoplayMs]="7000"></app-hero-carousel>
   </section>
 </main>
 

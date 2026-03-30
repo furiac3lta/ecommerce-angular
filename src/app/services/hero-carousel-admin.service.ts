@@ -11,13 +11,16 @@ export interface UploadedImageResponse {
   url: string;
 }
 
+export type CarouselKey = 'home-hero' | 'home-editorial';
+
 @Injectable({
   providedIn: 'root'
 })
 export class HeroCarouselAdminService {
+  readonly homeHeroKey: CarouselKey = 'home-hero';
+  readonly homeEditorialKey: CarouselKey = 'home-editorial';
   private readonly publicUrl = `${environment.apiBaseUrl}/api/v1/home/hero-slides`;
   private readonly adminUrl = `${environment.apiBaseUrl}/api/v1/admin/tools/hero-slides`;
-  private readonly resetUrl = `${this.adminUrl}/reset`;
   private readonly uploadImageUrl = `${this.adminUrl}/image`;
 
   readonly defaultSlides: HeroCarouselSlide[] = [
@@ -52,26 +55,29 @@ export class HeroCarouselAdminService {
 
   constructor(private httpClient: HttpClient, private headerService: HeaderService) {}
 
-  getSlides(): Observable<HeroCarouselSlide[]> {
-    return this.httpClient.get<HeroCarouselSlide[]>(this.publicUrl).pipe(
-      map((slides) => this.normalizeSlides(slides)),
-      catchError(() => of([...this.defaultSlides]))
+  getSlides(carouselKey: CarouselKey = this.homeHeroKey): Observable<HeroCarouselSlide[]> {
+    const url = carouselKey === this.homeHeroKey ? this.publicUrl : `${this.publicUrl}/${carouselKey}`;
+    return this.httpClient.get<HeroCarouselSlide[]>(url).pipe(
+      map((slides) => this.normalizeSlides(slides, carouselKey)),
+      catchError(() => of(this.getDefaultSlides(carouselKey)))
     );
   }
 
-  saveSlides(slides: HeroCarouselSlide[]): Observable<HeroCarouselSlide[]> {
-    return this.httpClient.post<HeroCarouselSlide[]>(this.adminUrl, slides, {
+  saveSlides(slides: HeroCarouselSlide[], carouselKey: CarouselKey = this.homeHeroKey): Observable<HeroCarouselSlide[]> {
+    const url = carouselKey === this.homeHeroKey ? this.adminUrl : `${this.adminUrl}/${carouselKey}`;
+    return this.httpClient.post<HeroCarouselSlide[]>(url, slides, {
       headers: this.headerService.headers
     }).pipe(
-      map((saved) => this.normalizeSlides(saved))
+      map((saved) => this.normalizeSlides(saved, carouselKey))
     );
   }
 
-  resetSlides(): Observable<HeroCarouselSlide[]> {
-    return this.httpClient.post<HeroCarouselSlide[]>(this.resetUrl, {}, {
+  resetSlides(carouselKey: CarouselKey = this.homeHeroKey): Observable<HeroCarouselSlide[]> {
+    const url = carouselKey === this.homeHeroKey ? `${this.adminUrl}/reset` : `${this.adminUrl}/${carouselKey}/reset`;
+    return this.httpClient.post<HeroCarouselSlide[]>(url, {}, {
       headers: this.headerService.headers
     }).pipe(
-      map((saved) => this.normalizeSlides(saved))
+      map((saved) => this.normalizeSlides(saved, carouselKey))
     );
   }
 
@@ -83,9 +89,9 @@ export class HeroCarouselAdminService {
     });
   }
 
-  private normalizeSlides(slides: HeroCarouselSlide[] | null | undefined): HeroCarouselSlide[] {
+  private normalizeSlides(slides: HeroCarouselSlide[] | null | undefined, carouselKey: CarouselKey): HeroCarouselSlide[] {
     if (!Array.isArray(slides) || !slides.length) {
-      return [...this.defaultSlides];
+      return this.getDefaultSlides(carouselKey);
     }
 
     return slides
@@ -99,5 +105,32 @@ export class HeroCarouselAdminService {
         align: (slide.align === 'center' ? 'center' : 'left') as 'left' | 'center'
       }))
       .filter((slide) => slide.title && slide.ctaText && slide.image);
+  }
+
+  private getDefaultSlides(carouselKey: CarouselKey): HeroCarouselSlide[] {
+    if (carouselKey === this.homeEditorialKey) {
+      return [
+        {
+          eyebrow: 'Lions Brand BJJ',
+          title: 'Diseno fuerte. Navegacion limpia. Compra directa.',
+          subtitle: 'Un segundo carrusel para reforzar la marca, sostener el tono editorial y empujar al catalogo desde la home.',
+          ctaText: 'Ver tienda',
+          ctaLink: '/product',
+          image: 'assets/bjj/kimono2.jpg',
+          align: 'left'
+        },
+        {
+          eyebrow: 'Fightwear editorial',
+          title: 'Colecciones claras. Lectura rapida. Producto al frente.',
+          subtitle: 'Cada slide puede rotar mensajes, imagenes y CTA sin tocar codigo desde el admin.',
+          ctaText: 'Explorar',
+          ctaLink: '/product',
+          image: 'assets/bjj/rashguard1.png',
+          align: 'left'
+        }
+      ];
+    }
+
+    return [...this.defaultSlides];
   }
 }

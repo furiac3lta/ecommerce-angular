@@ -17,6 +17,7 @@ export class HomeComponent implements OnInit{
   products: Product [] = [];
   categories: Category[] = [];
   heroSlides: HeroCarouselSlide[] = [];
+  editorialSlides: HeroCarouselSlide[] = [];
 
   constructor(
     private homeService:HomeService,
@@ -27,8 +28,11 @@ export class HomeComponent implements OnInit{
 
   }
   ngOnInit(): void {
-    this.heroCarouselAdminService.getSlides().subscribe((slides) => {
+    this.heroCarouselAdminService.getSlides(this.heroCarouselAdminService.homeHeroKey).subscribe((slides) => {
       this.heroSlides = slides;
+    });
+    this.heroCarouselAdminService.getSlides(this.heroCarouselAdminService.homeEditorialKey).subscribe((slides) => {
+      this.editorialSlides = slides;
     });
     this.homeService.getProducts().subscribe(
       data => this.products = data.slice(0,8)
