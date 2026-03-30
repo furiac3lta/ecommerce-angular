@@ -1,3 +1,32 @@
+.home-blocks-intro {
+  display: grid;
+  gap: 10px;
+}
+
+.home-blocks-intro h3 {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.home-blocks-intro p {
+  margin: 0;
+  max-width: 58rem;
+  color: rgba(17, 17, 17, 0.68);
+  line-height: 1.6;
+}
+
+.home-blocks-intro__eyebrow,
+.carousel-admin-kicker {
+  margin: 0;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(17, 17, 17, 0.46);
+}
+
 .carousel-admin-header {
   display: grid;
   gap: 16px;

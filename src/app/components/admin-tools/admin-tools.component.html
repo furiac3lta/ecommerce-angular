@@ -92,9 +92,21 @@
     </div>
   </div>
 
-  <div class="ds-card mb-6" *ngFor="let editor of carouselEditors">
+  <div class="ds-card mb-6">
+    <div class="home-blocks-intro">
+      <p class="home-blocks-intro__eyebrow">Home / Bloques configurables</p>
+      <h3>Acá tenés dos carruseles distintos</h3>
+      <p>
+        El primero controla el hero principal de la home. El segundo controla la franja editorial
+        inferior donde va el bloque tipo “Diseño fuerte. Navegación limpia. Compra directa.”.
+      </p>
+    </div>
+  </div>
+
+  <div class="ds-card mb-6" *ngFor="let editor of carouselEditors; let editorIndex = index">
     <div class="carousel-admin-header">
       <div>
+        <p class="carousel-admin-kicker">Carrusel {{ editorIndex + 1 }}</p>
         <h3 class="text-xl font-semibold text-gray-800 mb-2">{{ editor.title }}</h3>
         <p class="text-sm text-gray-500">{{ editor.description }}</p>
       </div>
