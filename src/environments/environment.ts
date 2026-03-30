@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiBaseUrl: '',
+  apiBaseUrl: 'https://lionsbrand.com.ar',
   transferAlias: 'LIONS.BRAND',
   transferCbu: '0000000000000000000000',
   transferBank: 'Banco',
