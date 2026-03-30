@@ -171,11 +171,11 @@
 .hero-carousel--statement {
   background: transparent;
   border-top: 1px solid rgba(17, 17, 17, 0.12);
-  min-height: calc(100vh - 96px);
+  min-height: calc(100svh - 96px);
 }
 
 .hero-carousel--statement .hero-slide {
-  min-height: calc(100vh - 96px);
+  min-height: calc(100svh - 96px);
   align-items: stretch;
   background: #0f0f10;
 }
@@ -197,7 +197,7 @@
 
 .hero-carousel--statement .hero-content {
   width: min(100%, 1440px);
-  min-height: calc(100vh - 96px);
+  min-height: calc(100svh - 96px);
   padding: 72px 64px 104px;
   color: #f4f1eb;
   display: grid;
@@ -294,45 +294,56 @@
 
   .hero-carousel--statement .hero-content {
     width: 100%;
-    min-height: calc(100vh - 88px);
-    padding: 96px 20px 110px;
+    min-height: auto;
+    padding: 88px 20px 104px;
     align-content: end;
   }
 
   .hero-carousel--statement .hero-image {
     width: 100%;
+    height: 100%;
     opacity: 1;
+    object-position: center;
   }
 
   .hero-carousel--statement .hero-overlay {
     background:
-      linear-gradient(180deg, rgba(7, 7, 8, 0.22) 0%, rgba(7, 7, 8, 0.42) 44%, rgba(7, 7, 8, 0.76) 100%);
+      linear-gradient(180deg, rgba(7, 7, 8, 0.08) 0%, rgba(7, 7, 8, 0.28) 38%, rgba(7, 7, 8, 0.72) 100%);
+  }
+
+  .hero-carousel--statement .hero-slide {
+    min-height: clamp(560px, calc(100svh - 84px), 760px);
   }
 
   .hero-carousel--statement .hero-title {
-    max-width: 8ch;
-    font-size: clamp(2.35rem, 13vw, 3.8rem);
-    line-height: 0.9;
+    max-width: 7ch;
+    font-size: clamp(2rem, 10.8vw, 3.2rem);
+    line-height: 0.92;
   }
 
   .hero-carousel--statement .hero-subtitle {
-    max-width: 22rem;
-    font-size: 1rem;
-    line-height: 1.45;
+    max-width: 20rem;
+    font-size: 0.98rem;
+    line-height: 1.4;
   }
 
   .hero-carousel--statement .hero-cta {
-    width: min(100%, 320px);
+    width: min(100%, 100%);
     min-width: 0;
+    min-height: 54px;
     padding-inline: 18px;
   }
 
   .hero-carousel--statement .hero-nav--prev {
-    right: 48px;
+    right: 60px;
+  }
+
+  .hero-carousel--statement .hero-nav {
+    bottom: 16px;
   }
 
   .hero-carousel--statement .hero-dots {
     left: 20px;
-    bottom: 28px;
+    bottom: 20px;
   }
 }
