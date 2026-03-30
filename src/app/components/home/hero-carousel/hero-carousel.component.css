@@ -176,21 +176,22 @@
 .hero-carousel--statement .hero-slide {
   min-height: calc(100vh - 96px);
   align-items: stretch;
-  background: transparent;
+  background: #ece5d8;
 }
 
 .hero-carousel--statement .hero-image {
-  inset: auto 0 0 auto;
-  width: min(36vw, 360px);
+  inset: 0;
+  width: 100%;
   height: 100%;
-  object-fit: contain;
-  opacity: 0.14;
-  transform: translateY(4%);
-  transform-origin: bottom right;
+  object-fit: cover;
+  opacity: 0.18;
+  transform: none;
+  transform-origin: center;
 }
 
 .hero-carousel--statement .hero-overlay {
-  background: none;
+  background:
+    linear-gradient(90deg, rgba(244, 239, 231, 0.96) 0%, rgba(244, 239, 231, 0.9) 38%, rgba(244, 239, 231, 0.7) 62%, rgba(244, 239, 231, 0.82) 100%);
 }
 
 .hero-carousel--statement .hero-content {
@@ -207,13 +208,13 @@
 }
 
 .hero-carousel--statement .hero-title {
-  max-width: 12ch;
+  max-width: 10ch;
   font-size: clamp(2.8rem, 6vw, 5rem);
   line-height: 0.95;
 }
 
 .hero-carousel--statement .hero-subtitle {
-  max-width: 48rem;
+  max-width: 42rem;
   color: rgba(17, 17, 17, 0.72);
 }
 
@@ -297,8 +298,8 @@
   }
 
   .hero-carousel--statement .hero-image {
-    width: min(48vw, 220px);
-    opacity: 0.1;
+    width: 100%;
+    opacity: 0.14;
   }
 
   .hero-carousel--statement .hero-title {
